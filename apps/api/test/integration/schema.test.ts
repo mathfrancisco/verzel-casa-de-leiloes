@@ -17,6 +17,21 @@ async function insertUser(email = `${randomUUID()}@demo.com`) {
   return id;
 }
 
+async function insertLot(sellerId: string) {
+  const imageId = randomUUID();
+  const lotId = randomUUID();
+  const hash = 'a'.repeat(64);
+  await testDb.sql`
+    INSERT INTO images (id, content_type, bytes, sha256) VALUES (${imageId}, 'image/png', '\\x00', ${hash})`;
+  await testDb.sql`
+    INSERT INTO lots (id, seller_id, image_id, item_source, item_external_id, item_snapshot, title,
+                      category, starting_price_cents, min_increment_cents, starts_at, ends_at,
+                      original_ends_at, genesis_hash, head_hash, seller_pseudonym)
+    VALUES (${lotId}, ${sellerId}, ${imageId}, 'artic', '1', '{}', 'Obra', 'PAINTING', 1000, 100,
+            now(), now() + interval '1 hour', now() + interval '1 hour', ${hash}, ${hash}, 'Leiloeiro X')`;
+  return lotId;
+}
+
 describe('schema inicial (migrations)', () => {
   it('cria as tabelas de usuários, carteira, livro-razão e idempotência', async () => {
     const rows = await testDb.sql<{ table_name: string }[]>`
@@ -56,11 +71,29 @@ describe('schema inicial (migrations)', () => {
 
   it('impede liquidar o mesmo lote duas vezes', async () => {
     const id = await insertUser();
-    const lotId = randomUUID();
+    const lotId = await insertLot(id);
     await testDb.sql`INSERT INTO wallet_entries (user_id, type, amount_cents, lot_id) VALUES (${id}, 'SETTLEMENT_CREDIT', 100, ${lotId})`;
     await expect(
       testDb.sql`INSERT INTO wallet_entries (user_id, type, amount_cents, lot_id) VALUES (${id}, 'SETTLEMENT_CREDIT', 100, ${lotId})`,
     ).rejects.toThrow(/wallet_entries_lot_type_unique/);
+  });
+
+  it('lançamento com lote inexistente é recusado (FK)', async () => {
+    const id = await insertUser();
+    await expect(
+      testDb.sql`INSERT INTO wallet_entries (user_id, type, amount_cents, lot_id) VALUES (${id}, 'SETTLEMENT_CREDIT', 100, ${randomUUID()})`,
+    ).rejects.toThrow(/wallet_entries_lot_id_lots_id_fk/);
+  });
+
+  it('lote recusa líder sem lances e fim antes do início (CHECKs)', async () => {
+    const id = await insertUser();
+    const lotId = await insertLot(id);
+    await expect(testDb.sql`UPDATE lots SET leader_id = ${id} WHERE id = ${lotId}`).rejects.toThrow(
+      /lots_leader_matches_bids/,
+    );
+    await expect(
+      testDb.sql`UPDATE lots SET ends_at = starts_at WHERE id = ${lotId}`,
+    ).rejects.toThrow(/lots_ends_after_start|lots_end_only_extends/);
   });
 
   it('permite vários depósitos sem lote', async () => {

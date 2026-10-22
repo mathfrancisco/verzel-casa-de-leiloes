@@ -31,6 +31,7 @@ const app = buildApp({
   catalog: env.CATALOG_PROVIDER === 'fake' ? new FakeCatalog() : new ArticCatalog(),
   config: {
     jwtSecret: env.JWT_SECRET,
+    pseudonymSecret: env.PSEUDONYM_SECRET,
     secureCookies: env.NODE_ENV === 'production',
     webDistDir: existsSync(webDistDir) ? webDistDir : undefined,
   },

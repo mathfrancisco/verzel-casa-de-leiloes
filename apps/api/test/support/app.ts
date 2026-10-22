@@ -5,8 +5,9 @@ import type { createTestDatabase } from './database';
 
 type TestDb = Awaited<ReturnType<typeof createTestDatabase>>;
 
-// Gerado a cada execução: valores fixos com cara de segredo disparam scanners de segredos.
+// Gerados a cada execução: valores fixos com cara de segredo disparam scanners de segredos.
 export const TEST_JWT_SECRET = randomBytes(32).toString('base64url');
+export const TEST_PSEUDONYM_SECRET = randomBytes(32).toString('base64url');
 
 export function buildTestApp(
   testDb: TestDb,
@@ -19,6 +20,7 @@ export function buildTestApp(
     catalog: deps.catalog ?? new FakeCatalog(),
     config: {
       jwtSecret: TEST_JWT_SECRET,
+      pseudonymSecret: TEST_PSEUDONYM_SECRET,
       secureCookies: false,
       authRateLimitPerMinute: 1000,
       ...overrides,

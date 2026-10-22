@@ -1,8 +1,19 @@
 import { CATALOG_PAGE_SIZE, type CatalogItem, type CatalogSearchResult } from '@leilao/shared';
 import { DomainError } from '../../domain/errors';
-import type { CatalogProvider } from '../../ports/catalog';
+import type { CatalogImage, CatalogProvider } from '../../ports/catalog';
 
 type Mode = 'ok' | 'fail' | 'slow' | 'notFound';
+
+/** PNG 1×1 válido, usado como imagem de todas as obras falsas. */
+export const FAKE_IMAGE: CatalogImage = {
+  bytes: Uint8Array.from(
+    Buffer.from(
+      'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
+      'base64',
+    ),
+  ),
+  contentType: 'image/png',
+};
 
 const item = (externalId: string, title: string, artist: string): CatalogItem => ({
   externalId,
@@ -58,6 +69,11 @@ export class FakeCatalog implements CatalogProvider {
       this.mode === 'notFound' ? undefined : this.items.find((i) => i.externalId === externalId);
     if (!found) throw new DomainError('CATALOG_ITEM_NOT_FOUND');
     return found;
+  }
+
+  async fetchImage(_item: CatalogItem): Promise<CatalogImage> {
+    await this.simulate();
+    return FAKE_IMAGE;
   }
 
   private async simulate(): Promise<void> {

@@ -31,7 +31,7 @@ describe('GET /ready', () => {
       db: drizzle(unreachable),
       sql: unreachable,
       catalog: new FakeCatalog(),
-      config: { jwtSecret: 'x'.repeat(32), secureCookies: false },
+      config: { jwtSecret: 'x'.repeat(32), pseudonymSecret: 'p'.repeat(32), secureCookies: false },
     });
     const res = await app.inject({ method: 'GET', url: '/ready' });
     await app.close();
