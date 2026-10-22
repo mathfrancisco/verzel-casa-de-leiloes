@@ -9,9 +9,9 @@ do README), registrada no PR do card. IDs em [`01-requisitos.md`](01-requisitos.
 | ✓ | Item do PDF | Requisito | Card | Evidência |
 |---|---|---|---|---|
 | [ ] | Deploy público da aplicação | RNF-01 | LC-004, LC-023 | |
-| [ ] | Repositório público no GitHub | — | — | |
-| [ ] | Front-End em React | RNF-02 | LC-001 | |
-| [ ] | Back-End em Node.js (Fastify) | RNF-02 | LC-001 | |
+| [x] | Repositório público no GitHub | — | — | github.com/mathfrancisco/verzel-casa-de-leiloes |
+| [x] | Front-End em React | RNF-02 | LC-001 | `apps/web` (React 18 + Vite), build e testes verdes |
+| [x] | Back-End em Node.js (Fastify) | RNF-02 | LC-001 | `apps/api` (Fastify 5, Node 22), `/health` testado |
 | [ ] | PostgreSQL com instruções no README | RNF-02, RNF-07 | LC-002, LC-023 | |
 | [ ] | Itens vindos de uma API pública | RF-02 | LC-005 | |
 | [ ] | Papéis leiloeiro (não dá lance) e licitante | RF-01 | LC-003, LC-011 | |
