@@ -2,6 +2,7 @@ import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { buildApp } from '../../src/app';
+import { FakeCatalog } from '../../src/infra/catalog/fake-catalog';
 import { buildTestApp } from '../support/app';
 import { createTestDatabase } from '../support/database';
 
@@ -29,6 +30,7 @@ describe('GET /ready', () => {
     const app = buildApp({
       db: drizzle(unreachable),
       sql: unreachable,
+      catalog: new FakeCatalog(),
       config: { jwtSecret: 'x'.repeat(32), secureCookies: false },
     });
     const res = await app.inject({ method: 'GET', url: '/ready' });
