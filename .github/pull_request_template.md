@@ -29,7 +29,8 @@ pnpm lint && pnpm typecheck && pnpm test
 
 ## Uso de IA
 
-- Ferramenta, o que gerou, o que foi revisado/ajustado:
+- IA: o que gerou
+- Eu: o que revisei, ajustei ou acrescentei
 
 ## Limitações conhecidas / decisões
 
