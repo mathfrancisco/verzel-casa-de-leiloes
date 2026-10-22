@@ -4,18 +4,24 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "tsx watch src/main.ts",
+    "dev": "tsx watch --env-file-if-exists=../../.env src/main.ts",
     "build": "tsup",
     "start": "node dist/main.js",
     "typecheck": "tsc -p tsconfig.json",
-    "test": "vitest run"
+    "test": "vitest run",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "tsx --env-file-if-exists=../../.env src/infra/db/migrate.ts"
   },
   "dependencies": {
     "@leilao/shared": "workspace:*",
-    "fastify": "5.4.0"
+    "drizzle-orm": "0.44.2",
+    "fastify": "5.4.0",
+    "postgres": "3.4.7",
+    "zod": "3.25.67"
   },
   "devDependencies": {
     "@types/node": "22.15.32",
+    "drizzle-kit": "0.31.1",
     "tsup": "8.5.0",
     "tsx": "4.20.3",
     "typescript": "5.8.3",
