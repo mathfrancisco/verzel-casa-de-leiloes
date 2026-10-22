@@ -55,6 +55,6 @@ do README), registrada no PR do card. IDs em [`01-requisitos.md`](01-requisitos.
 |---|---|---|---|---|
 | [ ] | Busca e filtro de lotes | RF-17 | LC-019 | |
 | [ ] | Cancelamento com estorno automático | RF-18 | LC-018 | |
-| [ ] | Docker Compose | RNF-13 | LC-002, LC-004 | |
+| [x] | Docker Compose | RNF-13 | LC-002, LC-004 | `docker compose up` sobe Postgres + app em `localhost:3000` com migrations no start |
 | [ ] | Testes automatizados | RNF-12 | todos + LC-022 | |
 | [ ] | Dark mode | RF-19 | LC-021 | |

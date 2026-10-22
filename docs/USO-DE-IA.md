@@ -30,3 +30,6 @@ fluxo de trabalho com IA está descrito em [`../ai/README.md`](../ai/README.md).
 | 22/10/2026 | Implementação (LC-002) | IA | Gerou o Docker Compose do Postgres, o schema e as migrations iniciais (Drizzle), a validação de variáveis de ambiente e o `/ready`, com testes de integração; rodou lint, typecheck, testes e build |
 | 22/10/2026 | Implementação (LC-003) | Eu | Pedi para seguir com o LC-003 e revisei o resultado |
 | 22/10/2026 | Implementação (LC-003) | IA | Gerou cadastro, login, logout e autorização por papel (API e telas), com testes; rodou lint, typecheck, testes, build e o fluxo no navegador |
+| 22/10/2026 | Deploy | Eu | Pesquisei provedores cloud para o deploy, pedi alternativas além das primeiras sugestões, conferi na página oficial o plano Sandbox do Northflank (gratuito, sem cartão, sempre ligado) e escolhi o Northflank |
+| 22/10/2026 | Deploy | IA | Comparou provedores (Railway, Render + Neon, Fly.io, Koyeb, Northflank, Cloud Run, Oracle Cloud, VPS) com fontes, considerando WebSocket, serviço sempre ligado e banco que não expira |
+| 22/10/2026 | Implementação (LC-004) | IA | Gerou Dockerfile, CI do GitHub Actions, serviço `app` no Compose, API servindo o site, eco de WebSocket e guia de deploy no Northflank; rodou testes, build da imagem e o fluxo no navegador contra o container |
