@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Status | TODO |
+| Status | REVIEW |
 | Épico / dia | E1 Fundação · Dia 1 |
 | Depende de | LC-002 |
 | Requisitos | RF-01, RNF-09 |
@@ -27,10 +27,10 @@ Usuários se cadastram como leiloeiro ou licitante e o servidor restringe rotas 
 
 ## Critérios de aceite
 
-- [ ] Cadastro cria usuário e carteira com saldo 0 na mesma transação
-- [ ] Login inválido sempre responde `INVALID_CREDENTIALS`
-- [ ] Rotas protegidas respondem 401/403 corretamente
-- [ ] Fluxo de cadastro → login → sair funciona no navegador
+- [x] Cadastro cria usuário e carteira com saldo 0 na mesma transação
+- [x] Login inválido sempre responde `INVALID_CREDENTIALS`
+- [x] Rotas protegidas respondem 401/403 corretamente
+- [x] Fluxo de cadastro → login → sair funciona no navegador
 
 ## Testes obrigatórios
 
@@ -38,7 +38,30 @@ Usuários se cadastram como leiloeiro ou licitante e o servidor restringe rotas 
 
 ## Definição de pronto
 
-- [ ] `pnpm lint && pnpm typecheck && pnpm test` verdes, saída real no PR
-- [ ] Todos os critérios de aceite com evidência
-- [ ] Status atualizado aqui e em `ai/cards/README.md`
-- [ ] `docs/CHECKLIST.md` (só com evidência) e `docs/USO-DE-IA.md` atualizados
+- [x] `pnpm lint && pnpm typecheck && pnpm test` verdes, saída real no PR
+- [x] Todos os critérios de aceite com evidência
+- [x] Status atualizado aqui e em `ai/cards/README.md`
+- [x] `docs/CHECKLIST.md` (só com evidência) e `docs/USO-DE-IA.md` atualizados
+
+## Evidências (22/10/2026)
+
+| Verificação | Resultado |
+|---|---|
+| `pnpm test` | shared 37 ✓ · web 24 ✓ · api 44 ✓ (105 testes); `auth.test.ts` cobre CT-01-01 a CT-01-08, `password.test.ts` o CT-01-09 |
+| `pnpm lint` · `pnpm typecheck` · `pnpm build` | verdes |
+| Navegador (Chromium + `pnpm dev`) | visitante em `/carteira` → `/entrar?next=/carteira`; cadastro vazio mostra erros por campo; cadastro de licitante entra logado; licitante em `/painel` vê "Sem permissão"; sair; senha errada → "E-mail ou senha incorretos."; login volta para `/carteira`; sessão persiste ao recarregar; cookie `httpOnly`, `SameSite=Lax`, `path=/` |
+
+Negativos cobertos: e-mail repetido com maiúsculas diferentes, senha curta, papel inválido,
+e-mail inválido, nada gravado quando a validação falha, senha errada e e-mail inexistente com a
+mesma resposta, cookie adulterado, token de outro segredo, papel errado (403), sem sessão (401),
+`Content-Type` diferente de JSON, JSON malformado, excesso de tentativas (429), redirecionamento
+`next` externo ignorado.
+
+Decisões:
+- Mensagens padrão dos códigos de erro em `packages/shared/src/errors.ts` (`ERROR_MESSAGES`).
+- Requisições `POST/PUT/PATCH/DELETE` sem `Content-Type: application/json` → 400
+  `VALIDATION_ERROR` (registrado na SP-00). O cliente web sempre envia JSON (`{}` sem corpo).
+- Rotas registradas dentro de um plugin para o rate limit ler a configuração de cada rota.
+- IDs de usuário em UUID v7 (pacote `uuid`).
+- Telas de carteira e painel são placeholders "Em construção" só para exercitar a proteção de
+  rota; o conteúdo entra no LC-009 e no LC-017.

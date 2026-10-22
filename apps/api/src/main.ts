@@ -13,8 +13,13 @@ try {
   throw err;
 }
 
-const { sql } = createDb(env.DATABASE_URL);
-const app = buildApp({ sql, logger: true });
+const { db, sql } = createDb(env.DATABASE_URL);
+const app = buildApp({
+  db,
+  sql,
+  config: { jwtSecret: env.JWT_SECRET, secureCookies: env.NODE_ENV === 'production' },
+  logger: true,
+});
 
 try {
   await app.listen({ port: env.PORT, host: '0.0.0.0' });
