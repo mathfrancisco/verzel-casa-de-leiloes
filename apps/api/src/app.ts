@@ -10,6 +10,7 @@ import { authRoutes } from './http/auth.routes';
 import { catalogRoutes } from './http/catalog.routes';
 import { registerErrorHandling } from './http/error-handler';
 import { healthRoutes } from './http/health';
+import { lotRoutes } from './http/lots.routes';
 import { readyRoutes } from './http/ready';
 import { registerSpa } from './http/spa';
 import { attachRealtime } from './infra/realtime/socket';
@@ -20,6 +21,8 @@ export interface AppDeps {
   catalog: CatalogProvider;
   config: {
     jwtSecret: string;
+    /** Segredo do HMAC dos pseudônimos (RN-16). */
+    pseudonymSecret: string;
     secureCookies: boolean;
     /** Tentativas de login/cadastro por IP por minuto (SP-00). */
     authRateLimitPerMinute?: number;
@@ -69,6 +72,7 @@ export function buildApp({ db, sql, catalog, config, logger = false }: AppDeps) 
       rateLimitPerMinute: config.authRateLimitPerMinute ?? 10,
     });
     catalogRoutes(api, catalog);
+    lotRoutes(api, { db, catalog, pseudonymSecret: config.pseudonymSecret });
   });
 
   return app;

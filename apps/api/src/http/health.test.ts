@@ -11,7 +11,7 @@ const app = buildApp({
   db: drizzle(sql),
   sql,
   catalog: new FakeCatalog(),
-  config: { jwtSecret: 'x'.repeat(32), secureCookies: false },
+  config: { jwtSecret: 'x'.repeat(32), pseudonymSecret: 'p'.repeat(32), secureCookies: false },
 });
 afterAll(async () => {
   await app.close();

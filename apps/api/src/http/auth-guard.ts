@@ -24,3 +24,15 @@ export function requireRole(role: Role) {
     if (request.user.role !== role) throw new DomainError('FORBIDDEN');
   };
 }
+
+/** Usuário da sessão, se houver; rotas públicas usam para personalizar a resposta. */
+export async function optionalUser(
+  request: FastifyRequest,
+): Promise<{ id: string; role: Role } | null> {
+  try {
+    await request.jwtVerify();
+    return { id: request.user.sub, role: request.user.role };
+  } catch {
+    return null;
+  }
+}

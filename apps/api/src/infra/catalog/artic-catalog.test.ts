@@ -173,3 +173,44 @@ describe('ArticCatalog — resiliência', () => {
     await expectCode(catalog.search('nunca-buscado', 1), 'CATALOG_UNAVAILABLE');
   });
 });
+
+describe('ArticCatalog — imagem', () => {
+  const item = {
+    externalId: '16568',
+    title: 'Water Lilies',
+    artist: null,
+    date: null,
+    medium: null,
+    dimensions: null,
+    origin: null,
+    imageUrl: 'https://www.artic.edu/iiif/2/abc/full/843,/0/default.jpg',
+    sourceUrl: 'https://www.artic.edu/artworks/16568',
+    suggestedCategory: 'PAINTING' as const,
+  };
+  const image =
+    (body: Uint8Array | string | null, contentType: string, status = 200) =>
+    () =>
+      Promise.resolve(new Response(body, { status, headers: { 'content-type': contentType } }));
+
+  it('baixa a imagem do item', async () => {
+    const { catalog, calls } = setup(image(new Uint8Array([1, 2, 3]), 'image/jpeg'));
+    const result = await catalog.fetchImage(item);
+    expect(result).toEqual({ bytes: new Uint8Array([1, 2, 3]), contentType: 'image/jpeg' });
+    expect(calls).toEqual([item.imageUrl]);
+  });
+
+  it('recusa conteúdo que não é imagem', async () => {
+    const { catalog } = setup(image('<html>', 'text/html'));
+    await expectCode(catalog.fetchImage(item), 'CATALOG_UNAVAILABLE');
+  });
+
+  it('recusa imagem maior que 5 MB', async () => {
+    const { catalog } = setup(image(new Uint8Array(5 * 1024 * 1024 + 1), 'image/png'));
+    await expectCode(catalog.fetchImage(item), 'CATALOG_UNAVAILABLE');
+  });
+
+  it('imagem inexistente → CATALOG_ITEM_NOT_FOUND', async () => {
+    const { catalog } = setup(image(null, 'text/plain', 404));
+    await expectCode(catalog.fetchImage(item), 'CATALOG_ITEM_NOT_FOUND');
+  });
+});

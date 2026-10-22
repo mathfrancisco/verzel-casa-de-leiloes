@@ -15,6 +15,20 @@
       "when": 1792707924235,
       "tag": "0001_schema_inicial",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792712285769,
+      "tag": "0002_lotes",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1792712286495,
+      "tag": "0003_lot_entries_append_only",
+      "breakpoints": true
     }
   ]
 }

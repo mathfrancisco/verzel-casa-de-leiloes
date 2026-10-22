@@ -4,6 +4,7 @@ import { EnvError, loadEnv } from './env';
 const valid = {
   DATABASE_URL: 'postgres://leilao:leilao@localhost:5432/leilao',
   JWT_SECRET: 'x'.repeat(32),
+  PSEUDONYM_SECRET: 'p'.repeat(32),
 };
 
 describe('loadEnv', () => {
@@ -24,12 +25,13 @@ describe('loadEnv', () => {
 
   it('lista todas as variáveis ausentes na mensagem', () => {
     expect(() => loadEnv({})).toThrow(EnvError);
-    expect(() => loadEnv({})).toThrow(/DATABASE_URL[\s\S]*JWT_SECRET/);
+    expect(() => loadEnv({})).toThrow(/DATABASE_URL[\s\S]*JWT_SECRET[\s\S]*PSEUDONYM_SECRET/);
   });
 
   it.each([
     [{ ...valid, DATABASE_URL: 'mysql://localhost/x' }, 'DATABASE_URL'],
     [{ ...valid, JWT_SECRET: 'curto' }, 'JWT_SECRET'],
+    [{ ...valid, PSEUDONYM_SECRET: 'curto' }, 'PSEUDONYM_SECRET'],
     [{ ...valid, PORT: 'abc' }, 'PORT'],
     [{ ...valid, NODE_ENV: 'staging' }, 'NODE_ENV'],
     [{ ...valid, CATALOG_PROVIDER: 'met' }, 'CATALOG_PROVIDER'],
