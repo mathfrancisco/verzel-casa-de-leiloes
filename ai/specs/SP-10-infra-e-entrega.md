@@ -29,8 +29,9 @@ A API valida as variáveis com Zod no start e não sobe se faltar alguma.
 ## Docker
 
 - `Dockerfile` multi-stage: instala, builda `shared` → `web` → `api`; imagem final só com
-  `dist`, `node_modules` de produção e o build do web em `apps/api/public`. Usuário não-root.
-- Start: `migrate` → `node dist/main.js`. `GET /health` (processo) e `GET /ready` (banco ok).
+  `dist`, `drizzle`, `node_modules` de produção e o build do web em `public/` (ao lado de
+  `dist/`). Usuário não-root.
+- Start: `node dist/main.js` (aplica as migrations e sobe o servidor). `GET /health` (processo) e `GET /ready` (banco ok).
 - `docker-compose.yml`: `db` (postgres:16-alpine, volume, healthcheck) e `app` (build local,
   `CATALOG_PROVIDER=artic`, roda migrations e seed na primeira subida). `docker compose up`
   → app em `http://localhost:3000`.
@@ -51,8 +52,9 @@ imagem Docker. Sem segredos reais: chaves de teste geradas no job.
 
 - Dia 1: esqueleto no ar (health + página React + Postgres gerenciado) para validar build,
   WebSocket e cookies no provedor.
-- Candidatos: Render, Railway ou Fly.io (serviço web com WebSocket) + Postgres gerenciado.
-  Escolha registrada no README com o motivo.
+- Provedor escolhido: **Northflank** (plano Sandbox: gratuito, sem cartão, serviços sempre
+  ligados, 1 banco incluído). Motivo e passo a passo no README.
+- Migrations rodam no início do processo da API (`src/main.ts`), não em um job separado.
 - Pós-deploy: `seed` executado uma vez; smoke test manual (login dos 3 usuários, lance,
   auditoria) registrado no PR.
 

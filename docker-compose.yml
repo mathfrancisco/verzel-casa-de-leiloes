@@ -15,5 +15,18 @@ services:
       timeout: 3s
       retries: 15
 
+  app:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://leilao:leilao@db:5432/leilao
+      # Segredo só para uso local. Em produção, defina JWT_SECRET no provedor.
+      JWT_SECRET: ${JWT_SECRET:-segredo-local-somente-para-desenvolvimento}
+      NODE_ENV: production
+    ports:
+      - '3000:3000'
+
 volumes:
   db-data:

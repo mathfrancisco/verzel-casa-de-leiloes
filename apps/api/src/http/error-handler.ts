@@ -2,6 +2,7 @@ import { ERROR_MESSAGES, ERROR_STATUS, type ApiErrorBody, type ErrorCode } from 
 import type { FastifyInstance, FastifyReply } from 'fastify';
 import { ZodError } from 'zod';
 import { DomainError } from '../domain/errors';
+import { isSpaRoute } from './spa';
 
 function send(
   reply: FastifyReply,
@@ -15,8 +16,13 @@ function send(
 }
 
 /** Converte qualquer erro no formato `{ error: { code, message, details } }` da SP-00. */
-export function registerErrorHandling(app: FastifyInstance): void {
-  app.setNotFoundHandler((_request, reply) => send(reply, 'NOT_FOUND'));
+export function registerErrorHandling(app: FastifyInstance, { serveSpa = false } = {}): void {
+  app.setNotFoundHandler((request, reply) => {
+    if (serveSpa && isSpaRoute(request)) {
+      return reply.header('cache-control', 'no-cache').sendFile('index.html');
+    }
+    return send(reply, 'NOT_FOUND');
+  });
 
   app.setErrorHandler((error, request, reply) => {
     if (error instanceof DomainError) return send(reply, error.code, error.details, error.message);
