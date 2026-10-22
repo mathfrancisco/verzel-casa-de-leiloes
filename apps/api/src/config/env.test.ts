@@ -8,7 +8,12 @@ const valid = {
 
 describe('loadEnv', () => {
   it('aceita o mínimo obrigatório e aplica padrões', () => {
-    expect(loadEnv(valid)).toEqual({ ...valid, PORT: 3000, NODE_ENV: 'development' });
+    expect(loadEnv(valid)).toEqual({
+      ...valid,
+      PORT: 3000,
+      NODE_ENV: 'development',
+      CATALOG_PROVIDER: 'artic',
+    });
   });
 
   it('converte PORT e aceita NODE_ENV conhecido', () => {
@@ -27,6 +32,7 @@ describe('loadEnv', () => {
     [{ ...valid, JWT_SECRET: 'curto' }, 'JWT_SECRET'],
     [{ ...valid, PORT: 'abc' }, 'PORT'],
     [{ ...valid, NODE_ENV: 'staging' }, 'NODE_ENV'],
+    [{ ...valid, CATALOG_PROVIDER: 'met' }, 'CATALOG_PROVIDER'],
   ])('rejeita valor inválido de %o', (source, name) => {
     expect(() => loadEnv(source)).toThrow(name);
   });

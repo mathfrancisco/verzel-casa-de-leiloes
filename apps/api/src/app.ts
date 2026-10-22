@@ -5,7 +5,9 @@ import rateLimit from '@fastify/rate-limit';
 import Fastify, { type FastifyServerOptions } from 'fastify';
 import { DomainError } from './domain/errors';
 import type { Db, Sql } from './infra/db/client';
+import type { CatalogProvider } from './ports/catalog';
 import { authRoutes } from './http/auth.routes';
+import { catalogRoutes } from './http/catalog.routes';
 import { registerErrorHandling } from './http/error-handler';
 import { healthRoutes } from './http/health';
 import { readyRoutes } from './http/ready';
@@ -15,6 +17,7 @@ import { attachRealtime } from './infra/realtime/socket';
 export interface AppDeps {
   db: Db;
   sql: Sql;
+  catalog: CatalogProvider;
   config: {
     jwtSecret: string;
     secureCookies: boolean;
@@ -28,7 +31,7 @@ export interface AppDeps {
 
 const MUTATING_METHODS = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);
 
-export function buildApp({ db, sql, config, logger = false }: AppDeps) {
+export function buildApp({ db, sql, catalog, config, logger = false }: AppDeps) {
   const app = Fastify({ logger });
 
   registerErrorHandling(app, { serveSpa: Boolean(config.webDistDir) });
@@ -65,6 +68,7 @@ export function buildApp({ db, sql, config, logger = false }: AppDeps) {
       secureCookies: config.secureCookies,
       rateLimitPerMinute: config.authRateLimitPerMinute ?? 10,
     });
+    catalogRoutes(api, catalog);
   });
 
   return app;
