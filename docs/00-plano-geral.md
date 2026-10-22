@@ -1,7 +1,18 @@
 # Plano de execução — Casa de Leilões (Teste Elite Dev Verzel)
 
-> Status: **planejamento**. Nada abaixo está implementado ainda. Este documento é o contrato
-> de trabalho para os próximos dias; a verificação item a item fica em [`CHECKLIST.md`](CHECKLIST.md).
+> Status: **planejamento**. Nada abaixo está implementado ainda. Este documento é a visão geral;
+> os detalhes normativos estão nos documentos abaixo e a verificação item a item fica em
+> [`CHECKLIST.md`](CHECKLIST.md).
+
+| Doc | Conteúdo |
+|---|---|
+| [01 — Requisitos](01-requisitos.md) | RF (funcionais), RNF (não funcionais), matriz de rastreabilidade |
+| [02 — Regras de negócio](02-regras-de-negocio.md) | RN numeradas, com exemplos e casos de borda |
+| [03 — Arquitetura](03-arquitetura.md) | Diagramas, fluxos, decisões de stack e por quê |
+| [04 — Modelagem de dados](04-modelagem-de-dados.md) | Diagrama ER, tabelas, restrições, índices, invariantes |
+| [`/ai`](../ai/README.md) | Specs, cards e fluxo de desenvolvimento assistido por IA |
+
+Em caso de conflito, vale: **02 Regras de negócio > specs (`ai/specs`) > este plano**.
 
 - **Recebido em:** 22/10/2026 · **Prazo (7 dias corridos):** 29/10/2026
 - **Entrega:** repositório público no GitHub + **deploy obrigatório** + formulário
@@ -81,24 +92,22 @@ apps/api/src/
 
 ---
 
-## 3. Modelo de dados (rascunho)
+## 3. Modelo de dados (resumo)
 
-Dinheiro sempre em **centavos (`BIGINT`)**; tempo sempre do relógio do banco (`now()`), em UTC.
+Detalhes normativos, diagrama ER, restrições e invariantes em
+[`04-modelagem-de-dados.md`](04-modelagem-de-dados.md). Dinheiro sempre em **centavos
+(`BIGINT`)**; tempo sempre do relógio do banco (`now()`), em UTC.
 
-| Tabela | Campos principais | Observações |
-|---|---|---|
-| `users` | id (uuid), name, email (único), password_hash, role (`AUCTIONEER`/`BIDDER`) | |
-| `wallets` | user_id (PK), balance_cents (`CHECK >= 0`) | Linha travada com `FOR UPDATE` |
-| `wallet_entries` | id, user_id, type (`DEPOSIT`, `SETTLEMENT_DEBIT`, `SETTLEMENT_CREDIT`, `REFUND_DEBIT`, `REFUND_CREDIT`), amount_cents (com sinal), lot_id, created_at | Livro-razão; `balance` = soma das entradas (testado) |
-| `catalog_items` | id, source (`artic`), external_id, snapshot (jsonb), fetched_at | Cópia do item no momento da criação do lote |
-| `images` | id, content_type, bytes (bytea), sha256 | Imagem baixada na criação do lote — não dependemos do CDN externo |
-| `lots` | id, seller_id, catalog_item_id, image_id, title, description, category, starting_price_cents, min_increment_cents, starts_at, ends_at, original_ends_at, state (`ACTIVE`/`CANCELLED`/`SETTLED`/`CLOSED_NO_WINNER`), current_price_cents, leader_id, bid_count, head_hash, genesis_hash, settled_at | A **fase** (agendado/ao vivo/encerrado) é derivada de `now()` vs. `starts_at`/`ends_at` |
-| `bids` | id, lot_id, seq, bidder_id, bidder_pseudonym, amount_cents, created_at, prev_hash, hash, signature | `UNIQUE(lot_id, seq)`; trigger bloqueia `UPDATE`/`DELETE` (defesa extra, não a detecção) |
-| `lot_events` | id, lot_id, seq, type (`CANCELLED`, `CLOSED`), payload, prev_hash, hash, signature | Entram na mesma cadeia dos lances (mesmo `seq`) |
-| `receipts` | id, lot_id (único), public_code (128 bits aleatórios, url-safe), winner_pseudonym, amount_cents, final_hash, signature, issued_at, revoked_at | Link público `/comprovante/:public_code` |
-
-Índices relevantes: `lots(state, ends_at)` para o worker; `lots(leader_id) WHERE state='ACTIVE'`
-para o saldo comprometido; `bids(lot_id, seq)`; busca textual com `pg_trgm` em `lots(title)`.
+| Tabela | Papel |
+|---|---|
+| `users` | Usuários com papel `AUCTIONEER` ou `BIDDER` |
+| `wallets` | Saldo total por usuário (cache travado com `FOR UPDATE`, `CHECK >= 0`) |
+| `wallet_entries` | Livro-razão: depósitos, liquidações e estornos |
+| `images` | Imagem do item baixada na criação do lote (não dependemos do CDN externo) |
+| `lots` | Termos do lote + snapshot do item (`jsonb`) + estado atual (preço, líder, cabeça da cadeia) |
+| `lot_entries` | Cadeia append-only de lances e eventos (`BID`, `CLOSED`, `CANCELLED`), `UNIQUE(lot_id, seq)` |
+| `receipts` | Comprovantes públicos por código não enumerável |
+| `idempotency_keys` | Respostas de lances e depósitos repetidos |
 
 ---
 
@@ -119,8 +128,8 @@ BEGIN
   SELECT * FROM wallets WHERE user_id = $u FOR UPDATE;   -- serializa lances do mesmo licitante
   comprometido = SUM(current_price) dos lotes ACTIVE onde leader_id = usuário
   valor > balance - comprometido → INSUFFICIENT_FUNDS (resposta inclui o disponível)
-  INSERT bid (seq = bid_count + 1, prev_hash = head_hash, hash, signature)
-  UPDATE lots SET current_price, leader_id, bid_count, head_hash,
+  INSERT lot_entries (type = BID, seq = chain_length + 1, prev_hash = head_hash, hash, signature)
+  UPDATE lots SET current_price, leader_id, bid_count, chain_length, head_hash,
                   ends_at = GREATEST(ends_at, now() + 2 min) se ends_at - now() <= 2 min
 COMMIT
 → emite eventos realtime (só depois do commit)

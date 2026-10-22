@@ -9,12 +9,18 @@ de um lote e verificar que ele não foi adulterado.
 > de instalação, execução, deploy e comportamentos conhecidos conforme as funcionalidades forem
 > implementadas e testadas.
 
-## Documentos
+## Documentação
 
-- [Plano de execução](docs/PLANO.md) — stack, arquitetura, modelo de dados, regras de lance,
-  técnica anti-adulteração, resiliência à API externa, testes e cronograma.
-- [Checklist de requisitos](docs/CHECKLIST.md) — cada requisito do PDF ligado ao plano e à evidência.
-- [Uso de IA](docs/USO-DE-IA.md) — onde e como a IA foi usada.
+| Documento | Conteúdo |
+|---|---|
+| [00 — Plano geral](docs/00-plano-geral.md) | Entendimento do desafio, stack, cronograma, riscos |
+| [01 — Requisitos](docs/01-requisitos.md) | Requisitos funcionais e não funcionais, matriz de rastreabilidade |
+| [02 — Regras de negócio](docs/02-regras-de-negocio.md) | Regras numeradas (normativo) |
+| [03 — Arquitetura](docs/03-arquitetura.md) | Diagramas, fluxos, técnica anti-adulteração, decisões de stack |
+| [04 — Modelagem de dados](docs/04-modelagem-de-dados.md) | Diagrama ER, restrições, índices, invariantes |
+| [Checklist](docs/CHECKLIST.md) | Cada item do PDF → requisito → card → evidência |
+| [Uso de IA](docs/USO-DE-IA.md) | Onde e como a IA foi usada |
+| [Desenvolvimento com IA](ai/README.md) | Specs, cards, prompts e `AGENTS.md` |
 
 ## Stack prevista
 
