@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Status | TODO |
+| Status | REVIEW |
 | Épico / dia | E1 Fundação · Dia 1 |
 | Depende de | LC-001 |
 | Requisitos | RNF-02, RNF-13 |
@@ -28,9 +28,9 @@ Banco local com um comando e schema versionado das tabelas de usuários e cartei
 
 ## Critérios de aceite
 
-- [ ] `docker compose up -d db && pnpm db:migrate` cria o schema do zero
-- [ ] `CHECK (balance_cents >= 0)` e `CHECK (amount_cents <> 0)` existem e são testados
-- [ ] API não sobe sem `DATABASE_URL`/`JWT_SECRET` e explica o motivo
+- [x] `docker compose up -d db && pnpm db:migrate` cria o schema do zero
+- [x] `CHECK (balance_cents >= 0)` e `CHECK (amount_cents <> 0)` existem e são testados
+- [x] API não sobe sem `DATABASE_URL`/`JWT_SECRET` e explica o motivo
 
 ## Testes obrigatórios
 
@@ -40,7 +40,30 @@ Banco local com um comando e schema versionado das tabelas de usuários e cartei
 
 ## Definição de pronto
 
-- [ ] `pnpm lint && pnpm typecheck && pnpm test` verdes, saída real no PR
-- [ ] Todos os critérios de aceite com evidência
-- [ ] Status atualizado aqui e em `ai/cards/README.md`
-- [ ] `docs/CHECKLIST.md` (só com evidência) e `docs/USO-DE-IA.md` atualizados
+- [x] `pnpm lint && pnpm typecheck && pnpm test` verdes, saída real no PR
+- [x] Todos os critérios de aceite com evidência
+- [x] Status atualizado aqui e em `ai/cards/README.md`
+- [x] `docs/CHECKLIST.md` (só com evidência) e `docs/USO-DE-IA.md` atualizados
+
+## Evidências (22/10/2026)
+
+| Verificação | Resultado |
+|---|---|
+| `docker compose config` | válido |
+| `docker compose up -d db` | `db Up (healthy)` |
+| `pnpm db:migrate` em banco vazio, 2× | "Migrations aplicadas." nas duas; tabelas `idempotency_keys`, `users`, `wallet_entries`, `wallets`; 2 migrations registradas |
+| `pnpm test` (Postgres do compose) | shared 29 ✓ · web 3 ✓ · api 22 ✓ (5 arquivos: env, startup, ready, schema, health) |
+| `pnpm lint` · `pnpm typecheck` · `pnpm build` | verdes |
+| `pnpm dev` com `.env` → `curl localhost:3000/ready` | `{"status":"ready"}` |
+| API sem `DATABASE_URL`/`JWT_SECRET` (teste `startup`) | sai com código 1 e lista as duas variáveis |
+| Bancos descartáveis dos testes | 0 restantes após a suíte |
+
+Decisões:
+- Driver `postgres` (postgres.js) com Drizzle; migrations SQL versionadas em `apps/api/drizzle/`
+  (`0000_extensions` cria `citext`, `0001_schema_inicial` gerada pelo `drizzle-kit`).
+- `loadEnv` valida só `DATABASE_URL`, `JWT_SECRET`, `PORT` e `NODE_ENV`; as demais variáveis da
+  SP-10 entram com os cards que as usam (YAGNI).
+- IDs `uuid` sem default no banco: a aplicação gera (LC-003).
+- `wallet_entries.lot_id` ainda sem FK; ela entra com a tabela `lots` (LC-006).
+- Testes de integração usam `DATABASE_URL` (padrão `postgres://leilao:leilao@localhost:5432/leilao`)
+  para criar um banco descartável por arquivo; o usuário precisa de permissão `CREATEDB`.

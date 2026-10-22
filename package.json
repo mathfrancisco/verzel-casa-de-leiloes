@@ -12,7 +12,9 @@
     "lint": "eslint . && prettier --check .",
     "format": "prettier --write .",
     "typecheck": "pnpm -r typecheck",
-    "test": "pnpm -r test"
+    "test": "pnpm -r test",
+    "db:generate": "pnpm --filter @leilao/api db:generate",
+    "db:migrate": "pnpm --filter @leilao/api db:migrate"
   },
   "devDependencies": {
     "@eslint/js": "9.29.0",
