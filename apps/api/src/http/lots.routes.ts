@@ -1,6 +1,11 @@
-import { createLotSchema, type LotDetail } from '@leilao/shared';
+import {
+  createLotSchema,
+  lotListQuerySchema,
+  type LotDetail,
+  type LotListResponse,
+} from '@leilao/shared';
 import type { FastifyInstance } from 'fastify';
-import { createLot, getImage, getLotDetail, type LotDeps } from '../application/lots';
+import { createLot, getImage, getLotDetail, listLots, type LotDeps } from '../application/lots';
 import { DomainError } from '../domain/errors';
 import { optionalUser, requireRole } from './auth-guard';
 
@@ -13,6 +18,12 @@ export function lotRoutes(app: FastifyInstance, deps: LotDeps): void {
     );
     return reply.code(201).send(lot);
   });
+
+  app.get(
+    '/api/lots',
+    async (request): Promise<LotListResponse> =>
+      listLots(deps.db, lotListQuerySchema.parse(request.query)),
+  );
 
   app.get<{ Params: { id: string } }>('/api/lots/:id', async (request): Promise<LotDetail> => {
     const lot = await getLotDetail(deps, request.params.id, await optionalUser(request));

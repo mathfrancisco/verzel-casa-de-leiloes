@@ -119,3 +119,23 @@ export interface LotDetail extends LotSummary {
   };
   receiptCode?: string;
 }
+
+/** Abas da vitrine (RN-14). `closed` inclui encerrando, arrematado e sem vencedor. */
+export const SHOWCASE_TABS = ['live', 'scheduled', 'closed'] as const;
+export type ShowcaseTab = (typeof SHOWCASE_TABS)[number];
+
+export const lotListQuerySchema = z.object({
+  phase: z.enum(SHOWCASE_TABS, { errorMap: () => ({ message: 'Aba inválida.' }) }),
+  cursor: z.string().max(200).optional(),
+  limit: z.coerce.number().int().min(1).max(24).default(12),
+});
+
+export type LotListQuery = z.infer<typeof lotListQuerySchema>;
+
+export interface LotListResponse {
+  items: LotSummary[];
+  nextCursor: string | null;
+  /** Quantidade de lotes em cada aba, para os rótulos das abas. */
+  counts: Record<ShowcaseTab, number>;
+  serverTime: string;
+}

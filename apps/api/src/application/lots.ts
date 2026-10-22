@@ -3,9 +3,13 @@ import {
   type CatalogItem,
   type CreateLotInput,
   type LotDetail,
+  type LotListQuery,
+  type LotListResponse,
   type Role,
+  type ShowcaseTab,
 } from '@leilao/shared';
-import { and, desc, eq, sql } from 'drizzle-orm';
+import { and, asc, desc, eq, sql, type SQL } from 'drizzle-orm';
+import { z } from 'zod';
 import { v7 as uuidv7 } from 'uuid';
 import { genesisHash, sha256Hex } from '../domain/auditChain';
 import { DomainError } from '../domain/errors';
@@ -205,4 +209,76 @@ async function viewerView(
         : 1 + best.filter((b) => Number(b.best) > myBestBidCents).length,
     isSeller: lot.sellerId === viewer.id,
   };
+}
+
+// ---- Vitrine (RN-03, RN-14) ----
+
+/** Filtro de cada aba; `now()` é o horário da transação, igual em todas as consultas. */
+const TAB_FILTER: Record<ShowcaseTab, SQL> = {
+  live: sql`${lots.state} = 'ACTIVE' AND ${lots.startsAt} <= now() AND ${lots.endsAt} > now()`,
+  scheduled: sql`${lots.state} = 'ACTIVE' AND ${lots.startsAt} > now()`,
+  closed: sql`((${lots.state} = 'ACTIVE' AND ${lots.endsAt} <= now()) OR ${lots.state} IN ('SETTLED', 'CLOSED_NO_WINNER'))`,
+};
+
+/** Ordem padrão: ao vivo termina antes; agendado começa antes; encerrado mais recente. */
+const TAB_ORDER = {
+  live: { key: 'endsAt', direction: 'asc' },
+  scheduled: { key: 'startsAt', direction: 'asc' },
+  closed: { key: 'endsAt', direction: 'desc' },
+} as const;
+
+const cursorSchema = z.object({ v: z.string().datetime(), id: z.string().regex(UUID) });
+
+const encodeCursor = (value: Date, id: string) =>
+  Buffer.from(JSON.stringify({ v: value.toISOString(), id })).toString('base64url');
+
+function decodeCursor(cursor: string) {
+  try {
+    return cursorSchema.parse(JSON.parse(Buffer.from(cursor, 'base64url').toString('utf8')));
+  } catch {
+    throw new DomainError('VALIDATION_ERROR', {
+      issues: [{ path: ['cursor'], message: 'Cursor inválido.' }],
+    });
+  }
+}
+
+export async function listLots(db: Db, query: LotListQuery): Promise<LotListResponse> {
+  const order = TAB_ORDER[query.phase];
+  const column = lots[order.key];
+  const cursor = query.cursor ? decodeCursor(query.cursor) : undefined;
+  // Paginação por chave (coluna de ordenação, id): estável mesmo com lotes novos chegando.
+  const after = cursor
+    ? order.direction === 'asc'
+      ? sql`(${column}, ${lots.id}) > (${cursor.v}::timestamptz, ${cursor.id}::uuid)`
+      : sql`(${column}, ${lots.id}) < (${cursor.v}::timestamptz, ${cursor.id}::uuid)`
+    : undefined;
+  const by = order.direction === 'asc' ? asc : desc;
+
+  return db.transaction(async (tx) => {
+    const [counts] = await tx
+      .select({
+        now: sql<string>`now()`,
+        live: sql<number>`count(*) FILTER (WHERE ${TAB_FILTER.live})::int`,
+        scheduled: sql<number>`count(*) FILTER (WHERE ${TAB_FILTER.scheduled})::int`,
+        closed: sql<number>`count(*) FILTER (WHERE ${TAB_FILTER.closed})::int`,
+      })
+      .from(lots);
+    const now = new Date(counts!.now);
+
+    const rows = await tx
+      .select()
+      .from(lots)
+      .where(and(TAB_FILTER[query.phase], after))
+      .orderBy(by(column), by(lots.id))
+      .limit(query.limit + 1);
+
+    const page = rows.slice(0, query.limit);
+    const last = page.at(-1);
+    return {
+      items: page.map((lot) => summary(lot, now)),
+      nextCursor: rows.length > query.limit && last ? encodeCursor(last[order.key], last.id) : null,
+      counts: { live: counts!.live, scheduled: counts!.scheduled, closed: counts!.closed },
+      serverTime: now.toISOString(),
+    };
+  });
 }
