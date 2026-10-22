@@ -2,7 +2,9 @@
 
 Vale para todas as specs.
 
-- Base: `/api`. JSON UTF-8. Rotas mutáveis exigem `Content-Type: application/json`.
+- Base: `/api`. JSON UTF-8. Rotas mutáveis (`POST/PUT/PATCH/DELETE`) exigem
+  `Content-Type: application/json`, mesmo sem corpo (enviar `{}`); caso contrário → 400
+  `VALIDATION_ERROR`.
 - Autenticação: cookie `session` (httpOnly, `SameSite=Lax`, `Secure` em produção) com JWT
   `{ sub: userId, role }`, validade 7 dias.
 - Dinheiro: inteiros em centavos, campos com sufixo `Cents`. Datas: ISO-8601 UTC com ms.
