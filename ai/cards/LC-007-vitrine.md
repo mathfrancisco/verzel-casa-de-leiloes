@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Status | TODO |
+| Status | REVIEW |
 | Épico / dia | E2 Catálogo e lotes · Dia 2 |
 | Depende de | LC-006 |
 | Requisitos | RF-04 |
@@ -26,9 +26,9 @@ Qualquer pessoa vê os lotes separados por fase, sem os cancelados.
 
 ## Critérios de aceite
 
-- [ ] Cada lote aparece só na aba da sua fase; cancelado nunca aparece
-- [ ] Lote muda de aba sozinho quando a fase muda (refetch ao zerar a contagem)
-- [ ] Vitrine funciona com `CATALOG_PROVIDER` em modo falha
+- [x] Cada lote aparece só na aba da sua fase; cancelado nunca aparece
+- [x] Lote muda de aba sozinho quando a fase muda (refetch ao zerar a contagem)
+- [x] Vitrine funciona com `CATALOG_PROVIDER` em modo falha
 
 ## Testes obrigatórios
 
@@ -38,7 +38,25 @@ Qualquer pessoa vê os lotes separados por fase, sem os cancelados.
 
 ## Definição de pronto
 
-- [ ] `pnpm lint && pnpm typecheck && pnpm test` verdes, saída real no PR
-- [ ] Todos os critérios de aceite com evidência
-- [ ] Status atualizado aqui e em `ai/cards/README.md`
-- [ ] `docs/CHECKLIST.md` (só com evidência) e `docs/USO-DE-IA.md` atualizados
+- [x] `pnpm lint && pnpm typecheck && pnpm test` verdes, saída real no PR
+- [x] Todos os critérios de aceite com evidência
+- [x] Status atualizado aqui e em `ai/cards/README.md`
+- [x] `docs/CHECKLIST.md` (só com evidência) e `docs/USO-DE-IA.md` atualizados
+
+## Evidências (22/10/2026)
+
+| Verificação | Resultado |
+|---|---|
+| `pnpm test` | shared 76 ✓ · web 38 ✓ · api 140 ✓ (254) |
+| `pnpm lint` · `pnpm typecheck` · `pnpm build` | verdes |
+| CT-03-06 (API) | cada aba só com a sua fase; ordem por aba; cancelados fora das abas e da contagem; paginação por cursor nas ordens crescente e decrescente; consulta inválida → 400 |
+| CT-02-07 (vitrine) | catálogo em modo falha → vitrine 200 com todos os lotes |
+| CT-09-03 | relógio do navegador 5 min atrasado → contagem usa a hora do servidor |
+| Chromium (`pnpm dev`) | abas "Ao vivo (2) Agendados (2) Encerrados (2)"; cancelado não aparece; **sem recarregar**, após ~80 s o lote que terminou foi para Encerrados e o agendado entrou em Ao vivo ("Ao vivo (2) Agendados (1) Encerrados (3)"); 375 px sem rolagem horizontal |
+
+Decisões:
+- A resposta da vitrine traz `counts` por aba e `serverTime` (SP-03 atualizada).
+- Aba na URL em português (`/?aba=ao-vivo|agendados|encerrados`), com links e `aria-current`.
+- Ao zerar uma contagem, a vitrine invalida as consultas de lotes; também recarrega a cada 60 s.
+- Estilo com variáveis CSS em vez de Tailwind (`apps/web/AGENTS.md` atualizado).
+- A página inicial provisória com status da API e `lib/health.ts` foram removidas (sem uso).

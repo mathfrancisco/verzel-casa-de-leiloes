@@ -1,8 +1,14 @@
-/* Estilo mínimo e acessível; o tema completo (Tailwind, dark mode) entra nos cards de UI. */
+/* Estilo mínimo e acessível com tokens em variáveis CSS (base para o dark mode do LC-021). */
 :root {
+  --bg: #f7f7fb;
+  --surface: #fff;
+  --text: #1a1a2e;
+  --muted: #555;
+  --border: #ddd;
+  --accent: #3b2fb0;
   font-family: system-ui, sans-serif;
-  color: #1a1a2e;
-  background: #f7f7fb;
+  color: var(--text);
+  background: var(--bg);
 }
 body {
   margin: 0;
@@ -90,4 +96,70 @@ button:disabled {
 }
 .user-badge {
   color: #444;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+.tabs a {
+  padding: 0.4rem 0.9rem;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  text-decoration: none;
+}
+.tabs a[aria-current='page'] {
+  background: var(--accent);
+  color: #fff;
+}
+.lot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  gap: 1rem;
+}
+.lot-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.75rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.lot-card p {
+  margin: 0;
+}
+.lot-card-link {
+  color: inherit;
+  text-decoration: none;
+}
+.lot-card-link:hover h2 {
+  text-decoration: underline;
+}
+.lot-card img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 4px;
+  background: var(--border);
+}
+.lot-card h2 {
+  font-size: 1.05rem;
+  margin: 0.5rem 0 0;
+}
+.lot-category,
+.lot-bids {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.countdown time {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+.load-more {
+  display: block;
+  margin: 1.5rem auto;
 }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { createLotSchema, lotStartIssue } from './lots';
+import { createLotSchema, lotListQuerySchema, lotStartIssue } from './lots';
 
 const valid = {
   externalId: '16568',
@@ -64,5 +64,20 @@ describe('lotStartIssue', () => {
     expect(lotStartIssue(new Date('2026-10-24T17:58:59.999Z'), now)).toBe(
       'O início não pode estar no passado.',
     );
+  });
+});
+
+describe('lotListQuerySchema', () => {
+  it('exige a aba e aplica limite padrão', () => {
+    expect(lotListQuerySchema.parse({ phase: 'live' })).toEqual({ phase: 'live', limit: 12 });
+  });
+
+  it.each([
+    {},
+    { phase: 'cancelled' },
+    { phase: 'live', limit: '25' },
+    { phase: 'live', limit: '0' },
+  ])('rejeita %o', (input) => {
+    expect(lotListQuerySchema.safeParse(input).success).toBe(false);
   });
 });
