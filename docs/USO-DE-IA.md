@@ -12,6 +12,9 @@ fluxo de trabalho com IA está descrito em [`../ai/README.md`](../ai/README.md).
 - O processo é iterativo: a IA gera uma versão, eu reviso e peço ajustes, e ela gera de novo até
   ficar como eu quero.
 - Decisões de stack, escopo e prioridade são minhas.
+- Na implementação, leio as specs e os cards, conduzo o desenvolvimento card a card e peço
+  ajuda à IA na hora de desenvolver e para tirar dúvidas. A IA roda os testes e o lint sobre a
+  implementação e eu reviso o resultado antes de aprovar.
 
 ## Registro
 
@@ -21,3 +24,5 @@ fluxo de trabalho com IA está descrito em [`../ai/README.md`](../ai/README.md).
 | 22/10/2026 | Planejamento | Eu | Li o PDF do desafio e fui passando cada tópico para a IA. Criei o repositório no GitHub, revisei o plano e o checklist e defini que esta primeira etapa ficaria só no planejamento |
 | 22/10/2026 | Documentação | IA | Gerou requisitos, regras de negócio, arquitetura com diagramas, modelagem de dados, specs, cards e `AGENTS.md` |
 | 22/10/2026 | Documentação | Eu | Revisei tudo o que foi gerado. Pedi mais documentação e conduzi cada parte: arquitetura, modelagem, regras de negócio e requisitos. Avaliei as alternativas de stack (Vite × Next.js, NestJS × Express × Fastify) e mantive Fastify. Defini a organização da área de IA (specs, cards e `AGENTS.md`) para o desenvolvimento assistido |
+| 22/10/2026 | Implementação (LC-001) | Eu | Li as specs e os cards e iniciei a implementação pelo LC-001 (monorepo), pedindo ajuda e tirando dúvidas com a IA durante o desenvolvimento |
+| 22/10/2026 | Implementação (LC-001) | IA | Gerou a estrutura do monorepo (configuração de TypeScript, ESLint e Prettier, `/health` da API, página inicial, helpers de dinheiro e códigos de erro) e rodou lint, typecheck, testes e build |
