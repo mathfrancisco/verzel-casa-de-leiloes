@@ -14,7 +14,7 @@ Requisitos: Node 22, pnpm 10 e Docker.
 
 ```bash
 pnpm install
-cp .env.example .env            # preencha JWT_SECRET (mínimo de 32 caracteres)
+cp .env.example .env            # preencha JWT_SECRET e PSEUDONYM_SECRET (32+ caracteres)
 docker compose up -d db         # PostgreSQL 16 em localhost:5432 (usuário/senha/banco: leilao)
 pnpm db:migrate                 # aplica as migrations de apps/api/drizzle
 pnpm dev                        # API em :3000 e web em :5173 (o web repassa /api para a API)
@@ -33,7 +33,7 @@ docker compose up --build       # Postgres + app em http://localhost:3000
 ```
 
 A imagem única (`Dockerfile`) contém a API, o WebSocket e o build do site. As migrations rodam
-sozinhas quando a app sobe. O `JWT_SECRET` do `docker-compose.yml` serve só para uso local.
+sozinhas quando a app sobe. Os segredos do `docker-compose.yml` servem só para uso local.
 
 ## Deploy (Northflank)
 
@@ -53,8 +53,10 @@ Passo a passo (os nomes dos campos podem variar um pouco no painel):
 5. **Variáveis de ambiente** do serviço:
    - `DATABASE_URL` = URI de conexão do addon PostgreSQL (vincule o addon ao serviço ou a um
      *secret group* e use a variável de URI que ele expõe);
-   - `JWT_SECRET` = segredo aleatório de 32+ caracteres
-     (`node -e "console.log(require('crypto').randomBytes(32).toString('base64url'))"`);
+   - `JWT_SECRET` e `PSEUDONYM_SECRET` = dois segredos aleatórios diferentes, de 32+ caracteres
+     (`node -e "console.log(require('crypto').randomBytes(32).toString('base64url'))"`).
+     O `PSEUDONYM_SECRET` gera os pseudônimos públicos dos licitantes: não troque depois do
+     primeiro deploy, senão os pseudônimos novos deixam de bater com os já gravados na cadeia;
    - `NODE_ENV` = `production`.
 6. **Health check**: HTTP `GET /ready` na porta 3000.
 7. Deploy. A cada push na `main`, o Northflank refaz o build e publica.

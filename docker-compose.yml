@@ -22,8 +22,9 @@ services:
         condition: service_healthy
     environment:
       DATABASE_URL: postgres://leilao:leilao@db:5432/leilao
-      # Segredo só para uso local. Em produção, defina JWT_SECRET no provedor.
+      # Segredos só para uso local. Em produção, defina-os no provedor.
       JWT_SECRET: ${JWT_SECRET:-segredo-local-somente-para-desenvolvimento}
+      PSEUDONYM_SECRET: ${PSEUDONYM_SECRET:-pseudonimos-local-somente-para-desenvolvimento}
       NODE_ENV: production
     ports:
       - '3000:3000'

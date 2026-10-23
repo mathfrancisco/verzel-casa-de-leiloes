@@ -35,3 +35,5 @@ fluxo de trabalho com IA está descrito em [`../ai/README.md`](../ai/README.md).
 | 22/10/2026 | Implementação (LC-004) | IA | Gerou Dockerfile, CI do GitHub Actions, serviço `app` no Compose, API servindo o site, eco de WebSocket e guia de deploy no Northflank; rodou testes, build da imagem e o fluxo no navegador contra o container |
 | 22/10/2026 | Implementação (LC-005) | Eu | Pedi para seguir com o LC-005 e revisei o resultado |
 | 22/10/2026 | Implementação (LC-005) | IA | Gerou o catálogo da API do Art Institute (cache, circuit breaker, retry, timeout), o catálogo fake e as rotas de busca, com testes; rodou lint, typecheck, testes e build |
+| 22/10/2026 | Implementação (LC-006) | Eu | Pedi para seguir com o LC-006 e revisei o resultado |
+| 22/10/2026 | Implementação (LC-006) | IA | Gerou a criação de lote (snapshot do item, imagem no banco, gênese da cadeia, pseudônimos), as tabelas de lotes e da cadeia com trigger append-only e as rotas de lote e imagem, com testes; rodou lint, typecheck, testes, build e um teste com a API rodando |

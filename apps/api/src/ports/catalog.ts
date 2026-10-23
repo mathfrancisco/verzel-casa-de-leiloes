@@ -8,4 +8,11 @@ import type { CatalogItem, CatalogSearchResult } from '@leilao/shared';
 export interface CatalogProvider {
   search(query: string, page: number): Promise<CatalogSearchResult>;
   getItem(externalId: string): Promise<CatalogItem>;
+  /** Baixa a imagem do item para guardarmos no banco (RN-20). */
+  fetchImage(item: CatalogItem): Promise<CatalogImage>;
+}
+
+export interface CatalogImage {
+  bytes: Uint8Array;
+  contentType: string;
 }
