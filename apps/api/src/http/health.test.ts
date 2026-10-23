@@ -1,9 +1,15 @@
 import type { HealthResponse } from '@leilao/shared';
+import postgres from 'postgres';
 import { afterAll, describe, expect, it } from 'vitest';
 import { buildApp } from '../app';
 
-const app = buildApp({ logger: false });
-afterAll(() => app.close());
+// O cliente postgres só conecta na primeira query; o health não consulta o banco.
+const sql = postgres('postgres://unused@127.0.0.1:1/unused');
+const app = buildApp({ sql });
+afterAll(async () => {
+  await app.close();
+  await sql.end();
+});
 
 describe('health', () => {
   it.each(['/health', '/api/health'])(
