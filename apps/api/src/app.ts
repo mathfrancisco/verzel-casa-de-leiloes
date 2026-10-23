@@ -11,6 +11,7 @@ import { catalogRoutes } from './http/catalog.routes';
 import { registerErrorHandling } from './http/error-handler';
 import { healthRoutes } from './http/health';
 import { lotRoutes } from './http/lots.routes';
+import { walletRoutes } from './http/wallet.routes';
 import { readyRoutes } from './http/ready';
 import { registerSpa } from './http/spa';
 import { attachRealtime } from './infra/realtime/socket';
@@ -78,6 +79,7 @@ export function buildApp({ db, sql, catalog, config, logger = false }: AppDeps) 
     });
     catalogRoutes(api, catalog);
     lotRoutes(api, { db, catalog, pseudonymSecret: config.pseudonymSecret });
+    walletRoutes(api, { db });
   });
 
   return app;
