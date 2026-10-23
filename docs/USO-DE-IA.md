@@ -39,3 +39,5 @@ fluxo de trabalho com IA está descrito em [`../ai/README.md`](../ai/README.md).
 | 22/10/2026 | Implementação (LC-006) | IA | Gerou a criação de lote (snapshot do item, imagem no banco, gênese da cadeia, pseudônimos), as tabelas de lotes e da cadeia com trigger append-only e as rotas de lote e imagem, com testes; rodou lint, typecheck, testes, build e um teste com a API rodando |
 | 22/10/2026 | Implementação (LC-007) | Eu | Pedi para seguir com o LC-007 e revisei o resultado |
 | 22/10/2026 | Implementação (LC-007) | IA | Gerou a vitrine (API com abas, ordenação, cursor e contagens; tela com abas, cards e contagem regressiva pela hora do servidor), com testes; rodou lint, typecheck, testes, build e a vitrine no navegador |
+| 23/10/2026 | Implementação (LC-008) | Eu | Pedi para seguir com o LC-008 e revisei o resultado |
+| 23/10/2026 | Implementação (LC-008) | IA | Gerou a tela de novo lote (busca no catálogo, seleção da obra, formulário com validação em reais e datas locais, erros por campo) e o ajuste de CSP para as miniaturas, com testes; rodou lint, typecheck, testes, build e o fluxo no navegador |

@@ -15,6 +15,8 @@ export const FAKE_IMAGE: CatalogImage = {
   contentType: 'image/png',
 };
 
+const FAKE_IMAGE_URL = `data:${FAKE_IMAGE.contentType};base64,${Buffer.from(FAKE_IMAGE.bytes).toString('base64')}`;
+
 const item = (externalId: string, title: string, artist: string): CatalogItem => ({
   externalId,
   title,
@@ -23,7 +25,7 @@ const item = (externalId: string, title: string, artist: string): CatalogItem =>
   medium: 'Óleo sobre tela',
   dimensions: '50 × 60 cm',
   origin: 'França',
-  imageUrl: `https://example.invalid/iiif/${externalId}.jpg`,
+  imageUrl: FAKE_IMAGE_URL,
   sourceUrl: `https://example.invalid/obras/${externalId}`,
   suggestedCategory: 'PAINTING',
 });
