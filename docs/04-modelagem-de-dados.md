@@ -163,7 +163,8 @@ A **fase** exibida (agendado, ao vivo, encerrado) não é coluna: é derivada de
 - `CHECK (ends_at > starts_at)` e `CHECK (original_ends_at <= ends_at)` (anti-sniping só aumenta).
 - `CHECK ((bid_count = 0) = (leader_id IS NULL))` e o mesmo para `current_price_cents`.
 - `item_snapshot` (`jsonb`): artista, data, técnica, dimensões, origem, URL de referência — o que
-  a API devolveu no momento da criação. Imutável.
+  a API devolveu no momento da criação. Imutável e incluído na gênese, junto de título, descrição
+  e categoria.
 - `chain_length` = nº de elos em `lot_entries` (lances + eventos); `bid_count` = só lances.
 - `head_hash` = hash do último elo (ou `genesis_hash` se vazio).
 - `seller_pseudonym` = pseudônimo do leiloeiro (mesma regra RN-16), usado na gênese.

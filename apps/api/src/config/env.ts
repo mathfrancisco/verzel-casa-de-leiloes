@@ -7,6 +7,7 @@ const envSchema = z.object({
     .string({ required_error: 'obrigatória' })
     .regex(/^postgres(ql)?:\/\//, 'deve ser uma URL postgres://'),
   JWT_SECRET: z.string({ required_error: 'obrigatória' }).min(32, 'mínimo de 32 caracteres'),
+  PSEUDONYM_SECRET: z.string({ required_error: 'obrigatória' }).min(32, 'mínimo de 32 caracteres'),
   PORT: z.coerce.number().int().min(1).max(65535).default(3000),
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   CATALOG_PROVIDER: z.enum(['artic', 'fake']).default('artic'),

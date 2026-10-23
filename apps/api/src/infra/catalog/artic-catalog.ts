@@ -6,13 +6,15 @@ import {
 } from '@leilao/shared';
 import { z } from 'zod';
 import { DomainError } from '../../domain/errors';
-import type { CatalogProvider } from '../../ports/catalog';
+import type { CatalogImage, CatalogProvider } from '../../ports/catalog';
 import { CircuitBreaker } from './circuit-breaker';
 import { TtlCache } from './ttl-cache';
 
 // API do Art Institute of Chicago: https://api.artic.edu/docs/
 
 const API_URL = 'https://api.artic.edu/api/v1/artworks';
+const IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
+const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 const USER_AGENT =
   'verzel-casa-de-leiloes (https://github.com/mathfrancisco/verzel-casa-de-leiloes)';
 const FIELDS = [
@@ -166,11 +168,27 @@ export class ArticCatalog implements CatalogProvider {
     return item;
   }
 
+  async fetchImage(item: CatalogItem): Promise<CatalogImage> {
+    const image = await this.request(item.imageUrl, async (res) => {
+      const contentType = res.headers.get('content-type')?.split(';')[0]?.trim() ?? '';
+      if (!IMAGE_TYPES.has(contentType)) throw unavailable();
+      const bytes = new Uint8Array(await res.arrayBuffer());
+      if (bytes.byteLength === 0 || bytes.byteLength > MAX_IMAGE_BYTES) throw unavailable();
+      return { bytes, contentType };
+    });
+    if (image === null) throw notFound();
+    return image;
+  }
+
+  private getJson(url: string): Promise<unknown> {
+    return this.request(url, (res) => res.json() as Promise<unknown>);
+  }
+
   /**
    * GET com timeout, 1 retry para erro de rede/5xx/429 e circuit breaker.
    * Devolve `null` para 404 (não é falha da API).
    */
-  private async getJson(url: string): Promise<unknown> {
+  private async request<T>(url: string, read: (res: Response) => Promise<T>): Promise<T | null> {
     if (!this.breaker.canRequest()) throw unavailable();
 
     for (let attempt = 0; attempt < 2; attempt++) {
@@ -182,7 +200,7 @@ export class ArticCatalog implements CatalogProvider {
           return null;
         }
         if (res.ok) {
-          const body: unknown = await res.json();
+          const body = await read(res);
           this.breaker.recordSuccess();
           return body;
         }
