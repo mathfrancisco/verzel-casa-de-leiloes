@@ -11,7 +11,9 @@ export function registerSpa(app: FastifyInstance, webDistDir: string): void {
     setHeaders(res, filePath) {
       res.setHeader(
         'cache-control',
-        filePath.includes('/assets/') ? 'public, max-age=31536000, immutable' : 'no-cache',
+        filePath.replaceAll('\\', '/').includes('/assets/')
+          ? 'public, max-age=31536000, immutable'
+          : 'no-cache',
       );
     },
   });
