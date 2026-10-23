@@ -46,7 +46,7 @@ do README), registrada no PR do card. IDs em [`01-requisitos.md`](01-requisitos.
 | [ ] | Saldo comprometido; superado libera na hora; lance só se couber | RN-07, RN-08 | LC-009, LC-011 | |
 | [ ] | Anti-sniping: últimos 2 min → +2 min | RN-09 | LC-011 | |
 | [ ] | Liquidação: debita vencedor, credita leiloeiro, comprovante; sem lances fecha sem vencedor | RN-10, RN-11 | LC-014 | |
-| [ ] | Histórico à prova de adulteração (inclusive direto no banco), técnica explicada | RN-15, RNF-05 | LC-010, LC-015, LC-023 | |
+| [ ] | Histórico à prova de adulteração (inclusive direto no banco), técnica explicada | RN-15, RNF-05 | LC-010, LC-015, LC-023 | LC-010: verificador unitário e paridade Node/happy-dom verificados localmente; adulteração SQL e auditoria pública pendentes. |
 | [ ] | Privacidade em auditoria e comprovante | RN-16, RNF-06 | LC-015, LC-016 | |
 
 ## Opcionais

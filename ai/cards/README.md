@@ -14,7 +14,7 @@ Atualize esta tabela junto com o status no arquivo do card.
 | [LC-007](LC-007-vitrine.md) | Construir a vitrine com abas ao vivo, agendados e encerrados | 2 | LC-006 | REVIEW |
 | [LC-008](LC-008-painel-leiloeiro-criar.md) | Construir a busca no catálogo e o formulário de novo lote no painel | 2 | LC-005, LC-006 | REVIEW |
 | [LC-009](LC-009-carteira.md) | Implementar carteira com depósito simulado e saldo comprometido | 3 | LC-003 | REVIEW |
-| [LC-010](LC-010-cadeia-auditavel.md) | Implementar a cadeia de hashes assinada e o verificador compartilhado | 3 | LC-006 | TODO |
+| [LC-010](LC-010-cadeia-auditavel.md) | Implementar a cadeia de hashes assinada e o verificador compartilhado | 3 | LC-006 | REVIEW |
 | [LC-011](LC-011-motor-de-lance.md) | Implementar o motor de lance transacional com anti-sniping | 3 | LC-009, LC-010 | TODO |
 | [LC-012](LC-012-realtime.md) | Implementar o gateway Socket.IO com salas de lote e de usuário | 4 | LC-011 | TODO |
 | [LC-013](LC-013-sala-ao-vivo.md) | Construir a sala do lote ao vivo com feedback de lance | 4 | LC-012, LC-007 | TODO |
