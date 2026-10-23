@@ -1,6 +1,9 @@
+import { existsSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { buildApp } from './app';
 import { EnvError, loadEnv } from './config/env';
 import { createDb } from './infra/db/client';
+import { runMigrations } from './infra/db/migrate';
 
 let env;
 try {
@@ -13,11 +16,21 @@ try {
   throw err;
 }
 
+await runMigrations(env.DATABASE_URL);
+
+// Na imagem Docker o build do web fica em `public/`, ao lado de `dist/`. Em dev ele não existe e o
+// Vite serve o front.
+const webDistDir = fileURLToPath(new URL('../public', import.meta.url));
+
 const { db, sql } = createDb(env.DATABASE_URL);
 const app = buildApp({
   db,
   sql,
-  config: { jwtSecret: env.JWT_SECRET, secureCookies: env.NODE_ENV === 'production' },
+  config: {
+    jwtSecret: env.JWT_SECRET,
+    secureCookies: env.NODE_ENV === 'production',
+    webDistDir: existsSync(webDistDir) ? webDistDir : undefined,
+  },
   logger: true,
 });
 
