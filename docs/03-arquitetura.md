@@ -224,7 +224,8 @@ flowchart LR
 ```
 
 1. **Gênese:** `genesis_hash = SHA-256(JSON canônico dos termos)` — id do lote, pseudônimo do
-   vendedor, lance inicial, incremento, início, fim original, id do item, hash da imagem.
+   vendedor, lance inicial, incremento, início, fim original, título, descrição, categoria,
+   `item_snapshot` completo, id do item e hash da imagem.
 2. **Cada elo:** `hash = SHA-256(JSON canônico {lotId, seq, type, bidderPseudonym, amountCents,
    createdAt, prevHash})` e `signature = Ed25519(chave privada, hash)`. JSON canônico = chaves
    ordenadas, sem espaços, números inteiros, datas ISO-8601 UTC com milissegundos.
