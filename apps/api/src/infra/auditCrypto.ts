@@ -2,7 +2,11 @@ import { createHash, createPublicKey, sign, type KeyObject, verify } from 'node:
 import { bytesToBase64url, type AuditCrypto, type Signer } from '@leilao/shared';
 
 export class Ed25519Signer implements Signer {
-  constructor(private readonly privateKey: KeyObject) {}
+  constructor(private readonly privateKey: KeyObject) {
+    if (privateKey.type !== 'private' || privateKey.asymmetricKeyType !== 'ed25519') {
+      throw new TypeError('Ed25519Signer requer uma chave privada Ed25519.');
+    }
+  }
 
   async sign(message: Uint8Array): Promise<Uint8Array> {
     return new Uint8Array(sign(null, message, this.privateKey));

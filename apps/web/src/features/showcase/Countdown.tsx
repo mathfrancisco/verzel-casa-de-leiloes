@@ -10,14 +10,14 @@ interface CountdownProps {
 
 export function Countdown({ label, target, onElapsed }: CountdownProps) {
   const remaining = useRemainingMs(target);
-  const fired = useRef(false);
+  const firedForTarget = useRef<string | null>(null);
 
   useEffect(() => {
-    if (remaining === 0 && !fired.current) {
-      fired.current = true;
+    if (remaining === 0 && firedForTarget.current !== target) {
+      firedForTarget.current = target;
       onElapsed?.();
     }
-  }, [remaining, onElapsed]);
+  }, [remaining, onElapsed, target]);
 
   return (
     <p className="countdown">

@@ -17,7 +17,7 @@ LC-004, LC-020, LC-022, LC-023
 |---|---|---|
 | `DATABASE_URL` | `postgres://leilao:leilao@localhost:5432/leilao` | Postgres |
 | `JWT_SECRET` | 32+ bytes aleatórios | Sessão |
-| `AUDIT_SIGNING_PRIVATE_KEY` | base64url (gerada por `pnpm keys:generate`) | Assinatura da cadeia |
+| `AUDIT_SIGNING_PRIVATE_KEY` | PEM PKCS#8 (gerada por `pnpm keys:generate`) | Assinatura da cadeia |
 | `AUDIT_SIGNING_PUBLIC_KEY` | base64url | Exposta em `/api/audit/public-key` e no build do web |
 | `PSEUDONYM_SECRET` | 32+ bytes aleatórios | Pseudônimos |
 | `CATALOG_PROVIDER` | `artic` \| `fake` | Catálogo |
