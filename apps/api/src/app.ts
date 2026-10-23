@@ -9,6 +9,8 @@ import { authRoutes } from './http/auth.routes';
 import { registerErrorHandling } from './http/error-handler';
 import { healthRoutes } from './http/health';
 import { readyRoutes } from './http/ready';
+import { registerSpa } from './http/spa';
+import { attachRealtime } from './infra/realtime/socket';
 
 export interface AppDeps {
   db: Db;
@@ -18,6 +20,8 @@ export interface AppDeps {
     secureCookies: boolean;
     /** Tentativas de login/cadastro por IP por minuto (SP-00). */
     authRateLimitPerMinute?: number;
+    /** Pasta do build do web; quando definida, a API também serve o SPA. */
+    webDistDir?: string | undefined;
   };
   logger?: FastifyServerOptions['logger'];
 }
@@ -27,7 +31,7 @@ const MUTATING_METHODS = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);
 export function buildApp({ db, sql, config, logger = false }: AppDeps) {
   const app = Fastify({ logger });
 
-  registerErrorHandling(app);
+  registerErrorHandling(app, { serveSpa: Boolean(config.webDistDir) });
   app.register(helmet);
   app.register(cookie);
   app.register(jwt, {
@@ -36,6 +40,9 @@ export function buildApp({ db, sql, config, logger = false }: AppDeps) {
     sign: { expiresIn: '7d' },
   });
   app.register(rateLimit, { max: 300, timeWindow: '1 minute' });
+
+  attachRealtime(app);
+  if (config.webDistDir) registerSpa(app, config.webDistDir);
 
   // Defesa contra CSRF junto com SameSite=Lax: formulários de outros sites não enviam JSON.
   app.addHook('onRequest', async (request) => {

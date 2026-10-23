@@ -8,7 +8,7 @@ Atualize esta tabela junto com o status no arquivo do card.
 | [LC-001](LC-001-monorepo.md) | Criar o monorepo TypeScript com lint, testes e pacote shared | 1 | — | REVIEW |
 | [LC-002](LC-002-banco-e-docker-compose.md) | Configurar Postgres, Drizzle, migrations iniciais e Docker Compose | 1 | LC-001 | REVIEW |
 | [LC-003](LC-003-autenticacao.md) | Implementar cadastro, login, logout e autorização por papel | 1 | LC-002 | REVIEW |
-| [LC-004](LC-004-ci-docker-deploy.md) | Configurar CI, imagem Docker única e deploy do esqueleto | 1 | LC-003 | TODO |
+| [LC-004](LC-004-ci-docker-deploy.md) | Configurar CI, imagem Docker única e deploy do esqueleto | 1 | LC-003 | DOING |
 | [LC-005](LC-005-catalogo-externo.md) | Implementar o catálogo da API Art Institute com cache e circuit breaker | 2 | LC-003 | TODO |
 | [LC-006](LC-006-criar-lote.md) | Criar lote com snapshot do item, imagem e gênese da cadeia | 2 | LC-005 | TODO |
 | [LC-007](LC-007-vitrine.md) | Construir a vitrine com abas ao vivo, agendados e encerrados | 2 | LC-006 | TODO |
