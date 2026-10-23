@@ -24,7 +24,7 @@ do README), registrada no PR do card. IDs em [`01-requisitos.md`](01-requisitos.
 
 | ✓ | Item do PDF | Requisito | Card | Evidência |
 |---|---|---|---|---|
-| [ ] | Vitrine: ao vivo / agendados / encerrados, sem cancelados | RF-04 | LC-007 | |
+| [x] | Vitrine: ao vivo / agendados / encerrados, sem cancelados | RF-04 | LC-007 | Testes da API por aba + teste no Chromium com troca de aba automática (LC-007) |
 | [ ] | Painel: buscar na API e criar lote (imagem, título, atributos, início/fim, valor mínimo) | RF-02, RF-03 | LC-008 | |
 | [ ] | Painel: cancelar lote sem lances | RF-05 | LC-018 | |
 | [ ] | Painel: resultado de cada encerrado e total recebido | RF-06 | LC-017 | |
