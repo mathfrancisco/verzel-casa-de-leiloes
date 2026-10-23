@@ -8,7 +8,7 @@ RN-13, RN-14, RN-20 · **Cards:** LC-006, LC-007, LC-008, LC-017, LC-018, LC-019
 | Método | Rota | Auth | Sucesso | Erros |
 |---|---|---|---|---|
 | POST | `/api/lots` | AUCTIONEER | 201 `LotDetail` | `VALIDATION_ERROR`, `CATALOG_ITEM_NOT_FOUND`, `CATALOG_UNAVAILABLE` |
-| GET | `/api/lots` | — | 200 `{ items: LotSummary[], nextCursor }` | `VALIDATION_ERROR` |
+| GET | `/api/lots` | — | 200 `{ items: LotSummary[], nextCursor, counts, serverTime }` | `VALIDATION_ERROR` |
 | GET | `/api/lots/:id` | opcional | 200 `LotDetail` | `LOT_NOT_FOUND` |
 | POST | `/api/lots/:id/cancel` | AUCTIONEER dono | 200 `LotDetail` | `FORBIDDEN`, `LOT_NOT_FOUND`, `LOT_NOT_CANCELLABLE` |
 | GET | `/api/auctioneer/lots` | AUCTIONEER | 200 `{ items: AuctioneerLot[], totalReceivedCents }` | — |
@@ -39,6 +39,10 @@ Validações da RN-02. O servidor busca o item (`getItem`) e a imagem (`fetchIma
 `sort=ending_soon|price_desc|price_asc|newest`, `cursor`, `limit` (≤ 24). Padrões de ordenação:
 ao vivo → `ending_soon`; agendados → início mais próximo; encerrados → mais recentes.
 `CANCELLED` nunca aparece. `closed` inclui `CLOSING`, `SETTLED`, `UNSOLD`.
+
+Implementado no LC-007: `phase`, `cursor` (opaco, paginação por chave `(coluna de ordenação, id)`)
+e `limit` (padrão 12). `counts = { live, scheduled, closed }` traz o total de cada aba para os
+rótulos; `nextCursor` é `null` na última página. Filtros e `sort` entram no LC-019.
 
 ### Tipos
 

@@ -3,15 +3,15 @@ import { Layout } from './components/Layout';
 import { RequireRole } from './components/RequireRole';
 import { LoginPage } from './features/auth/LoginPage';
 import { RegisterPage } from './features/auth/RegisterPage';
+import { ShowcasePage } from './features/showcase/ShowcasePage';
 import { ComingSoonPage } from './routes/ComingSoonPage';
-import { HomePage } from './routes/HomePage';
 import { NotFoundPage } from './routes/NotFoundPage';
 
 export function App() {
   return (
     <Routes>
       <Route element={<Layout />}>
-        <Route index element={<HomePage />} />
+        <Route index element={<ShowcasePage />} />
         <Route path="entrar" element={<LoginPage />} />
         <Route path="cadastro" element={<RegisterPage />} />
         <Route

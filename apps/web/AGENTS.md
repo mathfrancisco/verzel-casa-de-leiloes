@@ -8,11 +8,14 @@ Complementa o `AGENTS.md` da raiz. Telas e rotas em `ai/specs/SP-09-front-end.md
   dado que vem da API. Eventos do Socket.IO atualizam o cache (`setQueryData`) ou invalidam queries.
 - **Contrato:** tipos e schemas vêm de `packages/shared`; não redefinir tipos da API no front.
 - **Erros de lance:** mapear `error.code` → mensagem em `src/lib/errorMessages.ts` (uma fonte só).
-- **Dinheiro:** entrada e exibição via helpers de `src/lib/money.ts` (centavos ↔ `R$ 1.234,56`);
-  nunca `parseFloat` em valor monetário.
-- **Tempo:** contagem regressiva usa o offset calculado de `serverTime`, não `Date.now()` cru.
+- **Dinheiro:** entrada e exibição via `formatBRL`/`parseBRL` de `packages/shared` (centavos ↔
+  `R$ 1.234,56`); nunca `parseFloat` em valor monetário.
+- **Tempo:** contagem regressiva usa `src/lib/serverClock.ts` (offset calculado de `serverTime`),
+  não `Date.now()` cru.
 - **Autorização:** esconder botões por papel é só UX; o servidor decide.
-- **Estilo:** Tailwind; tema escuro por classe `dark` no `<html>`; cores via tokens do tema.
+- **Estilo:** CSS simples em `src/styles.css` com tokens em variáveis CSS (`--bg`, `--text`,
+  `--accent`…); o tema escuro (LC-021) redefine essas variáveis. Sem Tailwind: o CSS do projeto é
+  pequeno e as variáveis já resolvem o dark mode.
 
 ## Acessibilidade (obrigatório)
 
