@@ -1,4 +1,6 @@
 export * from './auth';
+export * from './auditVerify';
+export * from './browserAuditCrypto';
 export * from './canonicalJson';
 export * from './catalog';
 export * from './errors';

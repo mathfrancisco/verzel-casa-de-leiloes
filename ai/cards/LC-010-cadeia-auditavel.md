@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Status | TODO |
+| Status | REVIEW |
 | Épico / dia | E3 Lances e carteira · Dia 3 |
 | Depende de | LC-006 |
 | Requisitos | RNF-05 |
@@ -27,8 +27,8 @@ Funções puras que criam e verificam elos, idênticas no servidor e no navegado
 
 ## Critérios de aceite
 
-- [ ] Cadeia válida → `INTACT`; cada tipo de adulteração em memória → `TAMPERED` no check certo
-- [ ] Mesmo resultado no Node e no ambiente de navegador (Vitest `happy-dom`/`jsdom` com WebCrypto)
+- [x] Cadeia válida → `INTACT`; cada tipo de adulteração em memória → `TAMPERED` no check certo
+- [x] Mesmo resultado no Node e no ambiente de navegador (Vitest `happy-dom` com WebCrypto e fallback `@noble/ed25519`)
 
 ## Testes obrigatórios
 
@@ -37,7 +37,13 @@ Funções puras que criam e verificam elos, idênticas no servidor e no navegado
 
 ## Definição de pronto
 
-- [ ] `pnpm lint && pnpm typecheck && pnpm test` verdes, saída real no PR
-- [ ] Todos os critérios de aceite com evidência
-- [ ] Status atualizado aqui e em `ai/cards/README.md`
-- [ ] `docs/CHECKLIST.md` (só com evidência) e `docs/USO-DE-IA.md` atualizados
+- [x] `pnpm lint && pnpm typecheck && pnpm test` verdes localmente
+- [x] Todos os critérios de aceite com evidência local
+- [x] Status atualizado aqui e em `ai/cards/README.md`
+- [x] `docs/CHECKLIST.md` (só com evidência) e `docs/USO-DE-IA.md` atualizados
+
+## Evidências
+
+- Local: `pnpm lint` concluiu com `All matched files use Prettier code style!`; `pnpm typecheck` concluiu nos três pacotes; `pnpm test` concluiu 325 testes (103 shared, 166 API e 56 web), sem skips, usando o banco descartável `127.0.0.1:55439` e `FakeCatalog`; `pnpm build` concluiu `tsup` e Vite.
+- Revisão técnica assistida: os quatro achados sobre recibo, revogação, transições terminais e paridade do navegador foram corrigidos e a re-revisão não encontrou pendências.
+- Pendente: publicar a PR e obter a CI da PR; por isso o status permanece `REVIEW`.

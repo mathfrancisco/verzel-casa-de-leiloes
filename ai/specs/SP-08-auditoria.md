@@ -31,7 +31,16 @@ lexicográfica, sem espaços, strings UTF-8, inteiros sem notação científica,
 ```
 
 `hash = hex(SHA-256(canonical(elo)))`; `signature = base64url(Ed25519.sign(privateKey, bytes(hash)))`.
-Em `CLOSED`/`CANCELLED`, `amountCents` e `bidderPseudonym` são `null`.
+Aqui `bytes(hash)` são os bytes UTF-8 da representação hexadecimal minúscula, nunca o digest
+binário. Em `CLOSED`/`CANCELLED`, `amountCents` e `bidderPseudonym` são `null`.
+
+**Recibo:** `signature = base64url(Ed25519.sign(privateKey, bytes(canonical({ lotId, finalHash,
+amountCents, winnerPseudonym, issuedAt }))))`, com bytes UTF-8. O recibo aponta ao
+elo `CLOSED` de liquidação; um `CANCELLED` posterior preserva esse elo e o recibo, com `revokedAt`.
+
+Para reexecução das regras, um `BID` sem extensão usa `payload: {}`; quando há anti-sniping,
+usa exatamente `{ "endsAtAfter": "<ISO-8601 UTC com milissegundos>" }`. Um `CLOSED` liquidado
+usa `{ "winnerPseudonym": "…", "amountCents": 123 }`; sem lances, `{ "result": "UNSOLD" }`.
 
 **Pseudônimo:** `prefix + " " + base32(HMAC-SHA256(PSEUDONYM_SECRET, userId + ":" + lotId))[0..6]`,
 com `prefix` = `Licitante` ou `Leiloeiro`.
@@ -61,8 +70,10 @@ Função pura `verifyChain(report, publicKey, crypto)` usada no servidor (Node `
 navegador (WebCrypto / `@noble/ed25519`). Ordem das checagens = tabela de
 `docs/03-arquitetura.md` §5. Retorna o `verdict`.
 
-`RULES` reexecuta sobre o histórico: cada `BID` dentro de `[startsAt, endsAt vigente]`,
+`RULES` reexecuta sobre o histórico: cada `BID` dentro de `[startsAt, endsAt vigente)`,
 primeiro ≥ inicial, demais ≥ anterior + incremento, sem dois `BID` seguidos do mesmo pseudônimo.
+Também exige ordem temporal e transições: não aceita `BID` após evento terminal, nem terminais
+repetidos; somente `CLOSED → CANCELLED` é permitido para o estorno de RN-13.
 
 ## Casos de teste (adulteração via SQL direto — todos devem resultar em `TAMPERED`)
 
