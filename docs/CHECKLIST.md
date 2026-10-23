@@ -30,7 +30,7 @@ do README), registrada no PR do card. IDs em [`01-requisitos.md`](01-requisitos.
 | [ ] | Painel: resultado de cada encerrado e total recebido | RF-06 | LC-017 | |
 | [ ] | Sala: lance atual, histórico, posição, contagem regressiva | RF-10 | LC-013 | |
 | [ ] | Sala: "você está ganhando" / "você foi superado" sem recarregar | RF-10 | LC-012, LC-013 | |
-| [ ] | Carteira: total, comprometido, disponível, depósito simulado | RF-07, RF-08 | LC-009 | |
+| [x] | Carteira: total, comprometido, disponível, depósito simulado | RF-07, RF-08 | LC-009 | Testes focados LC-009: API PostgreSQL isolado 10/10, contrato 5/5, domínio 2/2 e web 8/8 (Node 22) |
 | [ ] | Meus arremates: com lance + vencidos com comprovante e link | RF-13, RF-14 | LC-016 | |
 | [ ] | Auditoria: pública, histórico completo, íntegro/adulterado | RF-15 | LC-015 | |
 | [ ] | Feedback: abaixo do mínimo, saldo insuficiente, já ganhando, não iniciado, encerrado | RF-11 | LC-011, LC-013 | |

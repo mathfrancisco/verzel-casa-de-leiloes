@@ -1,8 +1,12 @@
 import type { LoginInput, RegisterInput, UserDto, UserResponse } from '@leilao/shared';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { type QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ApiError, apiFetch } from '../../lib/api';
 
 const ME_KEY = ['me'] as const;
+
+export function clearPrivateSessionQueries(queryClient: QueryClient) {
+  queryClient.removeQueries({ queryKey: ['wallet'] });
+}
 
 /** Usuário logado: `undefined` enquanto carrega, `null` para visitante. */
 export function useMe(): UserDto | null | undefined {
@@ -39,7 +43,10 @@ export function useLogout() {
     mutationFn: () => apiFetch<void>('/api/auth/logout', { method: 'POST' }),
     onSuccess: () => {
       queryClient.setQueryData(ME_KEY, null);
-      void queryClient.invalidateQueries({ predicate: (q) => q.queryKey[0] !== 'me' });
+      clearPrivateSessionQueries(queryClient);
+      void queryClient.invalidateQueries({
+        predicate: (q) => q.queryKey[0] !== 'me' && q.queryKey[0] !== 'wallet',
+      });
     },
   });
 }
