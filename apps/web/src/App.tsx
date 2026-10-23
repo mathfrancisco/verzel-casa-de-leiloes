@@ -5,6 +5,7 @@ import { NewLotPage } from './features/auctioneer/NewLotPage';
 import { LoginPage } from './features/auth/LoginPage';
 import { RegisterPage } from './features/auth/RegisterPage';
 import { ShowcasePage } from './features/showcase/ShowcasePage';
+import { WalletPage } from './features/wallet/WalletPage';
 import { ComingSoonPage } from './routes/ComingSoonPage';
 import { NotFoundPage } from './routes/NotFoundPage';
 
@@ -18,8 +19,8 @@ export function App() {
         <Route
           path="carteira"
           element={
-            <RequireRole role="BIDDER">
-              <ComingSoonPage title="Carteira" />
+            <RequireRole>
+              <WalletPage />
             </RequireRole>
           }
         />

@@ -243,3 +243,38 @@ button:disabled {
 .selected-item a {
   grid-column: 1 / -1;
 }
+.wallet-balances {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: 1rem;
+}
+.wallet-balances div,
+.wallet-list li {
+  padding: 0.75rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+.wallet-balances dt {
+  color: var(--muted);
+}
+.wallet-balances dd {
+  margin: 0.25rem 0 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+.wallet-deposit {
+  max-width: 26rem;
+  margin: 2rem 0;
+}
+.wallet-list {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0;
+  list-style: none;
+}
+.wallet-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
