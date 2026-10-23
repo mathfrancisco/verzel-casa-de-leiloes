@@ -1,6 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { RequireRole } from './components/RequireRole';
+import { NewLotPage } from './features/auctioneer/NewLotPage';
 import { LoginPage } from './features/auth/LoginPage';
 import { RegisterPage } from './features/auth/RegisterPage';
 import { ShowcasePage } from './features/showcase/ShowcasePage';
@@ -27,6 +28,14 @@ export function App() {
           element={
             <RequireRole role="AUCTIONEER">
               <ComingSoonPage title="Painel do leiloeiro" />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="painel/novo"
+          element={
+            <RequireRole role="AUCTIONEER">
+              <NewLotPage />
             </RequireRole>
           }
         />

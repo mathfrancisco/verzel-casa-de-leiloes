@@ -16,7 +16,12 @@ export function Layout() {
         </Link>
         <nav aria-label="Principal">
           {user?.role === 'BIDDER' && <Link to="/carteira">Carteira</Link>}
-          {user?.role === 'AUCTIONEER' && <Link to="/painel">Painel</Link>}
+          {user?.role === 'AUCTIONEER' && (
+            <>
+              <Link to="/painel">Painel</Link>
+              <Link to="/painel/novo">Novo lote</Link>
+            </>
+          )}
           {user ? (
             <>
               <span className="user-badge">
