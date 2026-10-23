@@ -18,6 +18,22 @@ export function tabFromParam(param: string | null): ShowcaseTab {
   return found ?? 'live';
 }
 
+export function mergeLotPages(pages: LotSummary[][], tab: ShowcaseTab): LotSummary[] {
+  const lots = new Map<string, LotSummary>();
+  for (const page of pages) {
+    for (const lot of page) lots.set(lot.id, lot);
+  }
+
+  const descending = tab === 'closed';
+  const timeField = tab === 'scheduled' ? 'startsAt' : 'endsAt';
+  const direction = descending ? -1 : 1;
+  return [...lots.values()].sort((a, b) => {
+    const timeOrder = direction * (Date.parse(a[timeField]) - Date.parse(b[timeField]));
+    if (timeOrder !== 0) return timeOrder;
+    return direction * (a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
+  });
+}
+
 export function priceLine(lot: LotSummary): { label: string; amountCents: number | null } {
   const current = lot.currentPriceCents;
   switch (lot.phase) {

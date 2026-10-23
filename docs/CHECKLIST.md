@@ -40,11 +40,11 @@ do README), registrada no PR do card. IDs em [`01-requisitos.md`](01-requisitos.
 | ✓ | Item do PDF | Requisito / Regra | Card | Evidência |
 |---|---|---|---|---|
 | [ ] | Vitrine, salas, auditoria e comprovante funcionam com a API fora | RNF-03 / RN-21 | LC-005, LC-023 | |
-| [ ] | Lance só em lote ao vivo | RN-04 | LC-011 | |
-| [ ] | 1º lance ≥ inicial; seguintes ≥ atual + incremento | RN-05 | LC-011 | |
-| [ ] | Líder não cobre o próprio lance | RN-06 | LC-011 | |
-| [ ] | Saldo comprometido; superado libera na hora; lance só se couber | RN-07, RN-08 | LC-009, LC-011 | |
-| [ ] | Anti-sniping: últimos 2 min → +2 min | RN-09 | LC-011 | |
+| [x] | Lance só em lote ao vivo | RN-04 | LC-011 | Domínio 12/12 e integração 9/9 locais; 5 execuções sequenciais no PostgreSQL descartável. Lint, typecheck, testes e build locais passaram; PR/CI pendentes. |
+| [x] | 1º lance ≥ inicial; seguintes ≥ atual + incremento | RN-05 | LC-011 | CT-05-01/02 e regressão acima de R$ 10 milhões; integração local e gates locais verdes; PR/CI pendentes. |
+| [x] | Líder não cobre o próprio lance | RN-06 | LC-011 | CT-05-07 e integração LC-011 locais; gates locais verdes; PR/CI pendentes. |
+| [x] | Saldo comprometido; superado libera na hora; lance só se couber | RN-07, RN-08 | LC-009, LC-011 | CT-05-12 e evento de superação verificam compromisso e liberação; 5 execuções locais; gates locais verdes. |
+| [x] | Anti-sniping: últimos 2 min → +2 min | RN-09 | LC-011 | CT-05-06/15 de domínio e integração locais; gates locais verdes; PR/CI pendentes. |
 | [ ] | Liquidação: debita vencedor, credita leiloeiro, comprovante; sem lances fecha sem vencedor | RN-10, RN-11 | LC-014 | |
 | [ ] | Histórico à prova de adulteração (inclusive direto no banco), técnica explicada | RN-15, RNF-05 | LC-010, LC-015, LC-023 | LC-010: verificador unitário e paridade Node/happy-dom verificados localmente; adulteração SQL e auditoria pública pendentes. |
 | [ ] | Privacidade em auditoria e comprovante | RN-16, RNF-06 | LC-015, LC-016 | |

@@ -15,11 +15,17 @@ import { walletRoutes } from './http/wallet.routes';
 import { readyRoutes } from './http/ready';
 import { registerSpa } from './http/spa';
 import { attachRealtime } from './infra/realtime/socket';
+import type { AuditCrypto, Signer } from '@leilao/shared';
+import type { BidEvent } from './application/bids';
 
 export interface AppDeps {
   db: Db;
   sql: Sql;
   catalog: CatalogProvider;
+  auditSigner: Signer;
+  auditCrypto: AuditCrypto;
+  /** Coletor pós-commit; o transporte Socket.IO entra no LC-012. */
+  bidEventCollector?: (events: BidEvent[]) => void;
   config: {
     jwtSecret: string;
     /** Segredo do HMAC dos pseudônimos (RN-16). */
@@ -35,7 +41,16 @@ export interface AppDeps {
 
 const MUTATING_METHODS = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);
 
-export function buildApp({ db, sql, catalog, config, logger = false }: AppDeps) {
+export function buildApp({
+  db,
+  sql,
+  catalog,
+  auditSigner,
+  auditCrypto,
+  bidEventCollector,
+  config,
+  logger = false,
+}: AppDeps) {
   const app = Fastify({ logger });
 
   registerErrorHandling(app, { serveSpa: Boolean(config.webDistDir) });
@@ -78,7 +93,22 @@ export function buildApp({ db, sql, catalog, config, logger = false }: AppDeps) 
       rateLimitPerMinute: config.authRateLimitPerMinute ?? 10,
     });
     catalogRoutes(api, catalog);
-    lotRoutes(api, { db, catalog, pseudonymSecret: config.pseudonymSecret });
+    lotRoutes(api, {
+      db,
+      catalog,
+      pseudonymSecret: config.pseudonymSecret,
+      signer: auditSigner,
+      crypto: auditCrypto,
+      collectEvents: bidEventCollector
+        ? (events) => {
+            try {
+              bidEventCollector(events);
+            } catch (error) {
+              app.log.warn({ err: error }, 'Falha ao entregar eventos de lance pós-commit.');
+            }
+          }
+        : undefined,
+    });
     walletRoutes(api, { db });
   });
 

@@ -6,7 +6,7 @@ import { apiFetch } from '../../lib/api';
 import { messageFor } from '../../lib/errorMessages';
 import { syncServerTime } from '../../lib/serverClock';
 import { LotCard } from './LotCard';
-import { TAB_LABEL, TAB_PARAM, tabFromParam } from './showcase';
+import { mergeLotPages, TAB_LABEL, TAB_PARAM, tabFromParam } from './showcase';
 
 const EMPTY_TEXT = {
   live: 'Nenhum lote ao vivo agora.',
@@ -38,7 +38,7 @@ export function ShowcasePage() {
   }, [queryClient]);
 
   const counts = lots.data?.pages[0]?.counts;
-  const items = lots.data?.pages.flatMap((page) => page.items) ?? [];
+  const items = mergeLotPages(lots.data?.pages.map((page) => page.items) ?? [], tab);
 
   return (
     <section aria-labelledby="titulo-vitrine">
