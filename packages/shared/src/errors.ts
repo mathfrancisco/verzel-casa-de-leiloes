@@ -26,6 +26,30 @@ export const ERROR_STATUS = {
 
 export type ErrorCode = keyof typeof ERROR_STATUS;
 
+/** Mensagens padrão. O front pode trocar por textos com detalhes (ex.: valor mínimo). */
+export const ERROR_MESSAGES: Record<ErrorCode, string> = {
+  VALIDATION_ERROR: 'Dados inválidos.',
+  IDEMPOTENCY_KEY_REQUIRED: 'Cabeçalho Idempotency-Key obrigatório.',
+  UNAUTHENTICATED: 'Faça login para continuar.',
+  INVALID_CREDENTIALS: 'E-mail ou senha incorretos.',
+  FORBIDDEN: 'Você não tem permissão para esta ação.',
+  SELLER_CANNOT_BID: 'Leiloeiros não podem dar lances.',
+  NOT_FOUND: 'Não encontrado.',
+  LOT_NOT_FOUND: 'Lote não encontrado.',
+  CATALOG_ITEM_NOT_FOUND: 'Item não encontrado no catálogo.',
+  EMAIL_TAKEN: 'Este e-mail já está cadastrado.',
+  LOT_CANCELLED: 'Este lote foi cancelado pelo leiloeiro.',
+  LOT_NOT_STARTED: 'Este lote ainda não começou.',
+  LOT_CLOSED: 'Este lote já foi encerrado.',
+  ALREADY_WINNING: 'Você já está ganhando este lote.',
+  LOT_NOT_CANCELLABLE: 'Este lote não pode ser cancelado.',
+  BELOW_MINIMUM: 'Lance abaixo do mínimo.',
+  INSUFFICIENT_FUNDS: 'Saldo insuficiente.',
+  RATE_LIMITED: 'Muitas tentativas. Aguarde alguns segundos.',
+  INTERNAL_ERROR: 'Algo deu errado. Tente novamente.',
+  CATALOG_UNAVAILABLE: 'O catálogo de obras está indisponível no momento. Tente em instantes.',
+};
+
 export interface ApiErrorBody {
   error: {
     code: ErrorCode;

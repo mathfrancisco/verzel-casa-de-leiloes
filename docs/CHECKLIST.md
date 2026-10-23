@@ -14,7 +14,7 @@ do README), registrada no PR do card. IDs em [`01-requisitos.md`](01-requisitos.
 | [x] | Back-End em Node.js (Fastify) | RNF-02 | LC-001 | `apps/api` (Fastify 5, Node 22), `/health` testado |
 | [ ] | PostgreSQL com instruções no README | RNF-02, RNF-07 | LC-002, LC-023 | |
 | [ ] | Itens vindos de uma API pública | RF-02 | LC-005 | |
-| [ ] | Papéis leiloeiro (não dá lance) e licitante | RF-01 | LC-003, LC-011 | |
+| [ ] | Papéis leiloeiro (não dá lance) e licitante | RF-01 | LC-003, LC-011 | Papéis e autorização por papel prontos (LC-003); bloqueio de lance do leiloeiro no LC-011 |
 | [ ] | Seed: 1 leiloeiro, 2 clientes, ≥ 1 lote com lances abertos | RF-16 | LC-020 | |
 | [ ] | README detalhado, com comportamentos inesperados | RNF-07 | LC-023 | |
 | [ ] | Entrega em até 7 dias (29/10/2026) | RNF-08 | LC-023 | |

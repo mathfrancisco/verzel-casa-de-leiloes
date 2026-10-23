@@ -28,3 +28,5 @@ fluxo de trabalho com IA está descrito em [`../ai/README.md`](../ai/README.md).
 | 22/10/2026 | Implementação (LC-001) | IA | Gerou a estrutura do monorepo (configuração de TypeScript, ESLint e Prettier, `/health` da API, página inicial, helpers de dinheiro e códigos de erro) e rodou lint, typecheck, testes e build |
 | 22/10/2026 | Implementação (LC-002) | Eu | Defini o fluxo de trabalho por card (uma branch por card, commit local e push só quando eu pedir) e segui com o LC-002, revisando o resultado |
 | 22/10/2026 | Implementação (LC-002) | IA | Gerou o Docker Compose do Postgres, o schema e as migrations iniciais (Drizzle), a validação de variáveis de ambiente e o `/ready`, com testes de integração; rodou lint, typecheck, testes e build |
+| 22/10/2026 | Implementação (LC-003) | Eu | Pedi para seguir com o LC-003 e revisei o resultado |
+| 22/10/2026 | Implementação (LC-003) | IA | Gerou cadastro, login, logout e autorização por papel (API e telas), com testes; rodou lint, typecheck, testes, build e o fluxo no navegador |

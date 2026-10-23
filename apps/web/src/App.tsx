@@ -1,27 +1,37 @@
-import { useEffect, useState } from 'react';
-import { fetchHealth } from './lib/health';
-
-type ApiStatus = 'checking' | 'online' | 'offline';
-
-const STATUS_TEXT: Record<ApiStatus, string> = {
-  checking: 'Verificando a API…',
-  online: 'API no ar',
-  offline: 'API indisponível',
-};
+import { Route, Routes } from 'react-router-dom';
+import { Layout } from './components/Layout';
+import { RequireRole } from './components/RequireRole';
+import { LoginPage } from './features/auth/LoginPage';
+import { RegisterPage } from './features/auth/RegisterPage';
+import { ComingSoonPage } from './routes/ComingSoonPage';
+import { HomePage } from './routes/HomePage';
+import { NotFoundPage } from './routes/NotFoundPage';
 
 export function App() {
-  const [status, setStatus] = useState<ApiStatus>('checking');
-
-  useEffect(() => {
-    fetchHealth()
-      .then(() => setStatus('online'))
-      .catch(() => setStatus('offline'));
-  }, []);
-
   return (
-    <main>
-      <h1>Casa de Leilões</h1>
-      <p role="status">{STATUS_TEXT[status]}</p>
-    </main>
+    <Routes>
+      <Route element={<Layout />}>
+        <Route index element={<HomePage />} />
+        <Route path="entrar" element={<LoginPage />} />
+        <Route path="cadastro" element={<RegisterPage />} />
+        <Route
+          path="carteira"
+          element={
+            <RequireRole role="BIDDER">
+              <ComingSoonPage title="Carteira" />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="painel"
+          element={
+            <RequireRole role="AUCTIONEER">
+              <ComingSoonPage title="Painel do leiloeiro" />
+            </RequireRole>
+          }
+        />
+        <Route path="*" element={<NotFoundPage />} />
+      </Route>
+    </Routes>
   );
 }

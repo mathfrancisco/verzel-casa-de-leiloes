@@ -1,6 +1,8 @@
+import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { buildApp } from '../../src/app';
+import { buildTestApp } from '../support/app';
 import { createTestDatabase } from '../support/database';
 
 let testDb: Awaited<ReturnType<typeof createTestDatabase>>;
@@ -11,7 +13,7 @@ afterAll(() => testDb.drop());
 
 describe('GET /ready', () => {
   it('responde 200 quando o banco está acessível', async () => {
-    const app = buildApp({ sql: testDb.sql });
+    const app = buildTestApp(testDb);
     const res = await app.inject({ method: 'GET', url: '/ready' });
     await app.close();
 
@@ -24,7 +26,11 @@ describe('GET /ready', () => {
       connect_timeout: 1,
       max: 1,
     });
-    const app = buildApp({ sql: unreachable });
+    const app = buildApp({
+      db: drizzle(unreachable),
+      sql: unreachable,
+      config: { jwtSecret: 'x'.repeat(32), secureCookies: false },
+    });
     const res = await app.inject({ method: 'GET', url: '/ready' });
     await app.close();
     await unreachable.end();
