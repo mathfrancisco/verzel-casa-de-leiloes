@@ -2,6 +2,8 @@ import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { buildApp } from './app';
 import { EnvError, loadEnv } from './config/env';
+import { ArticCatalog } from './infra/catalog/artic-catalog';
+import { FakeCatalog } from './infra/catalog/fake-catalog';
 import { createDb } from './infra/db/client';
 import { runMigrations } from './infra/db/migrate';
 
@@ -26,6 +28,7 @@ const { db, sql } = createDb(env.DATABASE_URL);
 const app = buildApp({
   db,
   sql,
+  catalog: env.CATALOG_PROVIDER === 'fake' ? new FakeCatalog() : new ArticCatalog(),
   config: {
     jwtSecret: env.JWT_SECRET,
     secureCookies: env.NODE_ENV === 'production',
