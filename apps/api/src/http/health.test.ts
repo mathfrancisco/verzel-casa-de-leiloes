@@ -9,12 +9,17 @@ import { Ed25519Signer, NodeAuditCrypto } from '../infra/auditCrypto';
 
 // O cliente postgres só conecta na primeira query; o health não consulta o banco.
 const sql = postgres('postgres://unused@127.0.0.1:1/unused');
-const auditSigner = new Ed25519Signer(generateKeyPairSync('ed25519').privateKey);
+const auditPair = generateKeyPairSync('ed25519');
+const auditSigner = new Ed25519Signer(auditPair.privateKey);
+const auditPublicKey = new Uint8Array(
+  Buffer.from((auditPair.publicKey.export({ format: 'jwk' }) as { x?: string }).x!, 'base64url'),
+);
 const app = buildApp({
   db: drizzle(sql),
   sql,
   catalog: new FakeCatalog(),
   auditSigner,
+  auditPublicKey,
   auditCrypto: new NodeAuditCrypto(),
   config: { jwtSecret: 'x'.repeat(32), pseudonymSecret: 'p'.repeat(32), secureCookies: false },
 });
