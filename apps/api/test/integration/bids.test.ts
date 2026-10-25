@@ -231,6 +231,7 @@ describe('POST /api/lots/:id/bids (SP-05)', () => {
     const lot = await createLiveLot(seller.cookie, '1007');
     await testDb.sql`UPDATE lots SET state = 'CANCELLED', cancelled_at = now() WHERE id = ${lot.id}`;
 
+    events.length = 0;
     const response = await bid(bidder.cookie, lot.id, 'lance-cancelado', 1_000);
     expect(response.statusCode).toBe(409);
     expect(response.json<ApiErrorBody>().error.code).toBe('LOT_CANCELLED');

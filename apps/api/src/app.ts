@@ -68,7 +68,15 @@ export function buildApp({
   });
   app.register(rateLimit, { max: 300, timeWindow: '1 minute' });
 
-  attachRealtime(app);
+  const realtime = attachRealtime(app, db);
+  const collectEvents = (events: BidEvent[]) => {
+    try {
+      realtime.publish(events);
+      bidEventCollector?.(events);
+    } catch (error) {
+      app.log.warn({ err: error }, 'Falha ao entregar eventos pós-commit.');
+    }
+  };
   if (config.webDistDir) registerSpa(app, config.webDistDir);
 
   // Defesa contra CSRF junto com SameSite=Lax: formulários de outros sites não enviam JSON.
@@ -99,17 +107,9 @@ export function buildApp({
       pseudonymSecret: config.pseudonymSecret,
       signer: auditSigner,
       crypto: auditCrypto,
-      collectEvents: bidEventCollector
-        ? (events) => {
-            try {
-              bidEventCollector(events);
-            } catch (error) {
-              app.log.warn({ err: error }, 'Falha ao entregar eventos de lance pós-commit.');
-            }
-          }
-        : undefined,
+      collectEvents,
     });
-    walletRoutes(api, { db });
+    walletRoutes(api, { db, collectEvents });
   });
 
   return app;
