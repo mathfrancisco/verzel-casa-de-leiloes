@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Status | TODO |
+| Status | REVIEW |
 | Épico / dia | E5 Auditoria e gestão · Dia 5 |
 | Depende de | LC-010, LC-014 |
 | Requisitos | RF-15, RNF-05, RNF-06 |
@@ -25,9 +25,9 @@ Qualquer pessoa confere, sem login, se o histórico de um lote está íntegro.
 
 ## Critérios de aceite
 
-- [ ] Cada adulteração via SQL é acusada no check esperado
-- [ ] Página mostra o mesmo veredito calculado no navegador
-- [ ] Resposta sem PII
+- [x] Cada adulteração via SQL é acusada no check esperado
+- [x] Página mostra o mesmo veredito calculado no navegador
+- [x] Resposta sem PII
 
 ## Testes obrigatórios
 
@@ -39,3 +39,21 @@ Qualquer pessoa confere, sem login, se o histórico de um lote está íntegro.
 - [ ] Todos os critérios de aceite com evidência
 - [ ] Status atualizado aqui e em `ai/cards/README.md`
 - [ ] `docs/CHECKLIST.md` (só com evidência) e `docs/USO-DE-IA.md` atualizados
+
+## Evidência local
+
+- Testes focados: API de auditoria 14/14 e componente web 2/2.
+- `lint`, `typecheck`, `test` e `build` completos passaram com exit 0. A suíte
+  totalizou 407 testes: 104 shared, 222 API e 81 web, sem falhas ou skips.
+  Após corrigir a formatação do teste `ready`, o lint foi repetido com sucesso.
+  Os avisos de `act` e de future flags nos testes de componentes não foram fatais.
+- No build de produção servido localmente, a auditoria pública mostrou `INTACT`
+  com os sete checks aprovados. Após alterar o valor do lance via SQL, mostrou
+  `TAMPERED`, com falha em `HASHES` no elo 1. UUID inválido retornou 404.
+- Na viewport de 360 px, o documento final mediu 345 px de largura, sem
+  overflow horizontal; as tabelas rolaram internamente (655 px e 279 px).
+  O ajuste de uma regra CSS foi seguido por novo build web e ensaio no navegador.
+- Revisão técnica assistida final sem problemas após correções de UUID inválido,
+  associação do veredito ao relatório e melhorias de CT-08-05/CT-08-06.
+- Catálogo falso e PostgreSQL descartável. Evidência: `../work/lc015-validation.log`.
+- Publicação e CI permanecem pendentes; o card fica em `REVIEW`.

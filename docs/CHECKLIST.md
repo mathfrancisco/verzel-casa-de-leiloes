@@ -46,8 +46,8 @@ do README), registrada no PR do card. IDs em [`01-requisitos.md`](01-requisitos.
 | [x] | Saldo comprometido; superado libera na hora; lance só se couber | RN-07, RN-08 | LC-009, LC-011 | CT-05-12 e evento de superação verificam compromisso e liberação; 5 execuções locais; gates locais verdes. |
 | [x] | Anti-sniping: últimos 2 min → +2 min | RN-09 | LC-011 | CT-05-06/15 de domínio e integração locais; gates locais verdes; PR/CI pendentes. |
 | [ ] | Liquidação: debita vencedor, credita leiloeiro, comprovante; sem lances fecha sem vencedor | RN-10, RN-11 | LC-014 | Evidência local: suíte final 391 testes, incluindo foco LC-014 20/20 e CT-07-04 8/8; `../work/lc014-validation.log`. Aguardar registro no PR para marcar. |
-| [ ] | Histórico à prova de adulteração (inclusive direto no banco), técnica explicada | RN-15, RNF-05 | LC-010, LC-015, LC-023 | LC-010: verificador unitário e paridade Node/happy-dom verificados localmente; adulteração SQL e auditoria pública pendentes. |
-| [ ] | Privacidade em auditoria e comprovante | RN-16, RNF-06 | LC-015, LC-016 | |
+| [ ] | Histórico à prova de adulteração (inclusive direto no banco), técnica explicada | RN-15, RNF-05 | LC-010, LC-015, LC-023 | LC-015 local: auditoria API 14/14; relatório intacto com sete checks; valor adulterado por SQL detectado em `HASHES` no elo 1; UUID inválido 404. Navegador em build final: viewport 360 px sem overflow; tabelas com rolagem interna. Evidência em `../work/lc015-validation.log`. Aguardar registro no PR para marcar. |
+| [ ] | Privacidade em auditoria e comprovante | RN-16, RNF-06 | LC-015, LC-016 | LC-015 API 14/14 e teste de componente web 2/2; privacidade validada localmente. Aguardar registro no PR para marcar. |
 
 ## Opcionais
 

@@ -11,6 +11,7 @@ export const TEST_JWT_SECRET = randomBytes(32).toString('base64url');
 export const TEST_PSEUDONYM_SECRET = randomBytes(32).toString('base64url');
 const TEST_AUDIT_PAIR = generateKeyPairSync('ed25519');
 const TEST_AUDIT_KEY = TEST_AUDIT_PAIR.privateKey;
+export const TEST_AUDIT_SIGNER = new Ed25519Signer(TEST_AUDIT_KEY);
 const testAuditPublicJwk = TEST_AUDIT_PAIR.publicKey.export({ format: 'jwk' });
 if (!testAuditPublicJwk.x) throw new Error('Chave pública Ed25519 de teste ausente.');
 export const TEST_AUDIT_PUBLIC_KEY = new Uint8Array(Buffer.from(testAuditPublicJwk.x, 'base64url'));
@@ -21,7 +22,12 @@ export function buildTestApp(
   deps: Partial<
     Pick<
       AppDeps,
-      'db' | 'catalog' | 'bidEventCollector' | 'auditSigner' | 'onRealtimeEventCollectorReady'
+      | 'db'
+      | 'catalog'
+      | 'bidEventCollector'
+      | 'auditSigner'
+      | 'auditPublicKey'
+      | 'onRealtimeEventCollectorReady'
     >
   > = {},
 ) {
@@ -29,7 +35,8 @@ export function buildTestApp(
     db: deps.db ?? testDb.db,
     sql: testDb.sql,
     catalog: deps.catalog ?? new FakeCatalog(),
-    auditSigner: deps.auditSigner ?? new Ed25519Signer(TEST_AUDIT_KEY),
+    auditSigner: deps.auditSigner ?? TEST_AUDIT_SIGNER,
+    auditPublicKey: deps.auditPublicKey ?? TEST_AUDIT_PUBLIC_KEY,
     auditCrypto: new NodeAuditCrypto(),
     bidEventCollector: deps.bidEventCollector,
     onRealtimeEventCollectorReady: deps.onRealtimeEventCollectorReady,
