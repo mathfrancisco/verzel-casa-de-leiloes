@@ -1,4 +1,4 @@
-import { ERROR_MESSAGES } from '@leilao/shared';
+import { ERROR_MESSAGES, formatBRL } from '@leilao/shared';
 import type { ZodTypeAny } from 'zod';
 import { ApiError } from './api';
 
@@ -8,6 +8,27 @@ export function messageFor(error: unknown): string {
   if (error instanceof TypeError)
     return 'Não foi possível conectar ao servidor. Verifique sua conexão.';
   return ERROR_MESSAGES.INTERNAL_ERROR;
+}
+
+/** Texto contextual dos erros de lance, mantendo este módulo como fonte única. */
+export function bidMessageFor(error: unknown): string {
+  if (!(error instanceof ApiError)) return messageFor(error);
+  if (error.code === 'BELOW_MINIMUM' && typeof error.details?.minimumCents === 'number') {
+    return `Lance abaixo do mínimo. O próximo lance deve ser de pelo menos ${formatBRL(error.details.minimumCents)}.`;
+  }
+  if (error.code === 'INSUFFICIENT_FUNDS' && typeof error.details?.availableCents === 'number') {
+    return `Saldo insuficiente. Seu disponível é ${formatBRL(error.details.availableCents)}.`;
+  }
+  if (error.code === 'LOT_NOT_STARTED' && typeof error.details?.startsAt === 'string') {
+    const startsAt = new Date(error.details.startsAt);
+    if (!Number.isNaN(startsAt.getTime())) {
+      return `Este lote ainda não começou. Abre em ${new Intl.DateTimeFormat('pt-BR', {
+        dateStyle: 'short',
+        timeStyle: 'short',
+      }).format(startsAt)}.`;
+    }
+  }
+  return messageFor(error);
 }
 
 type FieldErrors = Record<string, string>;

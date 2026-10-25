@@ -5,6 +5,7 @@ import { NewLotPage } from './features/auctioneer/NewLotPage';
 import { LoginPage } from './features/auth/LoginPage';
 import { RegisterPage } from './features/auth/RegisterPage';
 import { ShowcasePage } from './features/showcase/ShowcasePage';
+import { LotRoomPage } from './features/lotRoom/LotRoomPage';
 import { WalletPage } from './features/wallet/WalletPage';
 import { ComingSoonPage } from './routes/ComingSoonPage';
 import { NotFoundPage } from './routes/NotFoundPage';
@@ -14,6 +15,7 @@ export function App() {
     <Routes>
       <Route element={<Layout />}>
         <Route index element={<ShowcasePage />} />
+        <Route path="lotes/:id" element={<LotRoomPage />} />
         <Route path="entrar" element={<LoginPage />} />
         <Route path="cadastro" element={<RegisterPage />} />
         <Route

@@ -1,7 +1,24 @@
 import { Link, Outlet, useNavigate } from 'react-router-dom';
+import { formatBRL, type Wallet } from '@leilao/shared';
+import { useQuery } from '@tanstack/react-query';
 import { useLogout, useMe } from '../features/auth/session';
+import { walletQueryKey } from '../features/wallet/wallet';
+import { apiFetch } from '../lib/api';
+import { OutbidToast } from './OutbidToast';
 
 const ROLE_LABEL = { AUCTIONEER: 'Leiloeiro', BIDDER: 'Licitante' } as const;
+
+function WalletHeaderLink({ userId }: { userId: string }) {
+  const wallet = useQuery({
+    queryKey: walletQueryKey(userId),
+    queryFn: () => apiFetch<Wallet>('/api/wallet'),
+  });
+  return (
+    <Link to="/carteira">
+      Carteira{wallet.data ? ` · ${formatBRL(wallet.data.availableCents)}` : ''}
+    </Link>
+  );
+}
 
 export function Layout() {
   const user = useMe();
@@ -15,7 +32,11 @@ export function Layout() {
           Casa de Leilões
         </Link>
         <nav aria-label="Principal">
-          {user && <Link to="/carteira">Carteira</Link>}
+          {user?.role === 'BIDDER' ? (
+            <WalletHeaderLink userId={user.id} />
+          ) : (
+            user && <Link to="/carteira">Carteira</Link>
+          )}
           {user?.role === 'AUCTIONEER' && (
             <>
               <Link to="/painel">Painel</Link>
@@ -47,6 +68,7 @@ export function Layout() {
       <main id="conteudo">
         <Outlet />
       </main>
+      <OutbidToast sessionKey={user?.id} />
     </>
   );
 }
