@@ -7,7 +7,7 @@ import {
 import { eq } from 'drizzle-orm';
 import type { FastifyInstance } from 'fastify';
 import { Server, type Socket } from 'socket.io';
-import type { BidEvent } from '../../application/bids';
+import type { RealtimeEvent } from '../../application/bids';
 import type { Db } from '../db/client';
 import { lots } from '../db/schema';
 
@@ -101,7 +101,7 @@ export function attachRealtime(app: FastifyInstance, db: Db) {
   });
 
   return {
-    publish(events: BidEvent[]) {
+    publish(events: RealtimeEvent[]) {
       for (const event of events) {
         const message = { ...event.payload, serverTime: event.serverTime };
         if (event.userId) io.to(userRoom(event.userId)).emit(event.type, message as never);

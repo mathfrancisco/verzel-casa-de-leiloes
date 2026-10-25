@@ -8,6 +8,8 @@ import { FakeCatalog } from './infra/catalog/fake-catalog';
 import { createDb } from './infra/db/client';
 import { runMigrations } from './infra/db/migrate';
 import { Ed25519Signer, NodeAuditCrypto } from './infra/auditCrypto';
+import { startSettlementWorker } from './jobs/settlementWorker';
+import type { RealtimeEvent } from './application/bids';
 
 let env;
 try {
@@ -34,6 +36,7 @@ try {
 }
 
 const { db, sql } = createDb(env.DATABASE_URL);
+let collectSettlementEvents: ((events: RealtimeEvent[]) => void) | undefined;
 const app = buildApp({
   db,
   sql,
@@ -46,6 +49,9 @@ const app = buildApp({
     secureCookies: env.NODE_ENV === 'production',
     webDistDir: existsSync(webDistDir) ? webDistDir : undefined,
   },
+  onRealtimeEventCollectorReady: (collectEvents) => {
+    collectSettlementEvents = collectEvents;
+  },
   logger: true,
 });
 
@@ -56,10 +62,19 @@ try {
   process.exit(1);
 }
 
+const stopSettlementWorker = startSettlementWorker({
+  db,
+  signer: auditSigner,
+  crypto: new NodeAuditCrypto(),
+  collectEvents: (events) => collectSettlementEvents?.(events),
+  onError: () => app.log.warn('Falha no ciclo de liquidação; nova tentativa no próximo ciclo.'),
+});
+
 for (const signal of ['SIGINT', 'SIGTERM'] as const) {
   process.on(signal, () => {
-    void app
-      .close()
+    void Promise.resolve()
+      .then(stopSettlementWorker)
+      .then(() => app.close())
       .then(() => sql.end())
       .then(() => process.exit(0));
   });

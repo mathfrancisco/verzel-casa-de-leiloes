@@ -1,7 +1,11 @@
 import type { AddressInfo } from 'node:net';
+import { generateKeyPairSync } from 'node:crypto';
 import { io as connect, type Socket } from 'socket.io-client';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import type { CatalogItem, LotDetail } from '@leilao/shared';
+import { settleDueLots } from '../../src/application/settlement';
+import type { RealtimeEvent } from '../../src/application/bids';
+import { Ed25519Signer, NodeAuditCrypto } from '../../src/infra/auditCrypto';
 import { FakeCatalog } from '../../src/infra/catalog/fake-catalog';
 import { buildTestApp, sessionCookie } from '../support/app';
 import { createTestDatabase } from '../support/database';
@@ -11,6 +15,8 @@ let app: ReturnType<typeof buildTestApp>;
 let client: Socket;
 let url: string;
 let sequence = 0;
+let settlementSigner: Ed25519Signer;
+let publishSettlementEvents: ((events: RealtimeEvent[]) => void) | undefined;
 const catalog = new FakeCatalog(
   Array.from(
     { length: 4 },
@@ -31,7 +37,18 @@ const catalog = new FakeCatalog(
 
 beforeAll(async () => {
   testDb = await createTestDatabase();
-  app = buildTestApp(testDb, {}, { catalog });
+  settlementSigner = new Ed25519Signer(generateKeyPairSync('ed25519').privateKey);
+  app = buildTestApp(
+    testDb,
+    {},
+    {
+      catalog,
+      auditSigner: settlementSigner,
+      onRealtimeEventCollectorReady: (collector) => {
+        publishSettlementEvents = collector;
+      },
+    },
+  );
   await app.listen({ port: 0, host: '127.0.0.1' });
   const { port } = app.server.address() as AddressInfo;
   url = `http://127.0.0.1:${port}`;
@@ -226,6 +243,42 @@ describe('WebSocket (Socket.IO)', () => {
     } finally {
       observer.close();
       await failingApp.close();
+    }
+  });
+
+  it('publica lot.closed, lot.won e carteiras da liquidação pelo mesmo transporte', async () => {
+    const seller = await register('AUCTIONEER');
+    const winner = await register();
+    await deposit(winner.cookie, 'fundos-liquidacao');
+    const lot = await createLiveLot(seller.cookie, '5001');
+    expect((await bid(winner.cookie, lot.id, 'lance-liquidacao', 1_200)).statusCode).toBe(201);
+    await testDb.sql`UPDATE lots SET original_ends_at = now() - interval '1 second', ends_at = now() - interval '1 second' WHERE id = ${lot.id}`;
+    const publicSocket = await socket();
+    const winnerSocket = await socket(winner.cookie);
+    const sellerSocket = await socket(seller.cookie);
+    try {
+      await join(publicSocket, lot.id);
+      const closed = once(publicSocket, 'lot.closed');
+      const won = once(winnerSocket, 'lot.won');
+      const winnerWallet = once(winnerSocket, 'wallet.changed');
+      const sellerWallet = once(sellerSocket, 'wallet.changed');
+      await settleDueLots(
+        {
+          db: testDb.db,
+          signer: settlementSigner,
+          crypto: new NodeAuditCrypto(),
+          collectEvents: (events) => publishSettlementEvents?.(events),
+        },
+        { limit: 20 },
+      );
+      expect(await closed).toMatchObject({ lotId: lot.id, result: 'SOLD', finalPriceCents: 1_200 });
+      expect(await won).toMatchObject({ lotId: lot.id, amountCents: 1_200 });
+      expect(await winnerWallet).toMatchObject({ availableCents: 8_800 });
+      expect(await sellerWallet).toMatchObject({ availableCents: 1_200 });
+    } finally {
+      publicSocket.close();
+      winnerSocket.close();
+      sellerSocket.close();
     }
   });
 });

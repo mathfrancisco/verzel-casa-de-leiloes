@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Status | TODO |
+| Status | REVIEW |
 | Épico / dia | E4 Tempo real e liquidação · Dia 4 |
 | Depende de | LC-011, LC-012 |
 | Requisitos | RF-12, RF-13, RNF-04 |
@@ -26,9 +26,9 @@ Lotes encerram sozinhos, o dinheiro muda de mãos uma única vez e o vencedor re
 
 ## Critérios de aceite
 
-- [ ] Lote com lances liquida corretamente; sem lances fecha sem vencedor
-- [ ] Execuções paralelas não duplicam liquidação
-- [ ] Invariantes I-1, I-5, I-6, I-7 verdes
+- [x] Lote com lances liquida corretamente; sem lances fecha sem vencedor
+- [x] Execuções paralelas não duplicam liquidação
+- [x] Invariantes I-1, I-5, I-6, I-7 verdes
 
 ## Testes obrigatórios
 
@@ -40,3 +40,14 @@ Lotes encerram sozinhos, o dinheiro muda de mãos uma única vez e o vencedor re
 - [ ] Todos os critérios de aceite com evidência
 - [ ] Status atualizado aqui e em `ai/cards/README.md`
 - [ ] `docs/CHECKLIST.md` (só com evidência) e `docs/USO-DE-IA.md` atualizados
+
+## Evidência local
+
+- Gates completos (`lint`, `typecheck`, `test` e `build`) passaram com exit 0.
+  A suíte totalizou 391 testes: 104 shared, 208 API e 79 web, sem falhas ou
+  skips. O foco final passou 20/20; o reforço de CT-07-04 passou 8/8.
+- A revisão técnica assistida não encontrou problemas após as correções de
+  shutdown Fastify após `ready`, aviso de erro sem dados sensíveis para falhas retornadas e
+  cobertura de CT-07-04 com o fim original passado e o fim prorrogado futuro.
+- Evidência detalhada: `../work/lc014-validation.log`.
+- Publicação e CI permanecem pendentes; o card fica em `REVIEW`.
