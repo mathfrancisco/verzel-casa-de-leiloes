@@ -1,6 +1,8 @@
 import type { LoginInput, RegisterInput, UserDto, UserResponse } from '@leilao/shared';
 import { type QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useEffect } from 'react';
 import { ApiError, apiFetch } from '../../lib/api';
+import { refreshRealtimeSession } from '../../lib/realtime';
 
 const ME_KEY = ['me'] as const;
 
@@ -23,6 +25,9 @@ export function useMe(): UserDto | null | undefined {
     staleTime: 5 * 60 * 1000,
     retry: false,
   });
+  useEffect(() => {
+    if (data !== undefined) refreshRealtimeSession(data?.id ?? null);
+  }, [data?.id, data]);
   return data;
 }
 
@@ -30,7 +35,10 @@ function useSessionMutation<TInput>(path: string) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (input: TInput) => apiFetch<UserResponse>(path, { method: 'POST', body: input }),
-    onSuccess: ({ user }) => queryClient.setQueryData(ME_KEY, user),
+    onSuccess: ({ user }) => {
+      queryClient.setQueryData(ME_KEY, user);
+      refreshRealtimeSession(user.id);
+    },
   });
 }
 
@@ -43,6 +51,7 @@ export function useLogout() {
     mutationFn: () => apiFetch<void>('/api/auth/logout', { method: 'POST' }),
     onSuccess: () => {
       queryClient.setQueryData(ME_KEY, null);
+      refreshRealtimeSession(null);
       clearPrivateSessionQueries(queryClient);
       void queryClient.invalidateQueries({
         predicate: (q) => q.queryKey[0] !== 'me' && q.queryKey[0] !== 'wallet',

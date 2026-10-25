@@ -4,9 +4,12 @@ import { DomainError } from '../domain/errors';
 import { computeAvailable } from '../domain/wallet';
 import type { Db } from '../infra/db/client';
 import { idempotencyKeys, lots, walletEntries, wallets } from '../infra/db/schema';
+import type { BidEvent } from './bids';
 
 export interface WalletDeps {
   db: Db;
+  /** Publicado pelo transporte somente após a transação confirmar. */
+  collectEvents?: (events: BidEvent[]) => void;
 }
 
 export interface WalletViewer {
@@ -34,7 +37,8 @@ export async function createDeposit(
   input: DepositInput,
   idempotencyKey: string,
 ): Promise<Wallet> {
-  return deps.db.transaction(async (tx) => {
+  let events: BidEvent[] = [];
+  const response = await deps.db.transaction(async (tx) => {
     await tx.select().from(wallets).where(eq(wallets.userId, viewer.id)).for('update');
 
     const [stored] = await tx
@@ -52,11 +56,14 @@ export async function createDeposit(
       return stored.response as Wallet;
     }
 
-    await tx.insert(walletEntries).values({
-      userId: viewer.id,
-      type: 'DEPOSIT',
-      amountCents: input.amountCents,
-    });
+    const [depositEntry] = await tx
+      .insert(walletEntries)
+      .values({
+        userId: viewer.id,
+        type: 'DEPOSIT',
+        amountCents: input.amountCents,
+      })
+      .returning({ createdAt: walletEntries.createdAt });
     await tx
       .update(wallets)
       .set({
@@ -72,8 +79,22 @@ export async function createDeposit(
       route: DEPOSIT_ROUTE,
       response,
     });
+    events = [
+      {
+        type: 'wallet.changed',
+        userId: viewer.id,
+        serverTime: depositEntry!.createdAt.toISOString(),
+        payload: {
+          totalCents: response.totalCents,
+          committedCents: response.committedCents,
+          availableCents: response.availableCents,
+        },
+      },
+    ];
     return response;
   });
+  deps.collectEvents?.(events);
+  return response;
 }
 
 export async function walletView(tx: WalletTransaction, userId: string): Promise<Wallet> {
