@@ -12,6 +12,7 @@ import { apiFetch } from '../../lib/api';
 import { messageFor } from '../../lib/errorMessages';
 import { syncServerTime } from '../../lib/serverClock';
 import { useDebouncedValue } from '../../lib/useDebouncedValue';
+import { IntroStrip } from './IntroStrip';
 import { LotCard } from './LotCard';
 import {
   activeFilterCount,
@@ -138,6 +139,7 @@ export function ShowcasePage() {
   return (
     <section aria-labelledby="titulo-vitrine">
       <h1 id="titulo-vitrine">Vitrine</h1>
+      <IntroStrip />
       <nav aria-label="Fases dos lotes" className="tabs">
         {SHOWCASE_TABS.map((t) => (
           <Link
