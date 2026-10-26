@@ -70,7 +70,12 @@ export function CatalogSearch({ selectedId, onSelect }: CatalogSearchProps) {
                   aria-pressed={item.externalId === selectedId}
                   onClick={() => onSelect(item)}
                 >
-                  <img src={item.imageUrl.replace('/843,/', '/400,/')} alt="" loading="lazy" />
+                  <img
+                    src={item.imageUrl.replace('/843,/', '/400,/')}
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                  />
                   <span className="catalog-title">{item.title}</span>
                   <span className="catalog-meta">
                     {[item.artist, item.date].filter(Boolean).join(' · ')}

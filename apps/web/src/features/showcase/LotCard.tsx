@@ -8,7 +8,7 @@ export function LotCard({ lot, onPhaseChange }: { lot: LotSummary; onPhaseChange
   return (
     <article className="lot-card">
       <Link to={`/lotes/${lot.id}`} className="lot-card-link">
-        <img src={lot.imageUrl} alt="" loading="lazy" width={400} height={300} />
+        <img src={lot.imageUrl} alt="" loading="lazy" decoding="async" width={400} height={300} />
         <h2>{lot.title}</h2>
       </Link>
       <p className="lot-category">{LOT_CATEGORIES[lot.category]}</p>

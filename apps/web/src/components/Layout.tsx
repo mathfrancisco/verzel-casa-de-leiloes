@@ -1,4 +1,6 @@
-import { Link, Outlet, useNavigate } from 'react-router-dom';
+import { type CSSProperties, Suspense, useEffect, useState } from 'react';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { ChunkErrorBoundary } from './ChunkErrorBoundary';
 import { formatBRL, type Wallet } from '@leilao/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useLogout, useMe } from '../features/auth/session';
@@ -21,7 +23,27 @@ function WalletHeaderLink({ userId }: { userId: string }) {
   );
 }
 
+const SR_ONLY: CSSProperties = {
+  position: 'absolute',
+  width: 1,
+  height: 1,
+  overflow: 'hidden',
+  clip: 'rect(0 0 0 0)',
+  whiteSpace: 'nowrap',
+};
+
+/** Fallback do Suspense: o texto é anunciado pela região `role="status"` persistente do Layout. */
+function RouteLoading({ onChange }: { onChange: (loading: boolean) => void }) {
+  useEffect(() => {
+    onChange(true);
+    return () => onChange(false);
+  }, [onChange]);
+  return <p aria-hidden="true">Carregando página…</p>;
+}
+
 export function Layout() {
+  const [loading, setLoading] = useState(false);
+  const location = useLocation();
   const user = useMe();
   const logout = useLogout();
   const navigate = useNavigate();
@@ -71,7 +93,14 @@ export function Layout() {
         </nav>
       </header>
       <main id="conteudo">
-        <Outlet />
+        <div role="status" aria-live="polite" style={SR_ONLY}>
+          {loading ? 'Carregando página…' : ''}
+        </div>
+        <ChunkErrorBoundary key={location.pathname}>
+          <Suspense fallback={<RouteLoading onChange={setLoading} />}>
+            <Outlet />
+          </Suspense>
+        </ChunkErrorBoundary>
       </main>
       <OutbidToast sessionKey={user?.id} />
     </>
