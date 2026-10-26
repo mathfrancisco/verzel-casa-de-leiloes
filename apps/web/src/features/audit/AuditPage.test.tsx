@@ -108,6 +108,26 @@ describe('AuditPage', () => {
     expect(container.textContent).not.toContain('Cadeia íntegra');
   });
 
+  it('mostra inconsistência, sem quebrar a página, quando a chave pública é inválida', async () => {
+    vi.mocked(apiFetch).mockResolvedValue({
+      ...(await reportFor('lot-a', true)),
+      publicKey: '!!! chave inválida !!!',
+    });
+    await act(async () => {
+      root.render(
+        <QueryClientProvider client={queryClient}>
+          <MemoryRouter initialEntries={['/auditoria/lot-a']}>
+            <Routes>
+              <Route path="/auditoria/:lotId" element={<AuditPage />} />
+            </Routes>
+          </MemoryRouter>
+        </QueryClientProvider>,
+      );
+    });
+
+    await vi.waitFor(() => expect(container.textContent).toContain('Cadeia com inconsistências'));
+  });
+
   it('não mostra o veredito local do lote anterior durante a troca de rota', async () => {
     const intact = await reportFor('lot-a', true);
     const altered = await reportFor('lot-b', false);
