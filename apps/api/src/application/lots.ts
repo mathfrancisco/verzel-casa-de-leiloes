@@ -163,7 +163,7 @@ export async function getLotDetail(
 export async function getImage(db: Db, id: string) {
   if (!UUID.test(id)) return null;
   const [image] = await db
-    .select({ bytes: images.bytes, contentType: images.contentType })
+    .select({ bytes: images.bytes, contentType: images.contentType, sha256: images.sha256 })
     .from(images)
     .where(eq(images.id, id));
   return image ?? null;
