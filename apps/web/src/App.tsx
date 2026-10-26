@@ -8,6 +8,8 @@ import { ShowcasePage } from './features/showcase/ShowcasePage';
 import { LotRoomPage } from './features/lotRoom/LotRoomPage';
 import { WalletPage } from './features/wallet/WalletPage';
 import { AuditPage } from './features/audit/AuditPage';
+import { ReceiptPage } from './features/receipt/ReceiptPage';
+import { ParticipationsPage } from './features/participations/ParticipationsPage';
 import { ComingSoonPage } from './routes/ComingSoonPage';
 import { NotFoundPage } from './routes/NotFoundPage';
 
@@ -18,6 +20,7 @@ export function App() {
         <Route index element={<ShowcasePage />} />
         <Route path="lotes/:id" element={<LotRoomPage />} />
         <Route path="auditoria/:lotId" element={<AuditPage />} />
+        <Route path="comprovante/:code" element={<ReceiptPage />} />
         <Route path="entrar" element={<LoginPage />} />
         <Route path="cadastro" element={<RegisterPage />} />
         <Route
@@ -25,6 +28,14 @@ export function App() {
           element={
             <RequireRole>
               <WalletPage />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="meus-lances"
+          element={
+            <RequireRole role="BIDDER">
+              <ParticipationsPage />
             </RequireRole>
           }
         />
