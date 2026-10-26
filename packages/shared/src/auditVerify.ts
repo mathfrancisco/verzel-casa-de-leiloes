@@ -67,6 +67,20 @@ export interface AuditReport {
   receipt: AuditReceipt | null;
 }
 
+/** Public HTTP representation returned by the audit endpoints. */
+export interface AuditReportResponse extends AuditReport {
+  verdict: AuditVerdict;
+  /** Raw 32-byte Ed25519 public key encoded as base64url. */
+  publicKey: string;
+  serverTime: string;
+}
+
+export interface AuditPublicKeyResponse {
+  algorithm: 'Ed25519';
+  /** Raw 32-byte Ed25519 public key encoded as base64url. */
+  publicKey: string;
+}
+
 export interface AuditCrypto {
   sha256(data: Uint8Array): Promise<Uint8Array>;
   verify(publicKey: Uint8Array, signature: Uint8Array, message: Uint8Array): Promise<boolean>;
@@ -382,13 +396,15 @@ export async function verifyChain(
   }
   if (!rules) {
     const expectedState =
-      terminal === 'CANCELLED'
-        ? 'CANCELLED'
-        : terminal === 'CLOSED'
-          ? closedWithWinner
-            ? 'SETTLED'
-            : 'CLOSED_NO_WINNER'
-          : 'ACTIVE';
+      !terminal && entries.length === 0 && report.lot.state === 'SCHEDULED'
+        ? 'SCHEDULED'
+        : terminal === 'CANCELLED'
+          ? 'CANCELLED'
+          : terminal === 'CLOSED'
+            ? closedWithWinner
+              ? 'SETTLED'
+              : 'CLOSED_NO_WINNER'
+            : 'ACTIVE';
     if (report.lot.state !== expectedState)
       rules = failed('RULES', 'Estado do lote não corresponde aos eventos.');
   }

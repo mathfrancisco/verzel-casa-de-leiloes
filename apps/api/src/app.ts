@@ -15,7 +15,7 @@ import { walletRoutes } from './http/wallet.routes';
 import { readyRoutes } from './http/ready';
 import { registerSpa } from './http/spa';
 import { attachRealtime } from './infra/realtime/socket';
-import type { AuditCrypto, Signer } from '@leilao/shared';
+import { bytesToBase64url, type AuditCrypto, type Signer } from '@leilao/shared';
 import type { RealtimeEvent } from './application/bids';
 
 export interface AppDeps {
@@ -23,6 +23,8 @@ export interface AppDeps {
   sql: Sql;
   catalog: CatalogProvider;
   auditSigner: Signer;
+  /** Chave Ed25519 pública bruta, derivada da mesma privada usada para assinar a cadeia. */
+  auditPublicKey: Uint8Array;
   auditCrypto: AuditCrypto;
   /** Coletor pós-commit; o transporte Socket.IO entra no LC-012. */
   bidEventCollector?: (events: RealtimeEvent[]) => void;
@@ -48,6 +50,7 @@ export function buildApp({
   sql,
   catalog,
   auditSigner,
+  auditPublicKey,
   auditCrypto,
   bidEventCollector,
   onRealtimeEventCollectorReady,
@@ -110,6 +113,8 @@ export function buildApp({
       catalog,
       pseudonymSecret: config.pseudonymSecret,
       signer: auditSigner,
+      publicKey: auditPublicKey,
+      publicKeyBase64url: bytesToBase64url(auditPublicKey),
       crypto: auditCrypto,
       collectEvents,
     });

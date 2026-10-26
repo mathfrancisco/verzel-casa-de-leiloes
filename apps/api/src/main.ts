@@ -1,3 +1,4 @@
+import { createPublicKey } from 'node:crypto';
 import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { buildApp } from './app';
@@ -29,8 +30,13 @@ await runMigrations(env.DATABASE_URL);
 const webDistDir = fileURLToPath(new URL('../public', import.meta.url));
 
 let auditSigner: Ed25519Signer;
+let auditPublicKey: Uint8Array;
 try {
-  auditSigner = new Ed25519Signer(parseEd25519PrivateKey(env.AUDIT_SIGNING_PRIVATE_KEY));
+  const privateKey = parseEd25519PrivateKey(env.AUDIT_SIGNING_PRIVATE_KEY);
+  auditSigner = new Ed25519Signer(privateKey);
+  const x = createPublicKey(privateKey).export({ format: 'jwk' }).x;
+  if (!x) throw new Error('Chave pública Ed25519 ausente.');
+  auditPublicKey = new Uint8Array(Buffer.from(x, 'base64url'));
 } catch {
   throw new EnvError('AUDIT_SIGNING_PRIVATE_KEY deve ser uma chave privada Ed25519 válida em PEM.');
 }
@@ -42,6 +48,7 @@ const app = buildApp({
   sql,
   catalog: env.CATALOG_PROVIDER === 'fake' ? new FakeCatalog() : new ArticCatalog(),
   auditSigner,
+  auditPublicKey,
   auditCrypto: new NodeAuditCrypto(),
   config: {
     jwtSecret: env.JWT_SECRET,

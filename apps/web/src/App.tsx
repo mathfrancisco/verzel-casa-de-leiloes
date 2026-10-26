@@ -7,6 +7,7 @@ import { RegisterPage } from './features/auth/RegisterPage';
 import { ShowcasePage } from './features/showcase/ShowcasePage';
 import { LotRoomPage } from './features/lotRoom/LotRoomPage';
 import { WalletPage } from './features/wallet/WalletPage';
+import { AuditPage } from './features/audit/AuditPage';
 import { ComingSoonPage } from './routes/ComingSoonPage';
 import { NotFoundPage } from './routes/NotFoundPage';
 
@@ -16,6 +17,7 @@ export function App() {
       <Route element={<Layout />}>
         <Route index element={<ShowcasePage />} />
         <Route path="lotes/:id" element={<LotRoomPage />} />
+        <Route path="auditoria/:lotId" element={<AuditPage />} />
         <Route path="entrar" element={<LoginPage />} />
         <Route path="cadastro" element={<RegisterPage />} />
         <Route

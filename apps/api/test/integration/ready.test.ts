@@ -29,11 +29,18 @@ describe('GET /ready', () => {
       connect_timeout: 1,
       max: 1,
     });
+    const auditPair = generateKeyPairSync('ed25519');
     const app = buildApp({
       db: drizzle(unreachable),
       sql: unreachable,
       catalog: new FakeCatalog(),
-      auditSigner: new Ed25519Signer(generateKeyPairSync('ed25519').privateKey),
+      auditSigner: new Ed25519Signer(auditPair.privateKey),
+      auditPublicKey: new Uint8Array(
+        Buffer.from(
+          (auditPair.publicKey.export({ format: 'jwk' }) as { x?: string }).x!,
+          'base64url',
+        ),
+      ),
       auditCrypto: new NodeAuditCrypto(),
       config: { jwtSecret: 'x'.repeat(32), pseudonymSecret: 'p'.repeat(32), secureCookies: false },
     });

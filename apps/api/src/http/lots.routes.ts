@@ -7,13 +7,18 @@ import {
 } from '@leilao/shared';
 import type { FastifyInstance } from 'fastify';
 import { createLot, getImage, getLotDetail, listLots, type LotDeps } from '../application/lots';
+import { getAuditReport, type AuditDeps } from '../application/audit';
 import { placeBid, type BidDeps } from '../application/bids';
 import { DomainError } from '../domain/errors';
 import { optionalUser, requireAuth, requireRole } from './auth-guard';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-export function lotRoutes(app: FastifyInstance, deps: LotDeps & BidDeps): void {
+export function lotRoutes(app: FastifyInstance, deps: LotDeps & BidDeps & AuditDeps): void {
+  app.get('/api/audit/public-key', async () => ({
+    algorithm: 'Ed25519' as const,
+    publicKey: deps.publicKeyBase64url,
+  }));
   app.post('/api/lots', { preHandler: requireRole('AUCTIONEER') }, async (request, reply) => {
     const lot = await createLot(
       deps,
@@ -33,6 +38,13 @@ export function lotRoutes(app: FastifyInstance, deps: LotDeps & BidDeps): void {
     const lot = await getLotDetail(deps, request.params.id, await optionalUser(request));
     if (!lot) throw new DomainError('LOT_NOT_FOUND');
     return lot;
+  });
+
+  app.get<{ Params: { id: string } }>('/api/lots/:id/audit', async (request) => {
+    if (!UUID.test(request.params.id)) throw new DomainError('LOT_NOT_FOUND');
+    const report = await getAuditReport(deps, request.params.id);
+    if (!report) throw new DomainError('LOT_NOT_FOUND');
+    return report;
   });
 
   app.post<{ Params: { id: string } }>('/api/lots/:id/bids', async (request, reply) => {

@@ -355,6 +355,54 @@ button:disabled {
 .outbid-toast p {
   margin-top: 0;
 }
+.audit-page {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  max-width: 58rem;
+}
+.audit-page section {
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--surface);
+}
+.audit-verdict {
+  margin: 0;
+  padding: 1rem;
+  border: 2px solid var(--border);
+  border-radius: 4px;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+.audit-intact {
+  color: #126b35;
+}
+.audit-tampered {
+  color: #a00020;
+}
+.audit-checks {
+  display: grid;
+  gap: 0.4rem;
+  padding-left: 1.25rem;
+}
+.audit-table-wrap {
+  overflow-x: auto;
+}
+.audit-table-wrap table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.audit-table-wrap th,
+.audit-table-wrap td {
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  white-space: nowrap;
+}
+.audit-key {
+  overflow-wrap: anywhere;
+}
 @media (max-width: 40rem) {
   .lot-room-main {
     grid-template-columns: 1fr;
