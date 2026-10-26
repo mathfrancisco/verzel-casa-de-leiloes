@@ -2,6 +2,7 @@ import { formatBRL, parseBRL, type BidResponse, type LotDetail } from '@leilao/s
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { CancelledNotice } from '../../components/CancelledNotice';
 import { useMe } from '../auth/session';
 import { Countdown } from '../showcase/Countdown';
 import { useLotChannel } from '../showcase/useLotChannel';
@@ -197,6 +198,7 @@ export function LotRoomPage() {
 
   return (
     <section className="lot-room">
+      {detail.phase === 'CANCELLED' && <CancelledNotice />}
       <div className="lot-room-main">
         <img className="lot-room-image" src={detail.imageUrl} alt="" />
         <div>

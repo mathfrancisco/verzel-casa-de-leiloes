@@ -1,4 +1,5 @@
 import {
+  cancelLotSchema,
   createLotSchema,
   lotListQuerySchema,
   placeBidSchema,
@@ -17,6 +18,7 @@ import {
 } from '../application/lots';
 import { getAuditReport, type AuditDeps } from '../application/audit';
 import { placeBid, type BidDeps } from '../application/bids';
+import { cancelLot } from '../application/cancel';
 import { DomainError } from '../domain/errors';
 import { optionalUser, requireAuth, requireRole } from './auth-guard';
 
@@ -55,6 +57,19 @@ export function lotRoutes(app: FastifyInstance, deps: LotDeps & BidDeps & AuditD
     return lot;
   });
 
+  app.post<{ Params: { id: string } }>(
+    '/api/lots/:id/cancel',
+    { preHandler: requireRole('AUCTIONEER') },
+    async (request): Promise<LotDetail> => {
+      if (!UUID.test(request.params.id)) throw new DomainError('LOT_NOT_FOUND');
+      return cancelLot(
+        deps,
+        { id: request.user.sub, role: request.user.role },
+        request.params.id,
+        cancelLotSchema.parse(request.body ?? {}),
+      );
+    },
+  );
   app.get<{ Params: { id: string } }>('/api/lots/:id/audit', async (request) => {
     if (!UUID.test(request.params.id)) throw new DomainError('LOT_NOT_FOUND');
     const report = await getAuditReport(deps, request.params.id);

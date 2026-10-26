@@ -20,6 +20,7 @@ Tipos em `packages/shared/src/realtime.ts`. Todos levam `serverTime`.
 | `lot:{id}` | `lot.extended` | `{ lotId, endsAt, previousEndsAt }` |
 | `lot:{id}` | `lot.closed` | `{ lotId, result: 'SOLD' \| 'UNSOLD', finalPriceCents, winnerPseudonym }` |
 | `lot:{id}` | `lot.cancelled` | `{ lotId, reason }` |
+| `user:{id}` | `lot.cancelled` | `{ lotId, reason }` (cada licitante do lote, para quem está fora da sala) |
 | `user:{id}` | `bid.outbid` | `{ lotId, lotTitle, newPriceCents }` |
 | `user:{id}` | `wallet.changed` | `{ totalCents, committedCents, availableCents }` |
 | `user:{id}` | `lot.won` | `{ lotId, lotTitle, amountCents, receiptCode }` |
