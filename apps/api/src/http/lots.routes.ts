@@ -21,6 +21,7 @@ import { placeBid, type BidDeps } from '../application/bids';
 import { cancelLot } from '../application/cancel';
 import { DomainError } from '../domain/errors';
 import { optionalUser, requireAuth, requireRole } from './auth-guard';
+import { readIdempotencyKey } from './idempotency-key';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -81,11 +82,7 @@ export function lotRoutes(app: FastifyInstance, deps: LotDeps & BidDeps & AuditD
     await requireAuth(request);
     if (request.user.role !== 'BIDDER') throw new DomainError('SELLER_CANNOT_BID');
     if (!UUID.test(request.params.id)) throw new DomainError('LOT_NOT_FOUND');
-    const key = request.headers['idempotency-key'];
-    if (!key) throw new DomainError('IDEMPOTENCY_KEY_REQUIRED');
-    if (Array.isArray(key)) {
-      throw new DomainError('VALIDATION_ERROR', { field: 'Idempotency-Key' });
-    }
+    const key = readIdempotencyKey(request);
     const result = await placeBid(
       deps,
       { id: request.user.sub, role: request.user.role },
