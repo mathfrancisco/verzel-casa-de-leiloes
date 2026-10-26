@@ -124,7 +124,7 @@ export function WalletPage() {
 
       <h2>Compromissos</h2>
       {data.commitments.length === 0 ? (
-        <p>Nenhum saldo comprometido em lotes.</p>
+        <p className="empty-state">Nenhum saldo comprometido em lotes.</p>
       ) : (
         <ul className="wallet-list">
           {data.commitments.map((commitment) => (
@@ -138,7 +138,7 @@ export function WalletPage() {
 
       <h2>Extrato</h2>
       {data.entries.length === 0 ? (
-        <p>Seu extrato ainda não tem lançamentos.</p>
+        <p className="empty-state">Seu extrato ainda não tem lançamentos.</p>
       ) : (
         <ul className="wallet-list">
           {data.entries.map((entry) => (
