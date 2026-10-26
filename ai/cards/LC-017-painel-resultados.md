@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Status | REVIEW |
+| Status | DONE |
 | Épico / dia | E5 Auditoria e gestão · Dia 5 |
 | Depende de | LC-014 |
 | Requisitos | RF-06 |
@@ -37,3 +37,4 @@ Leiloeiro vê o resultado de cada lote e quanto recebeu no total.
 - [x] Todos os critérios de aceite com evidência
 - [x] Status atualizado aqui e em `ai/cards/README.md`
 - [x] `docs/CHECKLIST.md` (só com evidência) e `docs/USO-DE-IA.md` atualizados
+- Integração: PR #18 integrada em `ac90fc0`; CI da PR (run 40384004031) e pós-merge (run 40384379860) passaram.

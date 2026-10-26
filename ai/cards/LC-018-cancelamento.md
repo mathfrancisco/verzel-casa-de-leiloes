@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Status | REVIEW |
+| Status | DONE |
 | Épico / dia | E5 Auditoria e gestão · Dia 5 |
 | Depende de | LC-017 |
 | Requisitos | RF-05, RF-18 |
@@ -42,3 +42,4 @@ Decisões: lote `ACTIVE` em `CLOSING` (fim passou, ainda sem liquidar) é cancel
 - [x] Navegador (harness local, FakeCatalog, banco descartável): botão só em lotes canceláveis; confirmação explicou estorno; total recebido caiu de R$ 26,00 para R$ 11,00 após cancelar arrematado; sala e auditoria mostraram aviso e elo `CANCELLED`. Evidência em `../work/lc018-validation.log`
 - [x] Status atualizado aqui e em `ai/cards/README.md`
 - [ ] `docs/CHECKLIST.md` atualizado; `docs/USO-DE-IA.md` fica a cargo do coordenador
+- Integração: PR #19 integrada em `acc6e58`; CI da PR (run 40385566227) e pós-merge (run 40385941500) passaram.

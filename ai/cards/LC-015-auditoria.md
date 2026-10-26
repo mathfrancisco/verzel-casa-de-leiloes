@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Status | REVIEW |
+| Status | DONE |
 | Épico / dia | E5 Auditoria e gestão · Dia 5 |
 | Depende de | LC-010, LC-014 |
 | Requisitos | RF-15, RNF-05, RNF-06 |
@@ -35,9 +35,9 @@ Qualquer pessoa confere, sem login, se o histórico de um lote está íntegro.
 
 ## Definição de pronto
 
-- [ ] `pnpm lint && pnpm typecheck && pnpm test` verdes, saída real no PR
+- [x] `pnpm lint && pnpm typecheck && pnpm test` verdes, saída real no PR
 - [ ] Todos os critérios de aceite com evidência
-- [ ] Status atualizado aqui e em `ai/cards/README.md`
+- [x] Status atualizado aqui e em `ai/cards/README.md`
 - [ ] `docs/CHECKLIST.md` (só com evidência) e `docs/USO-DE-IA.md` atualizados
 
 ## Evidência local
@@ -57,3 +57,4 @@ Qualquer pessoa confere, sem login, se o histórico de um lote está íntegro.
   associação do veredito ao relatório e melhorias de CT-08-05/CT-08-06.
 - Catálogo falso e PostgreSQL descartável. Evidência: `../work/lc015-validation.log`.
 - Publicação e CI permanecem pendentes; o card fica em `REVIEW`.
+- Integração: PR #16 integrada em `9aaeb8d`; CI da PR (run 40381804069) e pós-merge (run 40382175128) passaram.
