@@ -62,7 +62,7 @@ export function ParticipationsPage() {
       </div>
       <p aria-live="polite">{notice}</p>
       {items.length === 0 ? (
-        <p>Nenhum lote nesta aba.</p>
+        <p className="empty-state">Nenhum lote nesta aba.</p>
       ) : (
         <ul className="wallet-list">
           {items.map((item) => (

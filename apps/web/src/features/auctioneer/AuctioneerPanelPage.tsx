@@ -62,7 +62,9 @@ export function AuctioneerPanelPage() {
       </dl>
 
       {items.length === 0 ? (
-        <p>Ainda não há lotes no seu painel. Crie seu primeiro lote para começar.</p>
+        <p className="empty-state">
+          Ainda não há lotes no seu painel. Crie seu primeiro lote para começar.
+        </p>
       ) : (
         <ul className="auctioneer-lot-list">
           {items.map((lot) => (
