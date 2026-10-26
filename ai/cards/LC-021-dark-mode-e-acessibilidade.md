@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Status | REVIEW |
+| Status | DONE |
 | Épico / dia | E6 Qualidade e entrega · Dia 6 |
 | Depende de | LC-013, LC-015, LC-016, LC-017 |
 | Requisitos | RF-19, RNF-11 |
@@ -39,3 +39,5 @@ Interface agradável nos dois temas, utilizável no celular e por teclado/leitor
 - [ ] Todos os critérios de aceite com evidência
 - [ ] Status atualizado aqui e em `ai/cards/README.md`
 - [ ] `docs/CHECKLIST.md` (só com evidência) e `docs/USO-DE-IA.md` atualizados
+
+Integração: PR #22 integrada em `6597069`; CI da PR (run 40388593058) e pós-merge (run 40388949773) passaram.

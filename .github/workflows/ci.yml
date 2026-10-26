@@ -37,9 +37,74 @@ jobs:
       - run: pnpm test
       - run: pnpm build
 
+  e2e:
+    runs-on: ubuntu-latest
+    # Só roda se lint, tipos, testes e build passarem: o E2E dura cerca de 7 minutos.
+    needs: checks
+    timeout-minutes: 25
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: leilao
+          POSTGRES_PASSWORD: leilao
+          POSTGRES_DB: leilao_e2e
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U leilao -d leilao_e2e"
+          --health-interval 2s
+          --health-timeout 3s
+          --health-retries 15
+    env:
+      CI: 'true'
+      DATABASE_URL: postgres://leilao:leilao@localhost:5432/leilao_e2e
+      # O E2E nunca chama a API externa do Art Institute of Chicago.
+      CATALOG_PROVIDER: fake
+      NODE_ENV: development
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # Segredos efêmeros: gerados neste job, mascarados no log e descartados com o runner.
+      # Nenhum valor real nem chave fixa vai para o repositório.
+      - name: Gerar segredos efêmeros
+        run: |
+          jwt="$(openssl rand -base64 48 | tr -d '\n')"
+          pseudonym="$(openssl rand -base64 48 | tr -d '\n')"
+          openssl genpkey -algorithm ed25519 -out "$RUNNER_TEMP/audit.pem"
+          echo "::add-mask::$jwt"
+          echo "::add-mask::$pseudonym"
+          {
+            echo "JWT_SECRET=$jwt"
+            echo "PSEUDONYM_SECRET=$pseudonym"
+            echo "AUDIT_SIGNING_PRIVATE_KEY<<AUDIT_KEY_EOF"
+            cat "$RUNNER_TEMP/audit.pem"
+            echo "AUDIT_KEY_EOF"
+          } >> "$GITHUB_ENV"
+          rm "$RUNNER_TEMP/audit.pem"
+      - run: pnpm db:migrate
+      - run: pnpm seed
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm test:e2e
+      - name: Enviar relatório e traces
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore
+          retention-days: 7
+
   docker:
     runs-on: ubuntu-latest
-    needs: checks
+    needs: [checks, e2e]
     steps:
       - uses: actions/checkout@v4
       - run: docker build -t casa-de-leiloes .
