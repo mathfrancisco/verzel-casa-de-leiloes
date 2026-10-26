@@ -1,10 +1,9 @@
 import { formatBRL, parseBRL, type BidResponse, type LotDetail } from '@leilao/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { CancelledNotice } from '../../components/CancelledNotice';
 import { useMe } from '../auth/session';
-import { Countdown } from '../showcase/Countdown';
 import { useLotChannel } from '../showcase/useLotChannel';
 import { ApiError, apiFetch } from '../../lib/api';
 import { bidMessageFor, messageFor } from '../../lib/errorMessages';
@@ -16,6 +15,8 @@ import {
   shouldApplyBidSnapshot,
 } from './lotRoom';
 import { BidErrorNotice, type BidErrorNoticeValue } from './BidErrorNotice';
+import { LotHistory } from './LotHistory';
+import { LotSummary } from './LotSummary';
 
 const attempts = new BidAttempts();
 
@@ -75,6 +76,8 @@ export function LotRoomPage() {
     retry: false,
   });
   const detail = lot.data;
+  const { refetch } = lot;
+  const refetchLot = useCallback(() => void refetch(), [refetch]);
   const [amount, setAmount] = useState('');
   const [error, setError] = useState<BidErrorNoticeValue | null>(null);
   const displayed = displayedSeq(detail);
@@ -201,7 +204,13 @@ export function LotRoomPage() {
     <section className="lot-room">
       {detail.phase === 'CANCELLED' && <CancelledNotice />}
       <div className="lot-room-main">
-        <img className="lot-room-image" src={detail.imageUrl} alt="" />
+        <img
+          className="lot-room-image"
+          src={detail.imageUrl}
+          alt=""
+          fetchPriority="high"
+          decoding="async"
+        />
         <div>
           <p className="lot-category">{detail.category}</p>
           <h1>{detail.title}</h1>
@@ -220,26 +229,15 @@ export function LotRoomPage() {
         </div>
       </div>
 
-      <div className="lot-room-summary">
-        <p>
-          Preço atual{' '}
-          <strong>{formatBRL(detail.currentPriceCents ?? detail.startingPriceCents)}</strong>
-        </p>
-        <p>
-          Próximo lance mínimo <strong>{formatBRL(detail.minimumNextBidCents)}</strong>
-        </p>
-        {detail.phase === 'LIVE' && (
-          <Countdown
-            label="Termina em"
-            target={detail.endsAt}
-            onElapsed={() => void lot.refetch()}
-          />
-        )}
-        {detail.extended && <p className="lot-extended">Prorrogado</p>}
-        <p className="lot-status" aria-live="polite">
-          {statusText(detail)}
-        </p>
-      </div>
+      <LotSummary
+        priceCents={detail.currentPriceCents ?? detail.startingPriceCents}
+        minimumNextBidCents={detail.minimumNextBidCents}
+        live={detail.phase === 'LIVE'}
+        endsAt={detail.endsAt}
+        extended={detail.extended}
+        statusText={statusText(detail)}
+        onElapsed={refetchLot}
+      />
 
       {canBid && (
         <form className="bid-form" onSubmit={submit}>
@@ -265,31 +263,11 @@ export function LotRoomPage() {
         </form>
       )}
 
-      <section className="lot-history" aria-labelledby="lot-history-title">
-        <h2 id="lot-history-title">Histórico de lances</h2>
-        {detail.recentEntries.length === 0 ? (
-          <p>Ainda não há lances.</p>
-        ) : (
-          <ol>
-            {detail.recentEntries.map((entry) => (
-              <li key={entry.seq}>
-                <span>{entry.bidderPseudonym ?? entry.type}</span>
-                {entry.amountCents !== null && <strong>{formatBRL(entry.amountCents)}</strong>}
-                <time dateTime={entry.createdAt}>
-                  {new Intl.DateTimeFormat('pt-BR', {
-                    dateStyle: 'short',
-                    timeStyle: 'short',
-                  }).format(new Date(entry.createdAt))}
-                </time>
-                {entry.bidderPseudonym === detail.me?.myPseudonym && ' (você)'}
-              </li>
-            ))}
-          </ol>
-        )}
-        {detail.me?.position !== null && detail.me?.position !== undefined && (
-          <p>Sua posição: {detail.me.position}ª</p>
-        )}
-      </section>
+      <LotHistory
+        entries={detail.recentEntries}
+        myPseudonym={detail.me?.myPseudonym}
+        position={detail.me?.position}
+      />
       <Link to={`/auditoria/${detail.id}`}>Auditar este lote</Link>
     </section>
   );

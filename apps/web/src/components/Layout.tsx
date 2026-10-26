@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { formatBRL, type Wallet } from '@leilao/shared';
 import { useQuery } from '@tanstack/react-query';
@@ -71,7 +72,9 @@ export function Layout() {
         </nav>
       </header>
       <main id="conteudo">
-        <Outlet />
+        <Suspense fallback={<p role="status">Carregando página…</p>}>
+          <Outlet />
+        </Suspense>
       </main>
       <OutbidToast sessionKey={user?.id} />
     </>
