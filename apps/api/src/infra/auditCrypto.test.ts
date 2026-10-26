@@ -122,4 +122,9 @@ describe('adaptadores Ed25519 (CT-08-10)', () => {
       status: 'TAMPERED',
     });
   });
+
+  it('recusa uma chave privada que não seja Ed25519', () => {
+    const { privateKey } = generateKeyPairSync('rsa', { modulusLength: 2048 });
+    expect(() => new Ed25519Signer(privateKey)).toThrow('Ed25519');
+  });
 });

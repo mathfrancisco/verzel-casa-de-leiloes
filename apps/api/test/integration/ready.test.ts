@@ -1,8 +1,10 @@
+import { generateKeyPairSync } from 'node:crypto';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { buildApp } from '../../src/app';
 import { FakeCatalog } from '../../src/infra/catalog/fake-catalog';
+import { Ed25519Signer, NodeAuditCrypto } from '../../src/infra/auditCrypto';
 import { buildTestApp } from '../support/app';
 import { createTestDatabase } from '../support/database';
 
@@ -31,6 +33,8 @@ describe('GET /ready', () => {
       db: drizzle(unreachable),
       sql: unreachable,
       catalog: new FakeCatalog(),
+      auditSigner: new Ed25519Signer(generateKeyPairSync('ed25519').privateKey),
+      auditCrypto: new NodeAuditCrypto(),
       config: { jwtSecret: 'x'.repeat(32), pseudonymSecret: 'p'.repeat(32), secureCookies: false },
     });
     const res = await app.inject({ method: 'GET', url: '/ready' });

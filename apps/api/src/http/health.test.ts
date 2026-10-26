@@ -1,16 +1,21 @@
 import type { HealthResponse } from '@leilao/shared';
+import { generateKeyPairSync } from 'node:crypto';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import { afterAll, describe, expect, it } from 'vitest';
 import { buildApp } from '../app';
 import { FakeCatalog } from '../infra/catalog/fake-catalog';
+import { Ed25519Signer, NodeAuditCrypto } from '../infra/auditCrypto';
 
 // O cliente postgres só conecta na primeira query; o health não consulta o banco.
 const sql = postgres('postgres://unused@127.0.0.1:1/unused');
+const auditSigner = new Ed25519Signer(generateKeyPairSync('ed25519').privateKey);
 const app = buildApp({
   db: drizzle(sql),
   sql,
   catalog: new FakeCatalog(),
+  auditSigner,
+  auditCrypto: new NodeAuditCrypto(),
   config: { jwtSecret: 'x'.repeat(32), pseudonymSecret: 'p'.repeat(32), secureCookies: false },
 });
 afterAll(async () => {

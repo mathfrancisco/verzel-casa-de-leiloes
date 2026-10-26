@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Status | TODO |
+| Status | REVIEW |
 | Épico / dia | E3 Lances e carteira · Dia 3 |
 | Depende de | LC-009, LC-010 |
 | Requisitos | RF-09, RF-11, RNF-04 |
@@ -28,9 +28,9 @@ Lances corretos sob concorrência, com saldo comprometido e prorrogação garant
 
 ## Critérios de aceite
 
-- [ ] Todas as validações na ordem da RN com os detalhes de erro
-- [ ] Testes de concorrência verdes repetidamente (rodar 5× seguidas)
-- [ ] Invariantes I-2, I-3, I-4 checadas após cada teste de integração
+- [x] Todas as validações na ordem da RN com os detalhes de erro
+- [x] Testes de concorrência verdes repetidamente (rodar 5× seguidas)
+- [x] Invariantes I-2, I-3, I-4 checadas após cada teste de integração
 
 ## Testes obrigatórios
 
@@ -38,7 +38,14 @@ Lances corretos sob concorrência, com saldo comprometido e prorrogação garant
 
 ## Definição de pronto
 
-- [ ] `pnpm lint && pnpm typecheck && pnpm test` verdes, saída real no PR
-- [ ] Todos os critérios de aceite com evidência
-- [ ] Status atualizado aqui e em `ai/cards/README.md`
-- [ ] `docs/CHECKLIST.md` (só com evidência) e `docs/USO-DE-IA.md` atualizados
+- [x] `pnpm lint`, `pnpm typecheck`, `pnpm test` e `pnpm build` verdes localmente em Node 22; saída de PR/CI pendente
+- [x] Todos os critérios de aceite com evidência local: 12 testes de domínio, suíte final de integração 9/9 e 8 casos repetidos 5× no PostgreSQL descartável
+- [x] Status atualizado aqui e em `ai/cards/README.md`
+- [x] `docs/CHECKLIST.md` (só com evidência) e `docs/USO-DE-IA.md` atualizados
+
+## Evidência local
+
+- PostgreSQL descartável `verzel-cards-test-db` em `127.0.0.1:55439`.
+- `bidRules.test.ts` + `antiSniping.test.ts`: 12/12; `bids.test.ts`: 9/9.
+- O conjunto original de 8 casos de integração executou 5 vezes sequenciais, verificando I-2, I-3 e I-4 após cada caso; a suíte final com o caso do coletor pós-commit passou 9/9.
+- Revisão técnica assistida confirmou as correções de chave Ed25519, limite de valor e falha do coletor pós-commit; PR/CI ainda pendentes antes de qualquer status `DONE`.

@@ -1,15 +1,19 @@
 import {
   createLotSchema,
   lotListQuerySchema,
+  placeBidSchema,
   type LotDetail,
   type LotListResponse,
 } from '@leilao/shared';
 import type { FastifyInstance } from 'fastify';
 import { createLot, getImage, getLotDetail, listLots, type LotDeps } from '../application/lots';
+import { placeBid, type BidDeps } from '../application/bids';
 import { DomainError } from '../domain/errors';
-import { optionalUser, requireRole } from './auth-guard';
+import { optionalUser, requireAuth, requireRole } from './auth-guard';
 
-export function lotRoutes(app: FastifyInstance, deps: LotDeps): void {
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+export function lotRoutes(app: FastifyInstance, deps: LotDeps & BidDeps): void {
   app.post('/api/lots', { preHandler: requireRole('AUCTIONEER') }, async (request, reply) => {
     const lot = await createLot(
       deps,
@@ -29,6 +33,25 @@ export function lotRoutes(app: FastifyInstance, deps: LotDeps): void {
     const lot = await getLotDetail(deps, request.params.id, await optionalUser(request));
     if (!lot) throw new DomainError('LOT_NOT_FOUND');
     return lot;
+  });
+
+  app.post<{ Params: { id: string } }>('/api/lots/:id/bids', async (request, reply) => {
+    await requireAuth(request);
+    if (request.user.role !== 'BIDDER') throw new DomainError('SELLER_CANNOT_BID');
+    if (!UUID.test(request.params.id)) throw new DomainError('LOT_NOT_FOUND');
+    const key = request.headers['idempotency-key'];
+    if (!key) throw new DomainError('IDEMPOTENCY_KEY_REQUIRED');
+    if (Array.isArray(key)) {
+      throw new DomainError('VALIDATION_ERROR', { field: 'Idempotency-Key' });
+    }
+    const result = await placeBid(
+      deps,
+      { id: request.user.sub, role: request.user.role },
+      request.params.id,
+      placeBidSchema.parse(request.body),
+      key,
+    );
+    return reply.code(201).send(result);
   });
 
   app.get<{ Params: { id: string } }>('/api/images/:id', async (request, reply) => {
