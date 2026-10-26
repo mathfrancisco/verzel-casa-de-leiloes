@@ -42,6 +42,8 @@ export interface BidDeps {
   crypto: AuditCrypto;
   /** LC-012 binds this collector to Socket.IO. It is called only after a successful commit. */
   collectEvents?: (events: BidEvent[]) => void;
+  /** Relógio controlado do seed; sem ele vale o `now()` do banco. */
+  clock?: () => Date;
 }
 
 function route(lotId: string) {
@@ -83,7 +85,7 @@ export async function placeBid(
     if (!lockedLot) throw new DomainError('LOT_NOT_FOUND');
     // clock_timestamp(): o relógio depois da trava; now() seria o início da transação, antes da espera.
     const [nowRow] = await tx.execute<{ now: string }>(sql`select clock_timestamp() as now`);
-    const now = new Date(nowRow!.now);
+    const now = deps.clock?.() ?? new Date(nowRow!.now);
 
     // Defesa de consistência caso um vendedor seja representado com papel incorreto.
     if (lockedLot.sellerId === viewer.id) {

@@ -1,0 +1,67 @@
+[
+  {
+    "externalId": "900001",
+    "title": "Marés de verão",
+    "artist": "Acervo de demonstração",
+    "date": "2026",
+    "medium": "Pintura digital",
+    "dimensions": "320 × 240 px",
+    "origin": "Brasil",
+    "imageUrl": "https://example.invalid/seed/obra-1.png",
+    "sourceUrl": "https://example.invalid/seed/900001",
+    "suggestedCategory": "PAINTING",
+    "image": "obra-1.png"
+  },
+  {
+    "externalId": "900002",
+    "title": "Jardim em verde e areia",
+    "artist": "Acervo de demonstração",
+    "date": "2026",
+    "medium": "Pintura digital",
+    "dimensions": "320 × 240 px",
+    "origin": "Brasil",
+    "imageUrl": "https://example.invalid/seed/obra-2.png",
+    "sourceUrl": "https://example.invalid/seed/900002",
+    "suggestedCategory": "PAINTING",
+    "image": "obra-2.png"
+  },
+  {
+    "externalId": "900003",
+    "title": "Estudo em vermelho",
+    "artist": "Acervo de demonstração",
+    "date": "2026",
+    "medium": "Gravura digital",
+    "dimensions": "320 × 240 px",
+    "origin": "Brasil",
+    "imageUrl": "https://example.invalid/seed/obra-3.png",
+    "sourceUrl": "https://example.invalid/seed/900003",
+    "suggestedCategory": "PRINT",
+    "image": "obra-3.png"
+  },
+  {
+    "externalId": "900004",
+    "title": "Névoa sobre a cidade",
+    "artist": "Acervo de demonstração",
+    "date": "2026",
+    "medium": "Fotografia digital",
+    "dimensions": "320 × 240 px",
+    "origin": "Brasil",
+    "imageUrl": "https://example.invalid/seed/obra-4.png",
+    "sourceUrl": "https://example.invalid/seed/900004",
+    "suggestedCategory": "PHOTOGRAPHY",
+    "image": "obra-4.png"
+  },
+  {
+    "externalId": "900005",
+    "title": "Ondas violeta",
+    "artist": "Acervo de demonstração",
+    "date": "2026",
+    "medium": "Desenho digital",
+    "dimensions": "320 × 240 px",
+    "origin": "Brasil",
+    "imageUrl": "https://example.invalid/seed/obra-5.png",
+    "sourceUrl": "https://example.invalid/seed/900005",
+    "suggestedCategory": "DRAWING",
+    "image": "obra-5.png"
+  }
+]

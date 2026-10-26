@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Status | REVIEW |
+| Status | DONE |
 | Épico / dia | E5 Auditoria e gestão · Dia 5 |
 | Depende de | LC-007 |
 | Requisitos | RF-17 |
@@ -41,3 +41,4 @@ Decisões: busca com configuração `simple` e prefixo, sem remoção de acentos
 - [x] Todos os critérios de aceite com evidência
 - [x] Status atualizado aqui e em `ai/cards/README.md`
 - [x] `docs/CHECKLIST.md` atualizado; `docs/USO-DE-IA.md` fica a cargo do coordenador
+- Integração: PR #20 integrada em `34f1f52`; CI da PR (run 40386524198) e pós-merge (run 40386893542) passaram.

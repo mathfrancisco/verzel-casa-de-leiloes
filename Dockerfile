@@ -24,6 +24,7 @@ COPY --from=build --chown=node:node /out/node_modules ./node_modules
 COPY --from=build --chown=node:node /out/package.json ./package.json
 COPY --from=build --chown=node:node /repo/apps/api/dist ./dist
 COPY --from=build --chown=node:node /repo/apps/api/drizzle ./drizzle
+COPY --from=build --chown=node:node /repo/apps/api/seed ./seed
 COPY --from=build --chown=node:node /repo/apps/web/dist ./public
 USER node
 EXPOSE 3000

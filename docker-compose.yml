@@ -26,6 +26,8 @@ services:
       JWT_SECRET: ${JWT_SECRET:-segredo-local-somente-para-desenvolvimento}
       PSEUDONYM_SECRET: ${PSEUDONYM_SECRET:-pseudonimos-local-somente-para-desenvolvimento}
       NODE_ENV: production
+    # Seed idempotente antes do servidor: na primeira subida cria os dados de demonstração.
+    command: ['sh', '-c', 'node dist/seed.js && node dist/main.js']
     ports:
       - '3000:3000'
 
