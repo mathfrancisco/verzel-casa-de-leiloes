@@ -18,13 +18,21 @@ import { walletView } from './wallet';
 const BID_ROUTE_PREFIX = '/api/lots/';
 
 export interface BidEvent {
-  type: 'bid.accepted' | 'lot.extended' | 'bid.outbid' | 'wallet.changed';
+  type:
+    | 'bid.accepted'
+    | 'lot.extended'
+    | 'bid.outbid'
+    | 'wallet.changed'
+    | 'lot.closed'
+    | 'lot.won';
   userId?: string;
   serverTime: string;
   payload:
     | Record<string, unknown>
     | { totalCents: number; committedCents: number; availableCents: number };
 }
+
+export type RealtimeEvent = BidEvent;
 
 export interface BidDeps {
   db: Db;
