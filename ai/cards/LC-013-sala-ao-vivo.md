@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Status | REVIEW |
+| Status | DONE |
 | Épico / dia | E4 Tempo real e liquidação · Dia 4 |
 | Depende de | LC-012, LC-007 |
 | Requisitos | RF-10, RF-11, RF-20 |
@@ -62,4 +62,4 @@ privado entre sessões e cobertura incompleta de mensagens; os ajustes foram
 feitos e revistos com os ensaios de navegador. Não houve revisão humana
 registrada. Evidência em `../work/lc013-validation.log`.
 
-O card permanece em `REVIEW` enquanto publicação e CI estiverem pendentes.
+Integração: PR #13 integrada em `944d999`; a revisão assistida corrigiu a faixa de licitante exibida ao dono do lote (`102c4e5`, com teste); CI da PR (run 40343484093) e pós-merge (run 40343928436) passaram.
