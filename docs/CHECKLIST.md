@@ -29,7 +29,7 @@ do README), registrada no PR do card. IDs em [`01-requisitos.md`](01-requisitos.
 | [ ] | Painel: cancelar lote sem lances | RF-05 | LC-018 | |
 | [ ] | Painel: resultado de cada encerrado e total recebido | RF-06 | LC-017 | |
 | [ ] | Sala: lance atual, histórico, posição, contagem regressiva | RF-10 | LC-013 | |
-| [ ] | Sala: "você está ganhando" / "você foi superado" sem recarregar | RF-10 | LC-012, LC-013 | |
+| [ ] | Sala: "você está ganhando" / "você foi superado" sem recarregar | RF-10 | LC-012, LC-013 | Transporte LC-012 validado localmente: CT-06-01 a CT-06-05; foco API bids/realtime 17/17, cliente realtime 4/4, suíte 363 (shared 104, API 196, web 63; sem falhas ou skips), lint, typecheck e build verdes; log em `../work/lc012-validation.log`. Interface da sala depende de LC-013. |
 | [x] | Carteira: total, comprometido, disponível, depósito simulado | RF-07, RF-08 | LC-009 | Testes focados LC-009: API PostgreSQL isolado 10/10, contrato 5/5, domínio 2/2 e web 8/8 (Node 22); integrado na PR #7 (`1b777fd`); CI pós-merge run 40258206330 passou |
 | [ ] | Meus arremates: com lance + vencidos com comprovante e link | RF-13, RF-14 | LC-016 | |
 | [ ] | Auditoria: pública, histórico completo, íntegro/adulterado | RF-15 | LC-015 | |
