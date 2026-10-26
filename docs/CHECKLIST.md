@@ -25,12 +25,12 @@ do README), registrada no PR do card. IDs em [`01-requisitos.md`](01-requisitos.
 | ✓ | Item do PDF | Requisito | Card | Evidência |
 |---|---|---|---|---|
 | [x] | Vitrine: ao vivo / agendados / encerrados, sem cancelados | RF-04 | LC-007 | Testes da API por aba + teste no Chromium com troca de aba automática (LC-007) |
-| [ ] | Painel: buscar na API e criar lote (imagem, título, atributos, início/fim, valor mínimo) | RF-02, RF-03 | LC-008 | Tela e API prontas e testadas no navegador com o catálogo falso (LC-006, LC-008); falta busca contra a AIC real |
+| [ ] | Painel: buscar na API e criar lote (imagem, título, atributos, início/fim, valor mínimo) | RF-02, RF-03 | LC-008 | LC-008 integrado na PR #9; CI da PR (run 40248272220) e pós-merge (run 40248403542), incluindo Docker, passaram; GitGuardian passou. Navegador real e busca contra a AIC continuam pendentes; ver card para evidências locais e históricas |
 | [ ] | Painel: cancelar lote sem lances | RF-05 | LC-018 | |
 | [ ] | Painel: resultado de cada encerrado e total recebido | RF-06 | LC-017 | |
 | [ ] | Sala: lance atual, histórico, posição, contagem regressiva | RF-10 | LC-013 | |
 | [ ] | Sala: "você está ganhando" / "você foi superado" sem recarregar | RF-10 | LC-012, LC-013 | Transporte LC-012 validado localmente: CT-06-01 a CT-06-05; foco API bids/realtime 17/17, cliente realtime 4/4, suíte 363 (shared 104, API 196, web 63; sem falhas ou skips), lint, typecheck e build verdes; log em `../work/lc012-validation.log`. Interface da sala depende de LC-013. |
-| [x] | Carteira: total, comprometido, disponível, depósito simulado | RF-07, RF-08 | LC-009 | Testes focados LC-009: API PostgreSQL isolado 10/10, contrato 5/5, domínio 2/2 e web 8/8 (Node 22) |
+| [x] | Carteira: total, comprometido, disponível, depósito simulado | RF-07, RF-08 | LC-009 | Testes focados LC-009: API PostgreSQL isolado 10/10, contrato 5/5, domínio 2/2 e web 8/8 (Node 22); integrado na PR #7 (`1b777fd`); CI pós-merge run 40258206330 passou |
 | [ ] | Meus arremates: com lance + vencidos com comprovante e link | RF-13, RF-14 | LC-016 | |
 | [ ] | Auditoria: pública, histórico completo, íntegro/adulterado | RF-15 | LC-015 | |
 | [ ] | Feedback: abaixo do mínimo, saldo insuficiente, já ganhando, não iniciado, encerrado | RF-11 | LC-011, LC-013 | |
@@ -46,7 +46,7 @@ do README), registrada no PR do card. IDs em [`01-requisitos.md`](01-requisitos.
 | [x] | Saldo comprometido; superado libera na hora; lance só se couber | RN-07, RN-08 | LC-009, LC-011 | CT-05-12 e evento de superação verificam compromisso e liberação; 5 execuções locais; gates locais verdes. |
 | [x] | Anti-sniping: últimos 2 min → +2 min | RN-09 | LC-011 | CT-05-06/15 de domínio e integração locais; gates locais verdes; PR/CI pendentes. |
 | [ ] | Liquidação: debita vencedor, credita leiloeiro, comprovante; sem lances fecha sem vencedor | RN-10, RN-11 | LC-014 | |
-| [ ] | Histórico à prova de adulteração (inclusive direto no banco), técnica explicada | RN-15, RNF-05 | LC-010, LC-015, LC-023 | LC-010: verificador unitário e paridade Node/happy-dom verificados localmente; adulteração SQL e auditoria pública pendentes. |
+| [ ] | Histórico à prova de adulteração (inclusive direto no banco), técnica explicada | RN-15, RNF-05 | LC-010, LC-015, LC-023 | LC-010: verificador unitário e paridade Node/happy-dom verificados localmente; integrado na PR #10 (`0b6dfaa`), CI da PR (run 40262860918) e pós-merge (run 40263027354) passaram. Adulteração SQL e auditoria pública pendentes. |
 | [ ] | Privacidade em auditoria e comprovante | RN-16, RNF-06 | LC-015, LC-016 | |
 
 ## Opcionais
