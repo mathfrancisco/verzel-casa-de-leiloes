@@ -11,6 +11,7 @@ import { catalogRoutes } from './http/catalog.routes';
 import { registerErrorHandling } from './http/error-handler';
 import { healthRoutes } from './http/health';
 import { lotRoutes } from './http/lots.routes';
+import { receiptRoutes } from './http/receipts.routes';
 import { walletRoutes } from './http/wallet.routes';
 import { readyRoutes } from './http/ready';
 import { registerSpa } from './http/spa';
@@ -118,6 +119,7 @@ export function buildApp({
       crypto: auditCrypto,
       collectEvents,
     });
+    receiptRoutes(api, { db, publicKeyBase64url: bytesToBase64url(auditPublicKey) });
     walletRoutes(api, { db, collectEvents });
   });
 

@@ -9,6 +9,7 @@ import { notifyOutbid } from '../components/OutbidToast';
 function invalidateSnapshot(queryClient: ReturnType<typeof useQueryClient>, lotId?: string) {
   void queryClient.invalidateQueries({ queryKey: ['lots'] });
   void queryClient.invalidateQueries({ queryKey: ['wallet'] });
+  void queryClient.invalidateQueries({ queryKey: ['participations'] });
   if (lotId) void queryClient.invalidateQueries({ queryKey: ['lot', lotId] });
 }
 

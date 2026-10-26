@@ -8,4 +8,5 @@ export * from './health';
 export * from './lots';
 export * from './money';
 export * from './realtime';
+export * from './receipts';
 export * from './wallet';
