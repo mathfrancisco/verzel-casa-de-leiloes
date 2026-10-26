@@ -17,8 +17,10 @@ describe('parseEd25519PrivateKey', () => {
     expect(parseEd25519PrivateKey(oneLine).asymmetricKeyType).toBe('ed25519');
   });
 
-  it('aceita o PEM com \n literal e CRLF', () => {
-    expect(parseEd25519PrivateKey(pem.trim().replace(/\n/g, '\n')).type).toBe('private');
+  it('aceita o PEM com \\n literal e CRLF', () => {
+    const literal = pem.trim().replace(/\n/g, '\\n');
+    expect(literal).not.toContain('\n');
+    expect(parseEd25519PrivateKey(literal).type).toBe('private');
     expect(parseEd25519PrivateKey(pem.replace(/\n/g, '\r\n')).type).toBe('private');
   });
 
