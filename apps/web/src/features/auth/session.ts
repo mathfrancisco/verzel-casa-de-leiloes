@@ -9,6 +9,7 @@ const ME_KEY = ['me'] as const;
 export function clearPrivateSessionQueries(queryClient: QueryClient) {
   queryClient.removeQueries({ queryKey: ['wallet'] });
   queryClient.removeQueries({ queryKey: ['participations'] });
+  queryClient.removeQueries({ queryKey: ['auctioneer-lots'] });
 }
 
 /** Usuário logado: `undefined` enquanto carrega, `null` para visitante. */

@@ -120,6 +120,20 @@ export interface LotDetail extends LotSummary {
   receiptCode?: string;
 }
 
+export type AuctioneerLotResult = 'PENDING' | 'SOLD' | 'UNSOLD' | 'CANCELLED';
+
+export interface AuctioneerLot extends LotSummary {
+  result: AuctioneerLotResult;
+  finalPriceCents: number | null;
+  settledAt: string | null;
+  cancellable: boolean;
+}
+
+export interface AuctioneerLotsResponse {
+  items: AuctioneerLot[];
+  totalReceivedCents: number;
+}
+
 /** Abas da vitrine (RN-14). `closed` inclui encerrando, arrematado e sem vencedor. */
 export const SHOWCASE_TABS = ['live', 'scheduled', 'closed'] as const;
 export type ShowcaseTab = (typeof SHOWCASE_TABS)[number];
