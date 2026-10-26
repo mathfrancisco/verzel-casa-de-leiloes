@@ -35,6 +35,21 @@ describe('BidAttempts', () => {
 });
 
 describe('bidStatus', () => {
+  it('não mostra faixa de licitante ao dono do lote', () => {
+    for (const phase of ['LIVE', 'SETTLED', 'UNSOLD'] as const) {
+      expect(
+        bidStatus({
+          phase,
+          myPseudonym: 'Dono',
+          myBestBidCents: null,
+          leaderPseudonym: 'Outro',
+          bidCount: 1,
+          isSeller: true,
+        }),
+      ).toBeNull();
+    }
+  });
+
   it('deriva liderança, superação e primeiro lance a partir do snapshot público', () => {
     expect(
       bidStatus({

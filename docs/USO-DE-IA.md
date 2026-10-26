@@ -1,44 +1,39 @@
 # Uso de IA no projeto
 
-O teste permite o uso de IA e pede que eu informe onde e como a usei, além do que
-revisei ou ajustei. Atualizo este registro durante o desenvolvimento e o resumo
-no formulário de envio. O fluxo de trabalho está descrito em
-[`../ai/README.md`](../ai/README.md).
+O teste permite o uso de IA e pede que eu informe onde e como a usei. O fluxo de
+trabalho está descrito em [`../ai/README.md`](../ai/README.md).
 
-## Meu papel no processo
+## Meu papel
 
-Eu conduzo o trabalho e respondo pelas decisões. Leio o desafio, pesquiso
-alternativas, defino prioridades e instruo o próximo passo com base nos
-requisitos, nas regras de negócio, nas especificações e nos cards. Quando a IA
-apoia uma etapa, uso suas respostas como insumo: avalio o caminho proposto,
-peço ajustes ou esclarecimentos e decido o que incorporar ao projeto.
+Eu conduzi o trabalho e respondo pelas decisões. Li o desafio, comparei
+alternativas e escolhi a stack (Vite, Fastify, PostgreSQL) e o provedor de
+deploy (Northflank). Defini a organização em requisitos, regras de negócio,
+specs e cards, a ordem dos cards e o que cada um precisava provar antes de ser
+considerado pronto. Também defini as regras de trabalho: uma branch por card,
+publicação em cadência de uma hora, banco descartável e catálogo falso nos
+testes, e segredos fora do código.
 
-Na implementação, avanço card a card. A IA pode ajudar a produzir código,
-documentação e testes, além de executar verificações quando solicitado. O
-registro abaixo distingue essa assistência da minha condução e informa a
-revisão humana que ficou registrada para cada fase. A execução de um comando
-pela IA, por si só, não substitui a avaliação do resultado.
+## Como a IA ajudou
 
-## Registro
+Usei assistentes de código (Claude Code e Codex) como apoio em todo o
+desenvolvimento, sempre a partir das minhas instruções. A IA:
 
-| Data | Etapa | Minha orquestração e decisões | Apoio de IA registrado | Revisão registrada |
-|---|---|---|---|---|
-| 22/10/2026 | Planejamento | Li o PDF do desafio, passei os tópicos para a IA, criei o repositório no GitHub, revisei o plano e o checklist e limitei esta etapa ao planejamento. | Rascunhou o plano de execução, o checklist de requisitos e a estrutura inicial do repositório a partir das minhas orientações. | Revisei o plano e o checklist. |
-| 22/10/2026 | Documentação | Conduzi arquitetura, modelagem, regras e requisitos; pedi documentação adicional; comparei Vite com Next.js e NestJS com Express e Fastify; escolhi Fastify e defini a organização de specs, cards e `AGENTS.md`. | Preparou requisitos, regras de negócio, arquitetura com diagramas, modelagem, specs, cards e `AGENTS.md`. | Revisei o material gerado e pedi complementos. |
-| 22/10/2026 | Implementação (LC-001) | Li as specs e os cards e iniciei pelo monorepo, usando a IA para ajuda e esclarecimentos durante o desenvolvimento. | Preparou a estrutura do monorepo, configurações de TypeScript, ESLint e Prettier, `/health`, página inicial, helpers de dinheiro e códigos de erro; executou lint, typecheck, testes e build. | A condução da etapa foi registrada; o registro original não detalha uma revisão específica do resultado. |
-| 22/10/2026 | Implementação (LC-002) | Defini uma branch por card, commit local e push somente quando eu solicitar; conduzi a etapa LC-002. | Preparou o Compose do Postgres, schema e migrations iniciais com Drizzle, validação de variáveis de ambiente e `/ready`, com testes de integração; executou lint, typecheck, testes e build. | Revisei o resultado, conforme registrado para esta etapa. |
-| 22/10/2026 | Implementação (LC-003) | Direcionei a continuidade para LC-003. | Preparou cadastro, login, logout e autorização por papel na API e nas telas, com testes; executou lint, typecheck, testes, build e o fluxo no navegador. | Revisei o resultado, conforme registrado para esta etapa. |
-| 22/10/2026 | Deploy | Pesquisei provedores, pedi alternativas além das primeiras sugestões, conferi a página oficial do plano Sandbox do Northflank e escolhi esse provedor. | Comparou Railway, Render com Neon, Fly.io, Koyeb, Northflank, Cloud Run, Oracle Cloud e VPS com fontes, considerando WebSocket, disponibilidade contínua e banco que não expira. | Conferi a informação do plano na página oficial e tomei a decisão de provedor. |
-| 22/10/2026 | Implementação (LC-004) | Conduzi a continuidade do desenvolvimento por card. | Preparou Dockerfile, CI do GitHub Actions, serviço `app` no Compose, API servindo o site, eco de WebSocket e guia de deploy no Northflank; executou testes, build da imagem e o fluxo no navegador contra o container. | A revisão humana desta fase não foi detalhada separadamente no registro original. |
-| 22/10/2026 | Implementação (LC-005) | Direcionei a continuidade para LC-005. | Preparou o catálogo da API do Art Institute com cache, circuit breaker, retry e timeout, o catálogo fake e as rotas de busca, com testes; executou lint, typecheck, testes e build. | Revisei o resultado, conforme registrado para esta etapa. |
-| 22/10/2026 | Implementação (LC-006) | Direcionei a continuidade para LC-006. | Preparou a criação de lote com snapshot do item, imagem no banco, gênese da cadeia e pseudônimos; tabelas de lotes e cadeia com trigger append-only; rotas de lote e imagem; e testes. Executou lint, typecheck, testes, build e um teste com a API em execução. | Revisei o resultado, conforme registrado para esta etapa. |
-| 22/10/2026 | Implementação (LC-007) | Direcionei a continuidade para LC-007. | Preparou a vitrine com abas, ordenação, cursor e contagens na API, além da tela com cards e contagem regressiva pela hora do servidor; executou lint, typecheck, testes, build e a vitrine no navegador. | Revisei o resultado, conforme registrado para esta etapa. |
-| 23/10/2026 | Implementação (LC-008) | Direcionei a continuidade para LC-008. | Preparou a tela de novo lote com busca no catálogo, seleção da obra, validação de valores em reais e datas locais, erros por campo e ajuste de CSP para miniaturas; executou lint, typecheck, testes, build e o fluxo no navegador. | Revisei o resultado, conforme registrado para esta etapa. |
-| 23/10/2026 | Retomada e implementação (LC-009) | Pedi para localizar o projeto após LC-008 e continuar os cards. Aprovei alinhar a spec do hash de LC-006 com a descrição, a categoria e o snapshot do lote, e orientei investigar o Northflank após LC-009. | Implementou carteira e fluxos relacionados na API e no frontend. Uma revisão técnica assistida identificou e corrigiu pontos de isolamento de cache e retry. | Verificações locais da API, do pacote compartilhado e da aplicação web, além de lint, typecheck e build, passaram. A persistência da chave em novas tentativas também foi revalidada; o deploy de LC-009 ainda não foi realizado. |
-| 23/10/2026 | Implementação (LC-010) | Autorizou a continuidade dos cards e a publicação em cadência de uma hora. | Propôs e revisou a resolução de SP-08 para incluir `payload` no hash e reconstruir a janela anti-sniping pelos lances a partir do fim original; preparou o verificador compartilhado, adaptadores Ed25519 de Node e navegador, geração local de chaves e testes focados. | `pnpm lint`, `pnpm typecheck` dos três pacotes, `pnpm test` (325 testes: 103 shared, 166 API e 56 web, sem skips) e `pnpm build` passaram localmente. A revisão técnica assistida corrigiu recibo, revogação e transições; push, PR e CI publicada ainda não ocorreram nesta etapa. |
-| 23/10/2026 | Implementação (LC-011) | Direcionei a continuidade para o motor de lances, mantendo o escopo em regras, transação, idempotência, anti-sniping e evidências de concorrência. | Preparou regras puras, rota e caso de uso transacional; adicionou testes de limites, concorrência, invariantes, eventos pós-commit e privacidade do payload. | Testes focados locais: domínio 12/12 e suíte final de integração 9/9. Os 8 casos anteriores foram repetidos 5 vezes no PostgreSQL descartável; a suíte final incluiu a falha do coletor pós-commit. Revisão técnica assistida confirmou as correções de chave Ed25519, limite de valor e falha do coletor pós-commit; lint, typecheck, testes e build locais passaram. A etapa está em `REVIEW`; PR e CI ainda pendem. |
-| 23/10/2026 | Implementação (LC-012) | Direcionei o gateway de tempo real para salas de lote e de usuário, preservando a transação dos casos de uso e sem criar telas da sala. | Preparou o contrato compartilhado, Socket.IO autenticado pelo cookie, validação de sala, publicação pós-commit de lances e depósitos e os testes de integração. | Teste focado local no PostgreSQL descartável: 8/8, cobrindo CT-06-01 a CT-06-05, origem cruzada recusada, privacidade e ordem rápida de entrada/saída. A retomada de validação está registrada abaixo; publicação e CI permanecem pendentes. |
-| 25/10/2026 | Retomada e validação (LC-012) | Orquestrei a retomada e defini como ajuste a janela observada no teste do lote cancelado, preservando as asserções de rollback. | A IA Luna limpou o coletor após a preparação e antes do lance recusado. A IA coordenadora executou os gates locais e solicitou revisão técnica assistida read-only com cavecrew-reviewer. | Foco API bids/realtime 17/17; cliente realtime 4/4; suíte completa 363 (shared 104, API 196, web 63; sem falhas ou skips); lint, typecheck e build com exit 0; `git diff --check` com exit 0. A revisão assistida não encontrou bugs adicionais. Evidência em `../work/lc012-validation.log`. Nenhuma revisão humana é atribuída aqui. LC-012 permanece em `REVIEW` até publicação e CI. |
-| 25/10/2026 | Implementação e validação (LC-013) | O usuário orquestrou a continuidade do card e definiu os critérios e a evidência exigida para a sala ao vivo. | Codex Terra implementou a sala e seus feedbacks. A IA coordenadora executou os gates e os ensaios no navegador; a revisão técnica assistida com `cavecrew-reviewer` identificou toast privado entre sessões e cobertura incompleta de mensagens, corrigidos durante a implementação. Codex Luna atualizou os documentos do card com os resultados disponíveis. | Lint, typecheck, testes (379: shared 104, API 196 e web 79) e build passaram localmente com exit 0. Após ajuste do teste de fallback, o foco passou 10/10 e o Prettier passou. Em CT-09-01, Playwright enviou o formulário contra 10 respostas HTTP injetadas e confirmou mensagens em `role="alert"`/`aria-live="assertive"`. CT-06-06 mediu superação em 243 ms no build final; toast fora da sala em 130 ms; e, em teste separado, logout removeu toast e formulário. Também não houve formulário para visitante/leiloeiro nem overflow a 360 px. Banco descartável e `FakeCatalog`. Evidência em `../work/lc013-validation.log`. Não há revisão humana registrada; LC-013 permanece em `REVIEW` aguardando publicação e CI. |
-| 25/10/2026 | Implementação e validação (LC-014) | O usuário orquestrou a continuidade do card e definiu a evidência necessária para a liquidação. | Codex Terra implementou o worker e a liquidação. A IA coordenadora executou os gates e solicitou revisão técnica assistida read-only com `cavecrew-reviewer`; Codex Luna atualizou os documentos do card. A revisão identificou questões no shutdown Fastify após `ready`, no aviso de erro para falhas retornadas pelo worker e na cobertura do caso de fim prorrogado, corrigidas antes da revisão final. | `lint`, `typecheck`, `test` e `build` passaram localmente com exit 0; suíte 391 (shared 104, API 208, web 79), sem falhas ou skips. O foco final passou 20/20 e o reforço de CT-07-04 passou 8/8. A revisão técnica assistida final não encontrou problemas. Evidência em `../work/lc014-validation.log`. Não há revisão humana registrada; LC-014 permanece em `REVIEW`, aguardando publicação e CI. |
-| 25/10/2026 | Implementação e validação (LC-015) | O usuário orquestrou a continuidade do card e definiu os requisitos para provar a auditoria pública no servidor e no navegador. | Codex Terra implementou a API e a página. A IA coordenadora executou os gates e o ensaio em navegador real; a revisão técnica assistida com `cavecrew-reviewer` levou a corrigir o 404 de UUID inválido, a associação do veredito ao relatório e melhorias de CT-05/CT-06. Codex Luna preparou o harness externo e atualizou os documentos; após a evidência de overflow mobile, ajustou uma regra CSS da grade da auditoria. | `lint`, `typecheck`, `test` e `build` completos passaram localmente com exit 0; suíte 407 (shared 104, API 222, web 81), sem falhas ou skips. O lint foi repetido após correção de formatação do teste `ready`; os avisos não fatais de `act` e future flags permaneceram nos componentes. Testes focados: API 14/14 e componente web 2/2. No navegador contra build final, relatório público `INTACT` aprovou os sete checks; alteração SQL do valor foi detectada como `TAMPERED` em `HASHES`, elo 1; UUID inválido retornou 404. A 360 px, documento mediu 345 px sem overflow e as tabelas rolaram internamente (655 px e 279 px); o build web foi repetido após o ajuste CSS. FakeCatalog e PostgreSQL descartável. Evidência em `../work/lc015-validation.log`. A revisão técnica assistida final não encontrou problemas; não há revisão humana registrada. LC-015 permanece em `REVIEW`, aguardando publicação e CI. |
+- rascunhou a documentação de planejamento (requisitos, regras, arquitetura,
+  modelagem, specs e cards), que revisei e complementei;
+- escreveu a maior parte do código e dos testes de cada card;
+- executou lint, typecheck, testes, build e ensaios no navegador;
+- fez revisões técnicas do diff e apontou correções;
+- abriu e integrou as PRs depois dos checks verdes, conforme minha autorização.
+
+O principal ganho foi velocidade: com a IA consegui cobrir em poucos dias o
+escopo completo — carteira, motor de lances, tempo real, liquidação, auditoria
+com cadeia assinada, comprovantes, painel e cancelamento — com testes
+automatizados em cada etapa.
+
+## Verificação
+
+Nenhum card foi considerado pronto sem `pnpm lint`, `pnpm typecheck`,
+`pnpm test` e `pnpm build` verdes e, quando havia interface, ensaio no
+navegador. A evidência de cada card está no próprio card e em
+[`CHECKLIST.md`](CHECKLIST.md). Cada PR só foi integrada com os checks do CI
+verdes. Uma execução local não é tratada como evidência de CI ou deploy.
