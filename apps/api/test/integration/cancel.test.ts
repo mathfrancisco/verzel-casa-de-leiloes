@@ -1,3 +1,4 @@
+import { idemKey } from '../support/idempotency';
 import { randomUUID } from 'node:crypto';
 import {
   createAuditEntry,
@@ -77,7 +78,7 @@ async function deposit(cookie: Cookie, amountCents = 10_000) {
     method: 'POST',
     url: '/api/wallet/deposits',
     cookies: cookie,
-    headers: { 'idempotency-key': `dep-${++sequence}` },
+    headers: { 'idempotency-key': idemKey(`dep-${++sequence}`) },
     payload: { amountCents },
   });
   expect(response.statusCode).toBe(201);
@@ -108,7 +109,7 @@ async function bid(cookie: Cookie, lotId: string, amountCents: number) {
     method: 'POST',
     url: `/api/lots/${lotId}/bids`,
     cookies: cookie,
-    headers: { 'idempotency-key': `bid-${++sequence}` },
+    headers: { 'idempotency-key': idemKey(`bid-${++sequence}`) },
     payload: { amountCents },
   });
   expect(response.statusCode).toBe(201);
@@ -321,7 +322,7 @@ describe('cancelamento de lote (SP-03, RN-12, RN-13)', () => {
       method: 'POST',
       url: `/api/lots/${lot.id}/bids`,
       cookies: ana.cookie,
-      headers: { 'idempotency-key': `late-${++sequence}` },
+      headers: { 'idempotency-key': idemKey(`late-${++sequence}`) },
       payload: { amountCents: 2_000 },
     });
     expect(late.json<ApiErrorBody>().error.code).toBe('LOT_CANCELLED');
