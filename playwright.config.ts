@@ -12,6 +12,8 @@ export default defineConfig({
     {
       command: 'pnpm --filter @leilao/api dev',
       url: 'http://127.0.0.1:3000/api/lots?phase=live',
+      // Testes nunca chamam a API externa real (AGENTS.md).
+      env: { CATALOG_PROVIDER: 'fake' },
       reuseExistingServer: true,
       timeout: 60_000,
     },
