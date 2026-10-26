@@ -29,6 +29,13 @@
       "when": 1792712286495,
       "tag": "0003_lot_entries_append_only",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792984247680,
+      "tag": "0004_busca_e_filtros",
+      "breakpoints": true
     }
   ]
 }

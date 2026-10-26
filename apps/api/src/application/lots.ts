@@ -6,6 +6,7 @@ import {
   type CreateLotInput,
   type LotDetail,
   type LotListQuery,
+  type LotSort,
   type LotListResponse,
   type Role,
   type ShowcaseTab,
@@ -284,41 +285,101 @@ const TAB_FILTER: Record<ShowcaseTab, SQL> = {
   closed: sql`((${lots.state} = 'ACTIVE' AND ${lots.endsAt} <= now()) OR ${lots.state} IN ('SETTLED', 'CLOSED_NO_WINNER'))`,
 };
 
-/** Ordem padrão: ao vivo termina antes; agendado começa antes; encerrado mais recente. */
-const TAB_ORDER = {
-  live: { key: 'endsAt', direction: 'asc' },
-  scheduled: { key: 'startsAt', direction: 'asc' },
-  closed: { key: 'endsAt', direction: 'desc' },
+/**
+ * Ordenações da vitrine. `kind` define como o valor entra no cursor; cada ordenação tem nome
+ * próprio para o cursor só valer na ordem que o emitiu.
+ */
+const price = sql`coalesce(${lots.currentPriceCents}, ${lots.startingPriceCents})`;
+const ORDERS = {
+  ends_asc: { expr: sql`${lots.endsAt}`, kind: 'time', direction: 'asc' },
+  ends_desc: { expr: sql`${lots.endsAt}`, kind: 'time', direction: 'desc' },
+  starts_asc: { expr: sql`${lots.startsAt}`, kind: 'time', direction: 'asc' },
+  created_desc: {
+    expr: sql`${lots.createdAt}`,
+
+    kind: 'time',
+    direction: 'desc',
+  },
+  price_asc: { expr: price, kind: 'number', direction: 'asc' },
+  price_desc: { expr: price, kind: 'number', direction: 'desc' },
 } as const;
+type OrderName = keyof typeof ORDERS;
 
-const cursorSchema = z.object({ v: z.string().datetime(), id: z.string().regex(UUID) });
+/** Sem `sort`: ao vivo termina antes; agendado começa antes; encerrado mais recente. */
+const DEFAULT_ORDER: Record<ShowcaseTab, OrderName> = {
+  live: 'ends_asc',
+  scheduled: 'starts_asc',
+  closed: 'ends_desc',
+};
+const SORT_ORDER: Record<LotSort, OrderName> = {
+  ending_soon: 'ends_asc',
+  newest: 'created_desc',
+  price_asc: 'price_asc',
+  price_desc: 'price_desc',
+};
 
-const encodeCursor = (value: Date, id: string) =>
-  Buffer.from(JSON.stringify({ v: value.toISOString(), id })).toString('base64url');
+const cursorSchema = z.object({
+  o: z.enum(Object.keys(ORDERS) as [OrderName, ...OrderName[]]),
+  v: z.union([z.string().datetime(), z.number().int().safe()]),
+  id: z.string().regex(UUID),
+});
 
-function decodeCursor(cursor: string) {
+const encodeCursor = (o: OrderName, v: string | number, id: string) =>
+  Buffer.from(JSON.stringify({ o, v, id })).toString('base64url');
+
+function decodeCursor(cursor: string, order: OrderName) {
   try {
-    return cursorSchema.parse(JSON.parse(Buffer.from(cursor, 'base64url').toString('utf8')));
+    const decoded = cursorSchema.parse(
+      JSON.parse(Buffer.from(cursor, 'base64url').toString('utf8')),
+    );
+    const valid =
+      decoded.o === order &&
+      typeof decoded.v === (ORDERS[order].kind === 'time' ? 'string' : 'number');
+    if (valid) return decoded;
   } catch {
-    throw new DomainError('VALIDATION_ERROR', {
-      issues: [{ path: ['cursor'], message: 'Cursor inválido.' }],
-    });
+    // cai no erro abaixo
   }
+  throw new DomainError('VALIDATION_ERROR', {
+    issues: [{ path: ['cursor'], message: 'Cursor inválido.' }],
+  });
+}
+
+/** Filtros opcionais da vitrine (RF-17), comuns às consultas de lista e de contagem. */
+function searchFilters(query: LotListQuery): SQL[] {
+  const filters: SQL[] = [];
+  if (query.q) {
+    // Só letras e números chegam ao tsquery: sem operadores injetados. Prefixo (`:*`) casa a
+    // palavra enquanto é digitada; todas as palavras são exigidas.
+    const words = query.q.toLowerCase().match(/[\p{L}\p{N}]+/gu) ?? [];
+    filters.push(
+      words.length === 0
+        ? sql`false`
+        : sql`${lots.searchVector} @@ to_tsquery('simple', ${words.map((w) => `${w}:*`).join(' & ')})`,
+    );
+  }
+  if (query.category) filters.push(eq(lots.category, query.category));
+  if (query.minPriceCents !== undefined) filters.push(sql`${price} >= ${query.minPriceCents}`);
+  if (query.maxPriceCents !== undefined) filters.push(sql`${price} <= ${query.maxPriceCents}`);
+  return filters;
 }
 
 export async function listLots(db: Db, query: LotListQuery): Promise<LotListResponse> {
-  const order = TAB_ORDER[query.phase];
-  const column = lots[order.key];
-  const cursor = query.cursor ? decodeCursor(query.cursor) : undefined;
-  // Paginação por chave (coluna de ordenação, id): estável mesmo com lotes novos chegando.
+  const orderName = query.sort ? SORT_ORDER[query.sort] : DEFAULT_ORDER[query.phase];
+  const order = ORDERS[orderName];
+  const cursor = query.cursor ? decodeCursor(query.cursor, orderName) : undefined;
+  // Paginação por chave (valor de ordenação, id): estável mesmo com lotes novos chegando.
+  const cursorValue =
+    order.kind === 'time' ? sql`${cursor?.v}::timestamptz` : sql`${cursor?.v}::bigint`;
   const after = cursor
     ? order.direction === 'asc'
-      ? sql`(${column}, ${lots.id}) > (${cursor.v}::timestamptz, ${cursor.id}::uuid)`
-      : sql`(${column}, ${lots.id}) < (${cursor.v}::timestamptz, ${cursor.id}::uuid)`
+      ? sql`(${order.expr}, ${lots.id}) > (${cursorValue}, ${cursor.id}::uuid)`
+      : sql`(${order.expr}, ${lots.id}) < (${cursorValue}, ${cursor.id}::uuid)`
     : undefined;
   const by = order.direction === 'asc' ? asc : desc;
+  const filters = searchFilters(query);
 
   return db.transaction(async (tx) => {
+    // As contagens das abas seguem os filtros, para o rótulo bater com o que a aba mostraria.
     const [counts] = await tx
       .select({
         now: sql<string>`now()`,
@@ -326,21 +387,31 @@ export async function listLots(db: Db, query: LotListQuery): Promise<LotListResp
         scheduled: sql<number>`count(*) FILTER (WHERE ${TAB_FILTER.scheduled})::int`,
         closed: sql<number>`count(*) FILTER (WHERE ${TAB_FILTER.closed})::int`,
       })
-      .from(lots);
+      .from(lots)
+      .where(and(...filters));
     const now = new Date(counts!.now);
 
     const rows = await tx
-      .select()
+      .select({ lot: lots, sortValue: sql<string | Date | number>`${order.expr}`.as('sort_value') })
       .from(lots)
-      .where(and(TAB_FILTER[query.phase], after))
-      .orderBy(by(column), by(lots.id))
+      .where(and(TAB_FILTER[query.phase], ...filters, after))
+      .orderBy(by(order.expr), by(lots.id))
       .limit(query.limit + 1);
 
     const page = rows.slice(0, query.limit);
     const last = page.at(-1);
     return {
-      items: page.map((lot) => summary(lot, now)),
-      nextCursor: rows.length > query.limit && last ? encodeCursor(last[order.key], last.id) : null,
+      items: page.map(({ lot }) => summary(lot, now)),
+      nextCursor:
+        rows.length > query.limit && last
+          ? encodeCursor(
+              orderName,
+              order.kind === 'time'
+                ? new Date(last.sortValue).toISOString()
+                : Number(last.sortValue),
+              last.lot.id,
+            )
+          : null,
       counts: { live: counts!.live, scheduled: counts!.scheduled, closed: counts!.closed },
       serverTime: now.toISOString(),
     };

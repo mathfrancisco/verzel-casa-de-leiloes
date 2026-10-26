@@ -42,7 +42,24 @@ ao vivo → `ending_soon`; agendados → início mais próximo; encerrados → m
 
 Implementado no LC-007: `phase`, `cursor` (opaco, paginação por chave `(coluna de ordenação, id)`)
 e `limit` (padrão 12). `counts = { live, scheduled, closed }` traz o total de cada aba para os
-rótulos; `nextCursor` é `null` na última página. Filtros e `sort` entram no LC-019.
+rótulos; `nextCursor` é `null` na última página.
+
+Implementado no LC-019 (RF-17), todos opcionais e combinados com E:
+
+- `q`: texto de até 100 caracteres. Busca em título, descrição e artista (`search_vector`,
+  configuração `simple`: sem stemming e sem remoção de acentos, então "lirios" não encontra
+  "Lírios"). Cada palavra (só letras e números) casa por prefixo e todas são exigidas; texto
+  sem nenhuma palavra (ex.: `!!!`) devolve lista vazia, não erro.
+- `category`: valor de `LotCategory`. `minPriceCents`/`maxPriceCents`: inteiros ≥ 0, bordas
+  inclusas, aplicados ao **preço efetivo** (`current_price_cents`, ou `starting_price_cents` sem
+  lances); `min > max` é `VALIDATION_ERROR`. Parâmetro vazio (`?q=`) equivale a ausente.
+- `sort`: `ending_soon` (fim mais próximo), `newest` (criados há menos tempo), `price_asc`,
+  `price_desc` (preço efetivo). Todas desempatam por `id` e valem em qualquer aba; sem `sort`,
+  vale o padrão da aba.
+- `cursor` é opaco e só vale para a ordenação que o emitiu; usar com outra ordenação é
+  `VALIDATION_ERROR`.
+- `counts` respeita `q`, `category` e a faixa de preço (os rótulos das abas mostram quantos lotes
+  casam), mas nunca inclui `CANCELLED`.
 
 ### Tipos
 

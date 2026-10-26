@@ -53,7 +53,7 @@ do README), registrada no PR do card. IDs em [`01-requisitos.md`](01-requisitos.
 
 | ✓ | Item do PDF | Requisito | Card | Evidência |
 |---|---|---|---|---|
-| [ ] | Busca e filtro de lotes | RF-17 | LC-019 | |
+| [x] | Busca e filtro de lotes | RF-17 | LC-019 | CT-03-14 no PostgreSQL descartável: busca por título, artista e descrição (prefixo, todas as palavras), categoria, faixa de preço sobre o preço efetivo, quatro ordenações com paginação por cursor sem repetir nem pular, contagens por filtro, cancelado ausente, entradas inválidas 400 e texto malicioso inofensivo. CT-09-06 coberto por teste de componente (URL ↔ filtros, debounce de 300 ms, preço inválido); sem Playwright (LC-022) e não testado no navegador. Evidência em `../work/lc019-validation.log`. |
 | [x] | Cancelamento com estorno automático | RF-18 | LC-018 | CT-03-10/11/13 no PostgreSQL descartável: liberação do comprometido, `REFUND_DEBIT`/`REFUND_CREDIT`, comprovante revogado, auditoria `INTACT` (revokedAt = elo CANCELLED), I-1 e I-7, cancelamentos concorrentes estornam uma vez. Eventos `lot.cancelled` e `wallet.changed` só após o commit. Evidência em `../work/lc018-validation.log`. |
 | [x] | Docker Compose | RNF-13 | LC-002, LC-004 | `docker compose up` sobe Postgres + app em `localhost:3000` com migrations no start |
 | [ ] | Testes automatizados | RNF-12 | todos + LC-022 | |
