@@ -1,0 +1,2 @@
+CREATE INDEX "lots_visible_ends_idx" ON "lots" USING btree ("ends_at" DESC NULLS FIRST,"id" DESC NULLS FIRST) WHERE "lots"."state" <> 'CANCELLED';--> statement-breakpoint
+CREATE INDEX "lots_visible_created_idx" ON "lots" USING btree ("created_at" DESC NULLS FIRST,"id" DESC NULLS FIRST) WHERE "lots"."state" <> 'CANCELLED';

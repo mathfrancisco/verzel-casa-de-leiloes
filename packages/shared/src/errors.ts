@@ -57,3 +57,7 @@ export interface ApiErrorBody {
     details?: Record<string, unknown>;
   };
 }
+
+/** Corpo acima do limite do servidor: `VALIDATION_ERROR` com HTTP 413 (SP-00). */
+export const PAYLOAD_TOO_LARGE_STATUS = 413;
+export const PAYLOAD_TOO_LARGE_MESSAGE = 'Corpo da requisição grande demais.';

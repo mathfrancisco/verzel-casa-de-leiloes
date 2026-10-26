@@ -36,6 +36,13 @@
       "when": 1792984247680,
       "tag": "0004_busca_e_filtros",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1793049096342,
+      "tag": "0005_indices_vitrine",
+      "breakpoints": true
     }
   ]
 }

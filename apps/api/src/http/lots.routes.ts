@@ -21,6 +21,7 @@ import { placeBid, type BidDeps } from '../application/bids';
 import { cancelLot } from '../application/cancel';
 import { DomainError } from '../domain/errors';
 import { optionalUser, requireAuth, requireRole } from './auth-guard';
+import { readIdempotencyKey } from './idempotency-key';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -81,11 +82,7 @@ export function lotRoutes(app: FastifyInstance, deps: LotDeps & BidDeps & AuditD
     await requireAuth(request);
     if (request.user.role !== 'BIDDER') throw new DomainError('SELLER_CANNOT_BID');
     if (!UUID.test(request.params.id)) throw new DomainError('LOT_NOT_FOUND');
-    const key = request.headers['idempotency-key'];
-    if (!key) throw new DomainError('IDEMPOTENCY_KEY_REQUIRED');
-    if (Array.isArray(key)) {
-      throw new DomainError('VALIDATION_ERROR', { field: 'Idempotency-Key' });
-    }
+    const key = readIdempotencyKey(request);
     const result = await placeBid(
       deps,
       { id: request.user.sub, role: request.user.role },
@@ -99,9 +96,13 @@ export function lotRoutes(app: FastifyInstance, deps: LotDeps & BidDeps & AuditD
   app.get<{ Params: { id: string } }>('/api/images/:id', async (request, reply) => {
     const image = await getImage(deps.db, request.params.id);
     if (!image) throw new DomainError('NOT_FOUND');
-    return reply
-      .header('content-type', image.contentType)
-      .header('cache-control', 'public, max-age=31536000, immutable')
-      .send(image.bytes);
+    // A imagem de um lote nunca muda (id novo a cada upload): cache longo + validador pelo SHA-256.
+    const etag = `"${image.sha256}"`;
+    reply.header('etag', etag).header('cache-control', 'public, max-age=31536000, immutable');
+    const candidates = request.headers['if-none-match']
+      ?.split(',')
+      .map((v) => v.trim().replace(/^W\//, ''));
+    if (candidates?.includes(etag) || candidates?.includes('*')) return reply.code(304).send();
+    return reply.header('content-type', image.contentType).send(image.bytes);
   });
 }

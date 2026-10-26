@@ -1,3 +1,4 @@
+import { idemKey } from '../support/idempotency';
 import type { ApiErrorBody, AuctioneerLotsResponse, CatalogItem, LotDetail } from '@leilao/shared';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { settleDueLots, type SettlementDeps } from '../../src/application/settlement';
@@ -76,7 +77,7 @@ async function deposit(cookie: Record<string, string>, key: string) {
     method: 'POST',
     url: '/api/wallet/deposits',
     cookies: cookie,
-    headers: { 'idempotency-key': key },
+    headers: { 'idempotency-key': idemKey(key) },
     payload: { amountCents: 10_000 },
   });
   expect(response.statusCode).toBe(201);
@@ -92,7 +93,7 @@ async function bid(
     method: 'POST',
     url: `/api/lots/${lotId}/bids`,
     cookies: cookie,
-    headers: { 'idempotency-key': key },
+    headers: { 'idempotency-key': idemKey(key) },
     payload: { amountCents },
   });
   expect(response.statusCode).toBe(201);
