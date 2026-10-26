@@ -18,7 +18,7 @@ export const LotHistory = memo(function LotHistory({
     <section className="lot-history" aria-labelledby="lot-history-title">
       <h2 id="lot-history-title">Histórico de lances</h2>
       {entries.length === 0 ? (
-        <p>Ainda não há lances.</p>
+        <p className="empty-state">Ainda não há lances.</p>
       ) : (
         <ol>
           {entries.map((entry) => (
