@@ -39,3 +39,5 @@ Licitante deposita saldo e vê total, comprometido e disponível.
 - [x] Todos os critérios de aceite com evidência
 - [x] Status atualizado aqui e em `ai/cards/README.md`
 - [x] `docs/CHECKLIST.md` atualizado com evidência; `docs/USO-DE-IA.md` é mantido pelo coordenador
+
+Integração local sobre a main da PR #9 em 26/10/2026: lint, typecheck, build e 303 testes (81 shared, 165 API, 57 web) passaram no PostgreSQL descartável; revisão assistida sem achados, com publicação, CI e merge do LC-009 ainda pendentes.
