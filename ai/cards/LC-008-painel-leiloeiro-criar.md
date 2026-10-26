@@ -52,6 +52,24 @@ Leiloeiro encontra uma obra, confere os atributos e publica o lote pela interfac
 | Chromium (`pnpm dev`, `CATALOG_PROVIDER=fake`) | licitante em `/painel/novo` → "Sem permissão" (CT-09-04); busca "mo" lista a obra; seleção preenche título, categoria e atributos; erros do cliente ao lado dos campos; erro de campo vindo do servidor (simulado) aparece no campo Título com `aria-describedby`; publicação real → redireciona para `/lotes/:id` e a API devolve o lote `SCHEDULED` com R$ 1.500,00 / R$ 100,00; catálogo fora (503 simulado) → mensagem clara |
 | Busca contra a AIC real | **pendente** (rede deste ambiente bloqueia `api.artic.edu`; ver LC-005) |
 
+## Validação de integração (25/10/2026)
+
+Estado revalidado sobre `main` após a integração do LC-007. Esta rodada não incluiu uma nova
+execução de navegador.
+
+| Verificação | Resultado |
+|---|---|
+| `pnpm lint` (Node 22.16.0, pnpm 10.28.0) | Passou (`eslint .` e `prettier --check .`). O checkout tinha CRLF enquanto os blobs versionados usam LF; finais de linha foram normalizados sem reformatação em massa. |
+| `pnpm typecheck` | Passou (shared, API, web). |
+| `pnpm test` | Passou: shared 76, web 48, API 153; 277 testes no total. Inclui regressão para ocultar resultados antigos quando a busca é apagada e teste de cache imutável de assets no Windows. Consultas curtas também não disparam busca. |
+| `pnpm build` | Passou (API e web). |
+| Revisão de diff | Sem achados pendentes. |
+| Banco de integração | PostgreSQL 16.15, container `verzel-cards-test-db`, database `verzel_test_admin`, mapeado em `127.0.0.1:55439`; somente banco descartável. |
+| CI / integração | Aguardando PR e checks remotos. Status permanece REVIEW. |
+
+O caminho `/lotes/:id` ainda mostra “Página não encontrada” até a sala do lote do LC-013 existir;
+isso é uma dependência de navegação planejada e não altera a criação do lote deste card.
+
 Decisões:
 - CSP `img-src 'self' data: https://www.artic.edu`: as miniaturas da busca vêm direto do IIIF
   do museu; as imagens de lotes continuam servidas pela própria API.

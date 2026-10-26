@@ -41,3 +41,15 @@ fluxo de trabalho com IA está descrito em [`../ai/README.md`](../ai/README.md).
 | 22/10/2026 | Implementação (LC-007) | IA | Gerou a vitrine (API com abas, ordenação, cursor e contagens; tela com abas, cards e contagem regressiva pela hora do servidor), com testes; rodou lint, typecheck, testes, build e a vitrine no navegador |
 | 23/10/2026 | Implementação (LC-008) | Eu | Pedi para seguir com o LC-008 e revisei o resultado |
 | 23/10/2026 | Implementação (LC-008) | IA | Gerou a tela de novo lote (busca no catálogo, seleção da obra, formulário com validação em reais e datas locais, erros por campo) e o ajuste de CSP para as miniaturas, com testes; rodou lint, typecheck, testes, build e o fluxo no navegador |
+| 25/10/2026 | Direcionamento (LC-008) | Eu | Autorizei continuar os cards, respeitando a janela de uma hora para publicação e o uso de PostgreSQL descartável nas validações locais |
+| 25/10/2026 | Implementação e validação (LC-008) | IA | Corrigiu a busca para ocultar resultados antigos quando a consulta é apagada e evitar busca com consulta curta, adicionou uma regressão para consulta apagada e ajustou o encaminhamento do asset para preservar cache imutável no Windows. Revalidou lint, typecheck, 277 testes e build; a revisão de diff não encontrou achados pendentes. A execução de navegador, a busca na API real do museu e os checks de CI continuam pendentes |
+
+## Como conduzo a implementação assistida
+
+Eu organizo o trabalho por requisitos, cards e dependências: leio as specs, escolho a ordem e o
+escopo, pesquiso alternativas quando há decisão técnica, e dou instruções e contexto para a IA
+seguir um caminho. A IA auxilia na implementação, documentação e execução de verificações; uso os
+resultados e as revisões disponíveis para decidir os ajustes e o próximo passo. O registro acima
+descreve também tarefas executadas pela IA, para não omitir essa assistência. Cada resultado é
+relatado com o que foi verificado e com o que continua pendente; uma execução local não é tratada
+como evidência de CI, deploy ou validação externa.
