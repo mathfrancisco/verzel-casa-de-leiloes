@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Status | REVIEW |
+| Status | DONE |
 | Épico / dia | E4 Tempo real e liquidação · Dia 4 |
 | Depende de | LC-011 |
 | Requisitos | RF-10, RF-20, RNF-10 |
@@ -36,7 +36,7 @@ Mudanças de lote e carteira chegam aos clientes sem recarregar.
 ## Definição de pronto
 
 - [x] Gates locais verdes: lint, typecheck, testes (363: shared 104, API 196, web 63; sem falhas ou skips) e build; log em `../work/lc012-validation.log`
-- [ ] Registrar a saída dos gates no PR e obter CI verde — publicação e CI pendentes
+- [x] Gates registrados na PR #12 (integração com `main`: 365 testes — shared 104, API 197, web 64); PR integrada em `3749d9c`; CI da PR (run 40333632167) e pós-merge (run 40333960247) passaram
 - [x] Todos os critérios de aceite com evidência local
 - [x] Status atualizado aqui e em `ai/cards/README.md`
 - [x] `docs/CHECKLIST.md` (só com evidência) e `docs/USO-DE-IA.md` atualizados
