@@ -10,7 +10,8 @@
     "typecheck": "tsc -p tsconfig.json",
     "test": "vitest run",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "tsx --env-file-if-exists=../../.env src/infra/db/migrate.ts"
+    "db:migrate": "tsx --env-file-if-exists=../../.env src/infra/db/migrate.ts",
+    "keys:generate": "tsx scripts/generateAuditKeys.ts"
   },
   "dependencies": {
     "@fastify/cookie": "11.0.2",
