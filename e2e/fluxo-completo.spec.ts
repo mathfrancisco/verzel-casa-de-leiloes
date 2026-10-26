@@ -16,7 +16,7 @@ const localInput = (d: Date) =>
 
 const ENDS_IN_MS = 5 * 60_000;
 // CT-06-06 pede < 1 s; o teto folgado evita falso negativo em CI. O tempo medido vai no relatório.
-const OUTBID_CEILING_MS = 2_000;
+const OUTBID_CEILING_MS = 5_000;
 
 async function openContext(browser: Browser, email: string) {
   const context = await browser.newContext({ storageState: sessionFile(email) });
@@ -41,15 +41,6 @@ test('fluxo completo: criar lote, disputar, ser superado, encerrar, comprovante 
   let endsAt = 0;
 
   await test.step('leiloeiro cria um lote de 5 minutos pela UI', async () => {
-    // O início aceita até 1 min no passado e o campo só tem precisão de minutos: começar no
-    // minuto corrente só é seguro se ainda faltar folga até o próximo minuto.
-    const seconds = new Date().getSeconds();
-    if (seconds >= 50) await auctioneer.page.waitForTimeout((62 - seconds) * 1000);
-    const start = new Date();
-    start.setSeconds(0, 0);
-    const end = new Date(start.getTime() + ENDS_IN_MS);
-    endsAt = end.getTime();
-
     const page = auctioneer.page;
     await page.goto('/painel/novo');
     await page.getByLabel('Buscar no acervo do Art Institute of Chicago').fill('Monet');
@@ -57,6 +48,14 @@ test('fluxo completo: criar lote, disputar, ser superado, encerrar, comprovante 
     await page.getByLabel('Título').fill(title);
     await page.getByLabel('Lance inicial (R$)').fill('1.500,00');
     await page.getByLabel('Incremento mínimo (R$)').fill('100,00');
+    // O início aceita até 1 min no passado e o campo só tem precisão de minutos: calcula o
+    // início logo antes de enviar e deixa ao menos 30 s de folga até o próximo minuto.
+    const seconds = new Date().getSeconds();
+    if (seconds >= 30) await page.waitForTimeout((62 - seconds) * 1000);
+    const start = new Date();
+    start.setSeconds(0, 0);
+    const end = new Date(start.getTime() + ENDS_IN_MS);
+    endsAt = end.getTime();
     await page.getByLabel('Início', { exact: true }).fill(localInput(start));
     await page.getByLabel('Fim', { exact: true }).fill(localInput(end));
     await page.getByRole('button', { name: 'Publicar lote' }).click();

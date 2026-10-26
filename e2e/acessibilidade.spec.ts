@@ -6,8 +6,9 @@ const THEMES = ['light', 'dark'] as const;
 
 async function firstLotId(page: Page): Promise<string> {
   const response = await page.request.get('/api/lots?phase=live');
-  const body = (await response.json()) as { items: { id: string }[] };
-  const id = body.items[0]?.id;
+  const body = (await response.json()) as { items: { id: string; endsAt: string }[] };
+  // O lote que encerra por último não muda de estado durante a execução (o fluxo dura minutos).
+  const id = [...body.items].sort((a, b) => b.endsAt.localeCompare(a.endsAt))[0]?.id;
   if (!id) throw new Error('Seed sem lote ao vivo: rode `pnpm seed`.');
   return id;
 }
