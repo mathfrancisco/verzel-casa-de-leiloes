@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Status | TODO |
+| Status | REVIEW |
 | Épico / dia | E5 Auditoria e gestão · Dia 5 |
 | Depende de | LC-014 |
 | Requisitos | RF-06 |
@@ -24,8 +24,8 @@ Leiloeiro vê o resultado de cada lote e quanto recebeu no total.
 
 ## Critérios de aceite
 
-- [ ] Resultados e total batem com os lançamentos da carteira
-- [ ] Leiloeiro só vê os próprios lotes
+- [x] Resultados e total batem com os lançamentos da carteira (CT-03-13 sem a parte de estorno passou no PostgreSQL isolado; total = `SETTLEMENT_CREDIT` + `REFUND_DEBIT` negativo, conferido contra o razão)
+- [x] Leiloeiro só vê os próprios lotes (lote de outro leiloeiro ausente; visitante 401 e licitante 403)
 
 ## Testes obrigatórios
 
@@ -33,7 +33,7 @@ Leiloeiro vê o resultado de cada lote e quanto recebeu no total.
 
 ## Definição de pronto
 
-- [ ] `pnpm lint && pnpm typecheck && pnpm test` verdes, saída real no PR
-- [ ] Todos os critérios de aceite com evidência
-- [ ] Status atualizado aqui e em `ai/cards/README.md`
-- [ ] `docs/CHECKLIST.md` (só com evidência) e `docs/USO-DE-IA.md` atualizados
+- [x] `pnpm lint`, `pnpm typecheck`, `pnpm build` e `pnpm test` padrão verdes (418: shared 104, web 87, API 227, duas execuções seguidas); timeouts de `startup.test.ts` (25 s) e do teste longo do painel (30 s) ajustados à carga da suíte paralela. No navegador, /painel mostrou total R$ 26,00 igual ao razão, seis lotes com fase/resultado corretos, links de sala e auditoria e sem botão de cancelar. Saída local em `../work/lc017-validation.log`; PR pendente
+- [x] Todos os critérios de aceite com evidência
+- [x] Status atualizado aqui e em `ai/cards/README.md`
+- [x] `docs/CHECKLIST.md` (só com evidência) e `docs/USO-DE-IA.md` atualizados

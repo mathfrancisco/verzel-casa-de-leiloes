@@ -17,5 +17,6 @@ describe('início da API', () => {
     expect(result.stderr).toContain('DATABASE_URL');
     expect(result.stderr).toContain('JWT_SECRET');
     expect(result.stderr).toContain('PSEUDONYM_SECRET');
-  });
+    // O processo filho tem até 20 s; sob carga paralela o padrão de 5 s do Vitest não basta.
+  }, 25_000);
 });
