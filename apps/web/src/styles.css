@@ -520,3 +520,22 @@ button:disabled {
 .danger-button {
   justify-self: start;
 }
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0 1rem;
+  margin-bottom: 1rem;
+}
+.filters .field {
+  flex: 1 1 10rem;
+  margin-bottom: 0.75rem;
+}
+.filters button {
+  margin-bottom: 0.75rem;
+}
+.filters-error {
+  flex-basis: 100%;
+  margin-bottom: 0.5rem;
+}

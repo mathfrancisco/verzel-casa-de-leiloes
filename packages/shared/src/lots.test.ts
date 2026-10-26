@@ -89,3 +89,58 @@ describe('lotListQuerySchema', () => {
     expect(lotListQuerySchema.safeParse(input).success).toBe(false);
   });
 });
+
+describe('lotListQuerySchema — busca e filtros (RF-17)', () => {
+  it('aceita todos os filtros, converte preços e apara o texto', () => {
+    expect(
+      lotListQuerySchema.parse({
+        phase: 'closed',
+        q: '  monet  ',
+        category: 'PRINT',
+        minPriceCents: '1000',
+        maxPriceCents: '50000',
+        sort: 'price_asc',
+      }),
+    ).toEqual({
+      phase: 'closed',
+      q: 'monet',
+      category: 'PRINT',
+      minPriceCents: 1000,
+      maxPriceCents: 50_000,
+      sort: 'price_asc',
+      limit: 12,
+    });
+  });
+
+  it('trata filtros vazios como ausentes', () => {
+    expect(
+      lotListQuerySchema.parse({
+        phase: 'live',
+        q: '   ',
+        category: '',
+        minPriceCents: '',
+        maxPriceCents: '',
+        sort: '',
+      }),
+    ).toEqual({ phase: 'live', limit: 12 });
+  });
+
+  it('aceita faixa com mínimo igual ao máximo', () => {
+    expect(
+      lotListQuerySchema.safeParse({ phase: 'live', minPriceCents: '500', maxPriceCents: '500' })
+        .success,
+    ).toBe(true);
+  });
+
+  it.each([
+    { category: 'JOIAS' },
+    { sort: 'random' },
+    { minPriceCents: '-1' },
+    { minPriceCents: '10.5' },
+    { maxPriceCents: 'abc' },
+    { minPriceCents: '2000', maxPriceCents: '1000' },
+    { q: 'x'.repeat(101) },
+  ])('rejeita %o', (extra) => {
+    expect(lotListQuerySchema.safeParse({ phase: 'live', ...extra }).success).toBe(false);
+  });
+});
