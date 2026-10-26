@@ -50,6 +50,18 @@ function statusText(lot: LotDetail) {
   return lot.phase === 'LIVE' ? 'Acompanhe os lances ao vivo' : 'Lote encerrado';
 }
 
+function statusTone(lot: LotDetail): 'winning' | 'outbid' | 'neutral' {
+  const status = bidStatus({
+    phase: lot.phase,
+    myPseudonym: lot.me?.myPseudonym,
+    myBestBidCents: lot.me?.myBestBidCents,
+    leaderPseudonym: lot.leaderPseudonym,
+    bidCount: lot.bidCount,
+    isSeller: lot.me?.isSeller,
+  });
+  return status === 'winning' || status === 'outbid' ? status : 'neutral';
+}
+
 function attributes(lot: LotDetail) {
   return [
     ['Artista', lot.item.artist],
@@ -165,7 +177,7 @@ export function LotRoomPage() {
     );
   }, [detail]);
 
-  if (lot.isPending || user === undefined) return <p>Carregando lote…</p>;
+  if (lot.isPending || user === undefined) return <p role="status">Carregando lote…</p>;
   if (lot.isError) {
     return (
       <section>
@@ -236,6 +248,7 @@ export function LotRoomPage() {
         endsAt={detail.endsAt}
         extended={detail.extended}
         statusText={statusText(detail)}
+        statusTone={statusTone(detail)}
         onElapsed={refetchLot}
       />
 
