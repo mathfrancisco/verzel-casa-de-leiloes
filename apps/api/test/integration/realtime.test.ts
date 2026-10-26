@@ -1,3 +1,4 @@
+import { idemKey } from '../support/idempotency';
 import type { AddressInfo } from 'node:net';
 import { generateKeyPairSync } from 'node:crypto';
 import { io as connect, type Socket } from 'socket.io-client';
@@ -329,7 +330,7 @@ function deposit(cookie: Record<string, string>, key: string, target = app) {
     method: 'POST',
     url: '/api/wallet/deposits',
     cookies: cookie,
-    headers: { 'idempotency-key': key },
+    headers: { 'idempotency-key': idemKey(key) },
     payload: { amountCents: 10_000 },
   });
 }
@@ -365,7 +366,7 @@ function bid(
     method: 'POST',
     url: `/api/lots/${lotId}/bids`,
     cookies: cookie,
-    headers: { 'idempotency-key': key },
+    headers: { 'idempotency-key': idemKey(key) },
     payload: { amountCents },
   });
 }

@@ -1,3 +1,4 @@
+import { idemKey } from '../support/idempotency';
 import { generateKeyPairSync } from 'node:crypto';
 import {
   base64urlToBytes,
@@ -72,7 +73,7 @@ async function deposit(cookie: Record<string, string>, key: string, amountCents 
     method: 'POST',
     url: '/api/wallet/deposits',
     cookies: cookie,
-    headers: { 'idempotency-key': key },
+    headers: { 'idempotency-key': idemKey(key) },
     payload: { amountCents },
   });
   expect(response.statusCode).toBe(201);
@@ -108,7 +109,7 @@ async function bid(
     method: 'POST',
     url: `/api/lots/${lotId}/bids`,
     cookies: cookie,
-    headers: { 'idempotency-key': key },
+    headers: { 'idempotency-key': idemKey(key) },
     payload: { amountCents },
   });
   expect(response.statusCode).toBe(201);
@@ -281,7 +282,7 @@ describe('liquidação (SP-07)', () => {
       method: 'POST',
       url: `/api/lots/${lot.id}/bids`,
       cookies: bidder.cookie,
-      headers: { 'idempotency-key': 'lance-atrasado' },
+      headers: { 'idempotency-key': idemKey('lance-atrasado') },
       payload: { amountCents: 1_000 },
     });
     expect(response.statusCode).toBe(409);
