@@ -475,13 +475,13 @@ describe('cancelamento de lote (SP-03, RN-12, RN-13)', () => {
       await tx`SELECT id FROM lots WHERE id = ${lot.id} FOR UPDATE`;
       pending = cancel(seller.cookie, lot.id);
       await tx`SELECT pg_sleep(1)`;
-      const [row] = await tx<{ at: Date }[]>`SELECT clock_timestamp() AS at`;
-      lockReleasedAt = row!.at.toISOString();
+      const [row] = await tx<{ at: Date | string }[]>`SELECT clock_timestamp() AS at`;
+      lockReleasedAt = new Date(row!.at).toISOString();
     });
     expect((await pending!).statusCode).toBe(200);
 
-    const [entry] = await testDb.sql<{ created_at: Date }[]>`
+    const [entry] = await testDb.sql<{ created_at: Date | string }[]>`
       SELECT created_at FROM lot_entries WHERE lot_id = ${lot.id} AND type = 'CANCELLED'`;
-    expect(entry!.created_at.toISOString() >= lockReleasedAt).toBe(true);
+    expect(new Date(entry!.created_at).toISOString() >= lockReleasedAt).toBe(true);
   });
 });
