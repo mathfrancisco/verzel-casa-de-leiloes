@@ -10,3 +10,4 @@ test-results/
 /apps/api/keys/
 *.log
 .DS_Store
+/e2e/.auth/

@@ -1,17 +1,8 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
+import { ANA, LEILOEIRO, signIn } from './helpers';
 
-// Usuários do seed (apps/api/src/seed/seed.ts).
-const SENHA = 'demo1234';
 const THEMES = ['light', 'dark'] as const;
-
-async function login(page: Page, email: string) {
-  await page.goto('/entrar');
-  await page.getByLabel('E-mail').fill(email);
-  await page.getByLabel('Senha').fill(SENHA);
-  await page.getByRole('button', { name: 'Entrar' }).click();
-  await expect(page.getByRole('button', { name: 'Sair' })).toBeVisible();
-}
 
 async function firstLotId(page: Page): Promise<string> {
   const response = await page.request.get('/api/lots?phase=live');
@@ -67,14 +58,14 @@ for (const theme of THEMES) {
     });
 
     test('/carteira', async ({ page }) => {
-      await login(page, 'ana@demo.com');
+      await signIn(page, ANA);
       await open(page, '/carteira', () =>
         expect(page.getByRole('heading', { name: /carteira/i }).first()).toBeVisible(),
       );
     });
 
     test('/painel', async ({ page }) => {
-      await login(page, 'leiloeiro@demo.com');
+      await signIn(page, LEILOEIRO);
       await open(page, '/painel', () =>
         expect(page.getByRole('heading', { level: 1 })).toBeVisible(),
       );
