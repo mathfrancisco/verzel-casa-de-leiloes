@@ -21,7 +21,7 @@ Rota protegida sem sessão → `/entrar?next=…`; papel errado → página "sem
 
 ## Telas — conteúdo mínimo
 
-**Vitrine:** abas Ao vivo / Agendados / Encerrados (contagem em cada); grid de cards (imagem,
+**Vitrine:** faixa de apresentação no topo (`IntroStrip`): frase do produto, três passos (saldo simulado, lances ao vivo, auditoria), "Como funciona" em `<details>` e, para visitantes, link "Entrar" com nota de que os usuários de demonstração estão no README (sem senhas na UI); botão "Fechar apresentação" lembra a escolha em `localStorage` (tolerante a falha de storage); abas Ao vivo / Agendados / Encerrados (contagem em cada); grid de cards (imagem,
 título, preço atual ou inicial, nº de lances, contagem regressiva ou "encerrado"/"arrematado por
 R$ X"). Filtros (RF-17): busca com debounce de 300 ms, categoria, faixa de preço, ordenação;
 estado refletido na URL (`?aba=ao-vivo&q=…&categoria=PRINT&min=1000&max=550000&ordem=price_asc`;
@@ -93,3 +93,4 @@ atributos; campos de preço, incremento, início e fim com validação no client
 | CT-09-04 | e2e | Rotas protegidas por papel | redirecionamentos corretos |
 | CT-09-05 | e2e | Alternar tema e recarregar | tema mantido sem flash |
 | CT-09-06 | e2e | Filtros da vitrine refletem na URL e sobrevivem ao recarregar | ok |
+| CT-09-07 | componente | Faixa de apresentação da vitrine: renderiza, fechar esconde e persiste, `localStorage` lançando não quebra | faixa some e volta conforme o storage |

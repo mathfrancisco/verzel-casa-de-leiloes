@@ -34,6 +34,13 @@ const response = (items: LotSummary[]): LotListResponse => ({
   serverTime: '2026-10-25T10:30:00.000Z',
 });
 
+const mockApi = (lots: LotListResponse) =>
+  vi
+    .mocked(apiFetch)
+    .mockImplementation(async (path) =>
+      String(path).startsWith('/api/auth/me') ? { user: null } : lots,
+    );
+
 function Where() {
   const { search } = useLocation();
   return <output data-testid="search">{search}</output>;
@@ -57,8 +64,11 @@ describe('ShowcasePage — busca e filtros (CT-09-06)', () => {
     });
   const search = () => container.querySelector('[data-testid="search"]')!.textContent!;
   const urlParams = () => new URLSearchParams(search());
+  // A faixa de apresentação também consulta /api/auth/me; aqui só interessam as chamadas de lotes.
+  const lotCalls = () =>
+    vi.mocked(apiFetch).mock.calls.filter(([path]) => String(path).startsWith('/api/lots'));
   const lastRequest = () => {
-    const calls = vi.mocked(apiFetch).mock.calls;
+    const calls = lotCalls();
     return new URL(calls.at(-1)![0] as string, 'http://x').searchParams;
   };
   const control = <T extends HTMLElement>(label: string) =>
@@ -76,7 +86,7 @@ describe('ShowcasePage — busca e filtros (CT-09-06)', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.mocked(apiFetch).mockResolvedValue(response([lot]));
+    mockApi(response([lot]));
     (
       globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT?: boolean }
     ).IS_REACT_ACT_ENVIRONMENT = true;
@@ -114,19 +124,19 @@ describe('ShowcasePage — busca e filtros (CT-09-06)', () => {
   it('digitar espera 300 ms sem novas teclas antes de buscar e grava na URL', async () => {
     vi.useFakeTimers();
     await render('/?aba=ao-vivo');
-    const calls = vi.mocked(apiFetch).mock.calls.length;
+    const calls = lotCalls().length;
 
     await setValue(control('Buscar'), 'mon');
     await setValue(control('Buscar'), 'monet');
     await act(async () => void vi.advanceTimersByTime(299));
-    expect(vi.mocked(apiFetch).mock.calls.length).toBe(calls);
+    expect(lotCalls().length).toBe(calls);
     expect(urlParams().get('q')).toBeNull();
 
     await act(async () => void vi.advanceTimersByTime(1));
     expect(urlParams().get('q')).toBe('monet');
     expect(urlParams().get('aba')).toBe('ao-vivo');
     expect(lastRequest().get('q')).toBe('monet');
-    expect(vi.mocked(apiFetch).mock.calls.length).toBe(calls + 1);
+    expect(lotCalls().length).toBe(calls + 1);
   });
 
   it('categoria e ordenação aplicam na hora e vão para a URL', async () => {
@@ -156,25 +166,25 @@ describe('ShowcasePage — busca e filtros (CT-09-06)', () => {
   it('preço inválido mostra aviso e não consulta nem altera a URL', async () => {
     vi.useFakeTimers();
     await render('/');
-    const calls = vi.mocked(apiFetch).mock.calls.length;
+    const calls = lotCalls().length;
     await setValue(control('Preço mínimo (R$)'), 'abc');
     await act(async () => void vi.advanceTimersByTime(300));
 
     expect(container.querySelector('[role="alert"]')?.textContent).toContain('Preço inválido');
     expect(urlParams().get('min')).toBeNull();
-    expect(vi.mocked(apiFetch).mock.calls.length).toBe(calls);
+    expect(lotCalls().length).toBe(calls);
   });
 
   it('mínimo maior que o máximo avisa e não consulta', async () => {
     vi.useFakeTimers();
     await render('/');
-    const calls = vi.mocked(apiFetch).mock.calls.length;
+    const calls = lotCalls().length;
     await setValue(control('Preço mínimo (R$)'), '50');
     await setValue(control('Preço máximo (R$)'), '10');
     await act(async () => void vi.advanceTimersByTime(300));
 
     expect(container.querySelector('[role="alert"]')?.textContent).toContain('mínimo');
-    expect(vi.mocked(apiFetch).mock.calls.length).toBe(calls);
+    expect(lotCalls().length).toBe(calls);
   });
 
   it('as abas mantêm os filtros e "Limpar filtros" os remove, mantendo a aba', async () => {
@@ -202,7 +212,7 @@ describe('ShowcasePage — busca e filtros (CT-09-06)', () => {
   });
 
   it('sem resultados com filtros explica a ausência de resultados', async () => {
-    vi.mocked(apiFetch).mockResolvedValue(response([]));
+    mockApi(response([]));
     await render('/?q=nada');
     await vi.waitFor(() =>
       expect(container.textContent).toContain('Nenhum lote encontrado com estes filtros.'),
