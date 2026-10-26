@@ -58,6 +58,8 @@ export const SERVER_LIMITS = {
   /** Inatividade máxima de um socket; o upgrade do WebSocket zera esse timer no Node. */
   connectionTimeout: 120_000,
   keepAliveTimeout: 65_000,
+  /** Deve ser maior que `keepAliveTimeout`, senão o Node fecha a conexão ociosa antes. */
+  headersTimeout: 66_000,
 } as const;
 
 export function buildApp({
@@ -72,7 +74,9 @@ export function buildApp({
   config,
   logger = false,
 }: AppDeps) {
-  const app = Fastify({ logger, ...SERVER_LIMITS });
+  const { headersTimeout, ...fastifyLimits } = SERVER_LIMITS;
+  const app = Fastify({ logger, ...fastifyLimits });
+  app.server.headersTimeout = headersTimeout;
 
   registerErrorHandling(app, { serveSpa: Boolean(config.webDistDir) });
   app.register(helmet, {
