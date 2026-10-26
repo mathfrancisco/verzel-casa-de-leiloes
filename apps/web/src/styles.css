@@ -677,6 +677,10 @@ button.secondary:hover:not(:disabled),
   border-color: var(--accent);
 }
 @media (min-width: 30.01rem) {
+  /* Cabeçalho fixo não pode cobrir o elemento focado (WCAG 2.4.11). */
+  html {
+    scroll-padding-top: 6rem;
+  }
   .site-header {
     position: sticky;
     top: 0;
