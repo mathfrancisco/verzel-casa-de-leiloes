@@ -11,6 +11,8 @@
     "test": "vitest run",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx --env-file-if-exists=../../.env src/infra/db/migrate.ts",
+    "seed": "tsx --env-file-if-exists=../../.env src/seed/cli.ts",
+    "seed:reset": "tsx --env-file-if-exists=../../.env src/seed/cli.ts --reset",
     "keys:generate": "tsx scripts/generateAuditKeys.ts"
   },
   "dependencies": {

@@ -43,6 +43,7 @@ export class FakeCatalog implements CatalogProvider {
   constructor(
     private readonly items: CatalogItem[] = DEFAULT_ITEMS,
     private readonly slowMs = 5000,
+    private readonly images: Record<string, CatalogImage> = {},
   ) {}
 
   setMode(mode: Mode): void {
@@ -73,9 +74,9 @@ export class FakeCatalog implements CatalogProvider {
     return found;
   }
 
-  async fetchImage(_item: CatalogItem): Promise<CatalogImage> {
+  async fetchImage(item: CatalogItem): Promise<CatalogImage> {
     await this.simulate();
-    return FAKE_IMAGE;
+    return this.images[item.externalId] ?? FAKE_IMAGE;
   }
 
   private async simulate(): Promise<void> {

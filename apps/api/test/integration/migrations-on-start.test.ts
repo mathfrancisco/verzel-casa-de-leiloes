@@ -26,5 +26,6 @@ describe('runMigrations', () => {
     >`SELECT count(*)::int AS count FROM drizzle.__drizzle_migrations`;
     await db.end();
     expect(row?.count).toBeGreaterThanOrEqual(2);
-  });
+    // CREATE DATABASE e duas migrations completas disputam o Postgres com as outras suítes.
+  }, 30_000);
 });
