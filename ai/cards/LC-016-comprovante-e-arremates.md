@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Status | REVIEW |
+| Status | DONE |
 | Épico / dia | E5 Auditoria e gestão · Dia 5 |
 | Depende de | LC-014 |
 | Requisitos | RF-13, RF-14 |
@@ -38,3 +38,4 @@ Vencedor acessa e compartilha o comprovante; licitante acompanha tudo em que deu
 - [x] Todos os critérios de aceite com evidência
 - [x] Status atualizado aqui e em `ai/cards/README.md`
 - [x] `docs/CHECKLIST.md` (só com evidência) e `docs/USO-DE-IA.md` atualizados
+- Integração: PR #17 integrada em `84b58d2`; CI da PR (run 40382967358) e pós-merge (run 40383341310) passaram.
