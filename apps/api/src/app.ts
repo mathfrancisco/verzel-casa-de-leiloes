@@ -38,7 +38,12 @@ export function buildApp({ db, sql, catalog, config, logger = false }: AppDeps) 
   const app = Fastify({ logger });
 
   registerErrorHandling(app, { serveSpa: Boolean(config.webDistDir) });
-  app.register(helmet);
+  app.register(helmet, {
+    contentSecurityPolicy: {
+      // Miniaturas da busca no catálogo vêm direto do IIIF do Art Institute (painel do leiloeiro).
+      directives: { imgSrc: ["'self'", 'data:', 'https://www.artic.edu'] },
+    },
+  });
   app.register(cookie);
   app.register(jwt, {
     secret: config.jwtSecret,
