@@ -79,7 +79,9 @@ export function bidStatus(input: {
   myBestBidCents: number | null | undefined;
   leaderPseudonym: string | null;
   bidCount: number;
+  isSeller?: boolean;
 }): 'winning' | 'outbid' | 'first' | 'closed' | null {
+  if (input.isSeller) return null;
   if (input.phase !== 'LIVE') {
     return input.phase === 'SETTLED' || input.phase === 'UNSOLD'
       ? input.myPseudonym

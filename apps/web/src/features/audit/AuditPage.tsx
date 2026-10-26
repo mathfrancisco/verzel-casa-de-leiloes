@@ -41,7 +41,11 @@ export function AuditPage() {
     setLocalVerification(null);
     if (!audit.data) return;
     const startedAt = performance.now();
-    void verifyChain(audit.data, base64urlToBytes(audit.data.publicKey), new BrowserAuditCrypto())
+    // Decodifica dentro da promessa: uma chave malformada vira inconsistência, não erro de render.
+    void Promise.resolve()
+      .then(() =>
+        verifyChain(audit.data, base64urlToBytes(audit.data.publicKey), new BrowserAuditCrypto()),
+      )
       .then((verdict) => {
         if (!active) return;
         setLocalVerification({

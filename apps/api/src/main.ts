@@ -1,4 +1,4 @@
-import { createPrivateKey, createPublicKey } from 'node:crypto';
+import { createPublicKey } from 'node:crypto';
 import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { buildApp } from './app';
@@ -8,6 +8,7 @@ import { FakeCatalog } from './infra/catalog/fake-catalog';
 import { createDb } from './infra/db/client';
 import { runMigrations } from './infra/db/migrate';
 import { Ed25519Signer, NodeAuditCrypto } from './infra/auditCrypto';
+import { parseEd25519PrivateKey } from './infra/privateKeyPem';
 import { startSettlementWorker } from './jobs/settlementWorker';
 import type { RealtimeEvent } from './application/bids';
 
@@ -31,7 +32,7 @@ const webDistDir = fileURLToPath(new URL('../public', import.meta.url));
 let auditSigner: Ed25519Signer;
 let auditPublicKey: Uint8Array;
 try {
-  const privateKey = createPrivateKey(env.AUDIT_SIGNING_PRIVATE_KEY);
+  const privateKey = parseEd25519PrivateKey(env.AUDIT_SIGNING_PRIVATE_KEY);
   auditSigner = new Ed25519Signer(privateKey);
   const x = createPublicKey(privateKey).export({ format: 'jwk' }).x;
   if (!x) throw new Error('Chave pública Ed25519 ausente.');
