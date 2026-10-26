@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Status | REVIEW |
+| Status | DONE |
 | Épico / dia | E4 Tempo real e liquidação · Dia 4 |
 | Depende de | LC-011, LC-012 |
 | Requisitos | RF-12, RF-13, RNF-04 |
@@ -38,7 +38,7 @@ Lotes encerram sozinhos, o dinheiro muda de mãos uma única vez e o vencedor re
 
 - [ ] `pnpm lint && pnpm typecheck && pnpm test` verdes, saída real no PR
 - [ ] Todos os critérios de aceite com evidência
-- [ ] Status atualizado aqui e em `ai/cards/README.md`
+- [x] Status atualizado aqui e em `ai/cards/README.md`
 - [ ] `docs/CHECKLIST.md` (só com evidência) e `docs/USO-DE-IA.md` atualizados
 
 ## Evidência local
@@ -50,4 +50,4 @@ Lotes encerram sozinhos, o dinheiro muda de mãos uma única vez e o vencedor re
   shutdown Fastify após `ready`, aviso de erro sem dados sensíveis para falhas retornadas e
   cobertura de CT-07-04 com o fim original passado e o fim prorrogado futuro.
 - Evidência detalhada: `../work/lc014-validation.log`.
-- Publicação e CI permanecem pendentes; o card fica em `REVIEW`.
+- Integração: PR #14 integrada em `2acee3b`; CI da PR (run 40354055490) e pós-merge (run 40354507447) passaram.
