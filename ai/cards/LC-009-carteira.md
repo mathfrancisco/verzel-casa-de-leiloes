@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Status | TODO |
+| Status | REVIEW |
 | Épico / dia | E3 Lances e carteira · Dia 3 |
 | Depende de | LC-003 |
 | Requisitos | RF-07, RF-08 |
@@ -25,9 +25,9 @@ Licitante deposita saldo e vê total, comprometido e disponível.
 
 ## Critérios de aceite
 
-- [ ] Depósito repetido com a mesma chave não duplica
-- [ ] Comprometido reflete lotes liderados
-- [ ] Leiloeiro vê a carteira mas não deposita
+- [x] Depósito repetido com a mesma chave não duplica
+- [x] Comprometido reflete lotes liderados
+- [x] Leiloeiro vê a carteira mas não deposita
 
 ## Testes obrigatórios
 
@@ -36,6 +36,8 @@ Licitante deposita saldo e vê total, comprometido e disponível.
 ## Definição de pronto
 
 - [ ] `pnpm lint && pnpm typecheck && pnpm test` verdes, saída real no PR
-- [ ] Todos os critérios de aceite com evidência
-- [ ] Status atualizado aqui e em `ai/cards/README.md`
-- [ ] `docs/CHECKLIST.md` (só com evidência) e `docs/USO-DE-IA.md` atualizados
+- [x] Todos os critérios de aceite com evidência
+- [x] Status atualizado aqui e em `ai/cards/README.md`
+- [x] `docs/CHECKLIST.md` atualizado com evidência; `docs/USO-DE-IA.md` é mantido pelo coordenador
+
+Integração local sobre a main da PR #9 em 26/10/2026: lint, typecheck, build e 303 testes (81 shared, 165 API, 57 web) passaram no PostgreSQL descartável; revisão assistida sem achados, com publicação, CI e merge do LC-009 ainda pendentes.

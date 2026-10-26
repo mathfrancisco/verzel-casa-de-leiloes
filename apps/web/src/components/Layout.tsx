@@ -15,7 +15,7 @@ export function Layout() {
           Casa de Leilões
         </Link>
         <nav aria-label="Principal">
-          {user?.role === 'BIDDER' && <Link to="/carteira">Carteira</Link>}
+          {user && <Link to="/carteira">Carteira</Link>}
           {user?.role === 'AUCTIONEER' && (
             <>
               <Link to="/painel">Painel</Link>

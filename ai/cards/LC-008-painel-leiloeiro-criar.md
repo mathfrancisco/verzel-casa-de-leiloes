@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Status | REVIEW |
+| Status | DONE |
 | Épico / dia | E2 Catálogo e lotes · Dia 2 |
 | Depende de | LC-005, LC-006 |
 | Requisitos | RF-02, RF-03 |
@@ -65,10 +65,13 @@ execução de navegador.
 | `pnpm build` | Passou (API e web). |
 | Revisão de diff | Sem achados pendentes. |
 | Banco de integração | PostgreSQL 16.15, container `verzel-cards-test-db`, database `verzel_test_admin`, mapeado em `127.0.0.1:55439`; somente banco descartável. |
-| CI / integração | Aguardando PR e checks remotos. Status permanece REVIEW. |
+| CI / integração | Integrado pela PR #9 em `main` (`76fab265`); checks de CI da PR (run 40248272220) e pós-merge (run 40248403542), incluindo Docker, passaram; GitGuardian passou. |
 
 O caminho `/lotes/:id` ainda mostra “Página não encontrada” até a sala do lote do LC-013 existir;
 isso é uma dependência de navegação planejada e não altera a criação do lote deste card.
+
+O card está integrado e concluído. A busca contra a API real da AIC permanece pendente devido à
+restrição de rede já registrada no LC-005; essa validação externa não foi feita nesta integração.
 
 Decisões:
 - CSP `img-src 'self' data: https://www.artic.edu`: as miniaturas da busca vêm direto do IIIF
