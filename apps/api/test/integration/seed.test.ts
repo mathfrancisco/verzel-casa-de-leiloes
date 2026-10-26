@@ -1,6 +1,7 @@
 import type { AuditReportResponse } from '@leilao/shared';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { NodeAuditCrypto } from '../../src/infra/auditCrypto';
+import { registerUser } from '../../src/application/auth';
 import { DEMO_PASSWORD, DEMO_USERS, resetDemo, seedCatalog, seedDemo } from '../../src/seed/seed';
 import { buildTestApp, TEST_AUDIT_SIGNER, TEST_PSEUDONYM_SECRET } from '../support/app';
 import { createTestDatabase } from '../support/database';
@@ -105,5 +106,11 @@ describe('seed de demonstração (SP-10, CT-10-03)', () => {
     expect(lots).toHaveLength(5);
     expect(lots.map((lot) => lot.id)).not.toContain(old!.id);
     await expectAllIntact();
+  });
+
+  it('avisa seed incompleto quando o leiloeiro existe sem os lotes', async () => {
+    await resetDemo(testDb.url);
+    await registerUser(deps(), { ...DEMO_USERS[0], password: DEMO_PASSWORD });
+    expect(await seedDemo(deps())).toEqual({ created: false, partial: true });
   });
 });

@@ -13,7 +13,7 @@ import { createDeposit } from '../application/wallet';
 import { FakeCatalog } from '../infra/catalog/fake-catalog';
 import type { Db } from '../infra/db/client';
 import { runMigrations } from '../infra/db/migrate';
-import { users } from '../infra/db/schema';
+import { lots, users } from '../infra/db/schema';
 
 // Dados de demonstração de docs/04-modelagem-de-dados.md §7 (SP-10).
 
@@ -68,12 +68,19 @@ export function seedCatalog(): FakeCatalog {
  * Cria os dados de demonstração uma única vez. Lotes, lances e liquidações passam pelos mesmos
  * casos de uso da API, com relógio controlado, para que a cadeia de cada lote seja íntegra.
  */
-export async function seedDemo(deps: SeedDeps): Promise<{ created: boolean }> {
+export async function seedDemo(deps: SeedDeps): Promise<{ created: boolean; partial?: boolean }> {
   const [existing] = await deps.db
     .select({ id: users.id })
     .from(users)
     .where(eq(users.email, DEMO_USERS[0].email));
-  if (existing) return { created: false };
+  if (existing) {
+    // Uma execução interrompida deixa o leiloeiro sem os 5 lotes: avisar em vez de seguir calado.
+    const [owned] = await deps.db
+      .select({ count: sql<number>`count(*)::int` })
+      .from(lots)
+      .where(eq(lots.sellerId, existing.id));
+    return owned!.count < 5 ? { created: false, partial: true } : { created: false };
+  }
 
   const [row] = await deps.db.execute<{ now: string }>(
     sql`SELECT date_trunc('milliseconds', now()) AS now`,

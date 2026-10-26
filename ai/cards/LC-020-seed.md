@@ -34,7 +34,7 @@ Avaliador entra e percorre o fluxo sem montar nada do zero.
 
 ## Definição de pronto
 
-- [x] `pnpm lint && pnpm typecheck && pnpm test` verdes (506: shared 114, web 120, API 272). Saída em `../work/lc020-validation.log`; PR pendente. Implementado sobre LC-014 e LC-018 em `REVIEW`, por decisão do coordenador
+- [x] `pnpm lint && pnpm typecheck && pnpm test` verdes (507: shared 114, web 120, API 273). Saída em `../work/lc020-validation.log`; PR pendente. Implementado sobre LC-014 e LC-018 em `REVIEW`, por decisão do coordenador
 - [x] Todos os critérios de aceite com evidência
 - [x] Status atualizado aqui e em `ai/cards/README.md`
 - [x] `docs/CHECKLIST.md` atualizado; `docs/USO-DE-IA.md` fica a cargo do coordenador
@@ -46,7 +46,9 @@ Avaliador entra e percorre o fluxo sem montar nada do zero.
   liquidações do passado são assinados com o horário em que "aconteceram" e a auditoria fica
   íntegra sem forjar dados.
 - Idempotência: se `leiloeiro@demo.com` existe, o `seed` não faz nada. `seed:reset` apaga os
-  schemas `public` e `drizzle`, reaplica as migrations e semeia; recusa `NODE_ENV=production`.
+  schemas `public` e `drizzle`, reaplica as migrations e semeia; recusa `NODE_ENV=production`
+  e banco fora de `localhost`, `127.0.0.1`, `::1` ou `db`. Se o leiloeiro existe sem os 5 lotes
+  (execução interrompida), o `seed` avisa "Seed incompleto" em vez de seguir calado.
 - Fixtures em `apps/api/seed/fixtures`: 5 itens fictícios e imagens PNG geradas por script
   (CC0). Não são obras do Art Institute; trocar por imagens CC0 reais exige baixá-las.
 - Compose: `app` roda `node dist/seed.js && node dist/main.js`; a imagem copia `seed/`.

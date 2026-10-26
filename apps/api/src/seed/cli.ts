@@ -24,19 +24,32 @@ if (reset && env.NODE_ENV === 'production') {
   process.exit(1);
 }
 
+// `seed:reset` apaga o banco inteiro: só em banco local (máquina ou serviço `db` do compose).
+const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1', '[::1]', 'db']);
+if (reset && !LOCAL_HOSTS.has(new URL(env.DATABASE_URL).hostname)) {
+  console.error('seed:reset só apaga banco local (localhost, 127.0.0.1, ::1 ou db).');
+  process.exit(1);
+}
+
 if (reset) await resetDemo(env.DATABASE_URL);
 else await runMigrations(env.DATABASE_URL);
 
 const { db, sql } = createDb(env.DATABASE_URL);
 try {
-  const { created } = await seedDemo({
+  const { created, partial } = await seedDemo({
     db,
     catalog: seedCatalog(),
     signer: new Ed25519Signer(createPrivateKey(env.AUDIT_SIGNING_PRIVATE_KEY)),
     crypto: new NodeAuditCrypto(),
     pseudonymSecret: env.PSEUDONYM_SECRET,
   });
-  console.log(created ? 'Seed de demonstração criado.' : 'Seed já presente; nada a fazer.');
+  if (partial) {
+    console.warn(
+      'Seed incompleto: o leiloeiro existe sem os 5 lotes. Rode `pnpm seed:reset` em banco local.',
+    );
+  } else {
+    console.log(created ? 'Seed de demonstração criado.' : 'Seed já presente; nada a fazer.');
+  }
 } finally {
   await sql.end();
 }
