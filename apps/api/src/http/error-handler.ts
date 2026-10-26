@@ -1,4 +1,11 @@
-import { ERROR_MESSAGES, ERROR_STATUS, type ApiErrorBody, type ErrorCode } from '@leilao/shared';
+import {
+  ERROR_MESSAGES,
+  ERROR_STATUS,
+  PAYLOAD_TOO_LARGE_MESSAGE,
+  PAYLOAD_TOO_LARGE_STATUS,
+  type ApiErrorBody,
+  type ErrorCode,
+} from '@leilao/shared';
 import type { FastifyInstance, FastifyReply } from 'fastify';
 import { ZodError } from 'zod';
 import { DomainError } from '../domain/errors';
@@ -33,6 +40,13 @@ export function registerErrorHandling(app: FastifyInstance, { serveSpa = false }
     }
 
     if (error.statusCode === 429) return send(reply, 'RATE_LIMITED');
+    // Sem código próprio na SP-00: mantém VALIDATION_ERROR, mas com o status HTTP correto.
+    if (error.statusCode === PAYLOAD_TOO_LARGE_STATUS) {
+      const body: ApiErrorBody = {
+        error: { code: 'VALIDATION_ERROR', message: PAYLOAD_TOO_LARGE_MESSAGE },
+      };
+      return reply.code(PAYLOAD_TOO_LARGE_STATUS).send(body);
+    }
     // Erros do próprio Fastify na leitura da requisição (JSON malformado, corpo grande…).
     if (error.statusCode && error.statusCode >= 400 && error.statusCode < 500) {
       return send(reply, 'VALIDATION_ERROR');

@@ -96,9 +96,13 @@ export function lotRoutes(app: FastifyInstance, deps: LotDeps & BidDeps & AuditD
   app.get<{ Params: { id: string } }>('/api/images/:id', async (request, reply) => {
     const image = await getImage(deps.db, request.params.id);
     if (!image) throw new DomainError('NOT_FOUND');
-    return reply
-      .header('content-type', image.contentType)
-      .header('cache-control', 'public, max-age=31536000, immutable')
-      .send(image.bytes);
+    // A imagem de um lote nunca muda (id novo a cada upload): cache longo + validador pelo SHA-256.
+    const etag = `"${image.sha256}"`;
+    reply.header('etag', etag).header('cache-control', 'public, max-age=31536000, immutable');
+    const candidates = request.headers['if-none-match']
+      ?.split(',')
+      .map((v) => v.trim().replace(/^W\//, ''));
+    if (candidates?.includes(etag) || candidates?.includes('*')) return reply.code(304).send();
+    return reply.header('content-type', image.contentType).send(image.bytes);
   });
 }
