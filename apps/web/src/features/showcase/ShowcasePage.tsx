@@ -233,9 +233,16 @@ export function ShowcasePage() {
       </form>
 
       {lots.isPending && (
-        <p role="status" aria-busy="true">
-          Carregando lotes…
-        </p>
+        <>
+          <p role="status" aria-busy="true">
+            Carregando lotes…
+          </p>
+          <div className="lot-grid" aria-hidden="true">
+            {[0, 1, 2].map((n) => (
+              <div key={n} className="lot-skeleton" />
+            ))}
+          </div>
+        </>
       )}
 
       {lots.isError && (
@@ -248,7 +255,9 @@ export function ShowcasePage() {
       )}
 
       {lots.isSuccess && items.length === 0 && (
-        <p>{filtering ? 'Nenhum lote encontrado com estes filtros.' : EMPTY_TEXT[tab]}</p>
+        <p className="empty-state">
+          {filtering ? 'Nenhum lote encontrado com estes filtros.' : EMPTY_TEXT[tab]}
+        </p>
       )}
 
       {items.length > 0 && (
