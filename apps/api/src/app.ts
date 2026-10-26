@@ -16,7 +16,7 @@ import { readyRoutes } from './http/ready';
 import { registerSpa } from './http/spa';
 import { attachRealtime } from './infra/realtime/socket';
 import type { AuditCrypto, Signer } from '@leilao/shared';
-import type { BidEvent } from './application/bids';
+import type { RealtimeEvent } from './application/bids';
 
 export interface AppDeps {
   db: Db;
@@ -25,7 +25,9 @@ export interface AppDeps {
   auditSigner: Signer;
   auditCrypto: AuditCrypto;
   /** Coletor pós-commit; o transporte Socket.IO entra no LC-012. */
-  bidEventCollector?: (events: BidEvent[]) => void;
+  bidEventCollector?: (events: RealtimeEvent[]) => void;
+  /** Expõe o mesmo coletor pós-commit ao worker iniciado pelo entrypoint. */
+  onRealtimeEventCollectorReady?: (collectEvents: (events: RealtimeEvent[]) => void) => void;
   config: {
     jwtSecret: string;
     /** Segredo do HMAC dos pseudônimos (RN-16). */
@@ -48,6 +50,7 @@ export function buildApp({
   auditSigner,
   auditCrypto,
   bidEventCollector,
+  onRealtimeEventCollectorReady,
   config,
   logger = false,
 }: AppDeps) {
@@ -69,7 +72,7 @@ export function buildApp({
   app.register(rateLimit, { max: 300, timeWindow: '1 minute' });
 
   const realtime = attachRealtime(app, db);
-  const collectEvents = (events: BidEvent[]) => {
+  const collectEvents = (events: RealtimeEvent[]) => {
     try {
       realtime.publish(events);
       bidEventCollector?.(events);
@@ -77,6 +80,7 @@ export function buildApp({
       app.log.warn({ err: error }, 'Falha ao entregar eventos pós-commit.');
     }
   };
+  onRealtimeEventCollectorReady?.(collectEvents);
   if (config.webDistDir) registerSpa(app, config.webDistDir);
 
   // Defesa contra CSRF junto com SameSite=Lax: formulários de outros sites não enviam JSON.
