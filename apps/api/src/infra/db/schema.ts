@@ -23,6 +23,8 @@ import {
 
 const citext = customType<{ data: string }>({ dataType: () => 'citext' });
 
+const tsvector = customType<{ data: string }>({ dataType: () => 'tsvector' });
+
 const bytea = customType<{ data: Buffer }>({ dataType: () => 'bytea' });
 
 const timestamptz = (name: string) => timestamp(name, { precision: 3, withTimezone: true });
@@ -153,6 +155,10 @@ export const lots = pgTable(
     genesisHash: char('genesis_hash', { length: 64 }).notNull(),
     headHash: char('head_hash', { length: 64 }).notNull(),
     sellerPseudonym: varchar('seller_pseudonym', { length: 32 }).notNull(),
+    // Busca textual (RF-17): título, descrição e artista; 'simple' não depende de idioma.
+    searchVector: tsvector('search_vector').generatedAlwaysAs(
+      sql`to_tsvector('simple', coalesce(title, '') || ' ' || coalesce(description, '') || ' ' || coalesce(item_snapshot ->> 'artist', ''))`,
+    ),
     createdAt: createdAt(),
     settledAt: timestamptz('settled_at'),
     cancelledAt: timestamptz('cancelled_at'),
@@ -169,6 +175,8 @@ export const lots = pgTable(
     index('lots_active_leader_idx')
       .on(t.leaderId)
       .where(sql`${t.state} = 'ACTIVE'`),
+    index('lots_search_idx').using('gin', t.searchVector),
+    index('lots_category_price_idx').on(t.category, t.currentPriceCents),
     index('lots_seller_created_idx').on(t.sellerId, t.createdAt.desc()),
   ],
 );
