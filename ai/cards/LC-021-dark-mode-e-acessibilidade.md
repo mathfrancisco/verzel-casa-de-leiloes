@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Status | TODO |
+| Status | REVIEW |
 | Épico / dia | E6 Qualidade e entrega · Dia 6 |
 | Depende de | LC-013, LC-015, LC-016, LC-017 |
 | Requisitos | RF-19, RNF-11 |
@@ -25,8 +25,8 @@ Interface agradável nos dois temas, utilizável no celular e por teclado/leitor
 
 ## Critérios de aceite
 
-- [ ] Nenhuma violação crítica do axe nas telas principais, nos dois temas
-- [ ] Tema persiste sem flash
+- [x] Nenhuma violação crítica do axe nas telas principais, nos dois temas (`e2e/acessibilidade.spec.ts`: 10 verificações, 12/12 testes verdes; também exige zero `color-contrast`)
+- [x] Tema persiste sem flash (teste de componente + E2E CT-09-05 que checa a classe `dark` antes de o React montar)
 
 ## Testes obrigatórios
 

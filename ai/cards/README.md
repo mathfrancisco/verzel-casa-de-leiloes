@@ -25,7 +25,7 @@ Atualize esta tabela junto com o status no arquivo do card.
 | [LC-018](LC-018-cancelamento.md) | Implementar cancelamento de lote com estorno automático | 5 | LC-017 | REVIEW |
 | [LC-019](LC-019-busca-e-filtros.md) | Adicionar busca e filtros à vitrine | 5 | LC-007 | REVIEW |
 | [LC-020](LC-020-seed.md) | Criar o seed de demonstração com cadeia válida | 6 | LC-014, LC-018 | REVIEW |
-| [LC-021](LC-021-dark-mode-e-acessibilidade.md) | Adicionar dark mode e revisar acessibilidade e responsividade | 6 | LC-013, LC-015, LC-016, LC-017 | TODO |
+| [LC-021](LC-021-dark-mode-e-acessibilidade.md) | Adicionar dark mode e revisar acessibilidade e responsividade | 6 | LC-013, LC-015, LC-016, LC-017 | REVIEW |
 | [LC-022](LC-022-e2e.md) | Automatizar o fluxo completo com Playwright no CI | 6 | LC-020 | TODO |
 | [LC-023](LC-023-entrega.md) | Publicar o deploy final, escrever o README e enviar o teste | 7 | LC-021, LC-022 | TODO |
 

@@ -5,6 +5,7 @@ import { useLogout, useMe } from '../features/auth/session';
 import { walletQueryKey } from '../features/wallet/wallet';
 import { apiFetch } from '../lib/api';
 import { OutbidToast } from './OutbidToast';
+import { ThemeToggle } from './ThemeToggle';
 
 const ROLE_LABEL = { AUCTIONEER: 'Leiloeiro', BIDDER: 'Licitante' } as const;
 
@@ -66,6 +67,7 @@ export function Layout() {
               </>
             )
           )}
+          <ThemeToggle />
         </nav>
       </header>
       <main id="conteudo">
