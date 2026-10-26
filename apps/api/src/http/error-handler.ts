@@ -33,6 +33,13 @@ export function registerErrorHandling(app: FastifyInstance, { serveSpa = false }
     }
 
     if (error.statusCode === 429) return send(reply, 'RATE_LIMITED');
+    // Sem código próprio na SP-00: mantém VALIDATION_ERROR, mas com o status HTTP correto.
+    if (error.statusCode === 413) {
+      const body: ApiErrorBody = {
+        error: { code: 'VALIDATION_ERROR', message: 'Corpo da requisição grande demais.' },
+      };
+      return reply.code(413).send(body);
+    }
     // Erros do próprio Fastify na leitura da requisição (JSON malformado, corpo grande…).
     if (error.statusCode && error.statusCode >= 400 && error.statusCode < 500) {
       return send(reply, 'VALIDATION_ERROR');

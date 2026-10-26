@@ -178,6 +178,14 @@ export const lots = pgTable(
     index('lots_search_idx').using('gin', t.searchVector),
     index('lots_category_price_idx').on(t.category, t.currentPriceCents),
     index('lots_seller_created_idx').on(t.sellerId, t.createdAt.desc()),
+    // Vitrine: aba "encerrados" (OR entre estados) e ordenação `newest` não usam os índices por
+    // estado; estes entregam a página já ordenada, sem varrer e ordenar a tabela (perf/api-explain.md).
+    index('lots_visible_ends_idx')
+      .on(t.endsAt.desc().nullsFirst(), t.id.desc().nullsFirst())
+      .where(sql`${t.state} <> 'CANCELLED'`),
+    index('lots_visible_created_idx')
+      .on(t.createdAt.desc().nullsFirst(), t.id.desc().nullsFirst())
+      .where(sql`${t.state} <> 'CANCELLED'`),
   ],
 );
 
