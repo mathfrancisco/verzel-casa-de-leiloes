@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useMe } from '../features/auth/session';
 import { getRealtimeSocket, refreshRealtimeSession } from './realtime';
 import { syncServerTime } from './serverClock';
+import { notifyOutbid } from '../components/OutbidToast';
 
 function invalidateSnapshot(queryClient: ReturnType<typeof useQueryClient>, lotId?: string) {
   void queryClient.invalidateQueries({ queryKey: ['lots'] });
@@ -39,7 +40,10 @@ export function RealtimeLifecycle() {
     const onLotExtended: ServerToClientEvents['lot.extended'] = (event) => onLotEvent(event);
     const onLotClosed: ServerToClientEvents['lot.closed'] = (event) => onLotEvent(event);
     const onLotCancelled: ServerToClientEvents['lot.cancelled'] = (event) => onLotEvent(event);
-    const onBidOutbid: ServerToClientEvents['bid.outbid'] = (event) => onLotEvent(event);
+    const onBidOutbid: ServerToClientEvents['bid.outbid'] = (event) => {
+      onLotEvent(event);
+      notifyOutbid(event);
+    };
     const onWalletChanged: ServerToClientEvents['wallet.changed'] = onWalletEvent;
     const onLotWon: ServerToClientEvents['lot.won'] = (event) => onLotEvent(event);
     const onPong: ServerToClientEvents['pong'] = sync;
