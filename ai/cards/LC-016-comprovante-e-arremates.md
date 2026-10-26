@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Status | TODO |
+| Status | REVIEW |
 | Épico / dia | E5 Auditoria e gestão · Dia 5 |
 | Depende de | LC-014 |
 | Requisitos | RF-13, RF-14 |
@@ -25,8 +25,8 @@ Vencedor acessa e compartilha o comprovante; licitante acompanha tudo em que deu
 
 ## Critérios de aceite
 
-- [ ] Comprovante abre sem login e sem PII; código inválido → página 404 amigável
-- [ ] Status de participação corretos em todos os casos
+- [x] Comprovante abre sem login e sem PII; código inválido → página 404 amigável (CT-07-06 passou no PostgreSQL isolado)
+- [x] Status de participação corretos em todos os casos (CT-07-07 passou no PostgreSQL isolado)
 
 ## Testes obrigatórios
 
@@ -34,7 +34,7 @@ Vencedor acessa e compartilha o comprovante; licitante acompanha tudo em que deu
 
 ## Definição de pronto
 
-- [ ] `pnpm lint && pnpm typecheck && pnpm test` verdes, saída real no PR
-- [ ] Todos os critérios de aceite com evidência
-- [ ] Status atualizado aqui e em `ai/cards/README.md`
-- [ ] `docs/CHECKLIST.md` (só com evidência) e `docs/USO-DE-IA.md` atualizados
+- [x] `pnpm lint && pnpm typecheck && pnpm test` verdes, saída local real; PR ainda pendente
+- [x] Todos os critérios de aceite com evidência
+- [x] Status atualizado aqui e em `ai/cards/README.md`
+- [x] `docs/CHECKLIST.md` (só com evidência) e `docs/USO-DE-IA.md` atualizados

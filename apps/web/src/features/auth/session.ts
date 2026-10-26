@@ -8,6 +8,7 @@ const ME_KEY = ['me'] as const;
 
 export function clearPrivateSessionQueries(queryClient: QueryClient) {
   queryClient.removeQueries({ queryKey: ['wallet'] });
+  queryClient.removeQueries({ queryKey: ['participations'] });
 }
 
 /** Usuário logado: `undefined` enquanto carrega, `null` para visitante. */
@@ -36,6 +37,7 @@ function useSessionMutation<TInput>(path: string) {
   return useMutation({
     mutationFn: (input: TInput) => apiFetch<UserResponse>(path, { method: 'POST', body: input }),
     onSuccess: ({ user }) => {
+      clearPrivateSessionQueries(queryClient);
       queryClient.setQueryData(ME_KEY, user);
       refreshRealtimeSession(user.id);
     },

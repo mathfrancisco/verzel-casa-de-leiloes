@@ -33,7 +33,10 @@ export function Layout() {
         </Link>
         <nav aria-label="Principal">
           {user?.role === 'BIDDER' ? (
-            <WalletHeaderLink userId={user.id} />
+            <>
+              <WalletHeaderLink userId={user.id} />
+              <Link to="/meus-lances">Meus arremates</Link>
+            </>
           ) : (
             user && <Link to="/carteira">Carteira</Link>
           )}

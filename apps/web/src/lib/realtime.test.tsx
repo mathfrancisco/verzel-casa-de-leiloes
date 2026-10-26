@@ -83,6 +83,7 @@ describe('realtime web client', () => {
     queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
     queryClient.setQueryData(['lots', 'live'], []);
     queryClient.setQueryData(['wallet', 'user-1'], {});
+    queryClient.setQueryData(['participations'], { items: [] });
     container = document.createElement('div');
     document.body.append(container);
     root = createRoot(container);
@@ -238,7 +239,7 @@ describe('realtime web client', () => {
     expect(invalidate.mock.calls.length).toBeGreaterThan(visibilityCalls);
   });
 
-  it('keeps account-wide event listeners mounted and invalidates wallet snapshots', () => {
+  it('keeps account-wide event listeners mounted and invalidates wallet and participations snapshots', () => {
     act(() =>
       root.render(
         <QueryClientProvider client={queryClient}>
@@ -256,6 +257,15 @@ describe('realtime web client', () => {
       }),
     );
     expect(queryClient.getQueryState(['wallet', 'user-1'])?.isInvalidated).toBe(true);
+    act(() =>
+      fire('lot.closed', {
+        lotId: 'lot-1',
+        serverTime: '2026-10-23T12:00:00.000Z',
+        state: 'SETTLED',
+        receiptCode: 'a'.repeat(22),
+      }),
+    );
+    expect(queryClient.getQueryState(['participations'])?.isInvalidated).toBe(true);
     act(() => root.unmount());
     expect(socketHarness.handlers.get('wallet.changed')?.size ?? 0).toBe(0);
   });

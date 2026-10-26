@@ -403,6 +403,17 @@ button:disabled {
 .audit-key {
   overflow-wrap: anywhere;
 }
+.receipt-page {
+  max-width: 58rem;
+}
+.receipt-image {
+  display: block;
+  width: min(100%, 32rem);
+  height: auto;
+}
+.receipt-hash {
+  overflow-wrap: anywhere;
+}
 @media (max-width: 40rem) {
   .lot-room-main {
     grid-template-columns: 1fr;
