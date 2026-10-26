@@ -170,3 +170,9 @@ export interface LotListResponse {
   counts: Record<ShowcaseTab, number>;
   serverTime: string;
 }
+
+/** Corpo opcional do cancelamento (SP-03): motivo registrado no elo `CANCELLED`. */
+export const cancelLotSchema = z.object({
+  reason: z.string().trim().max(200, 'O motivo deve ter no máximo 200 caracteres.').optional(),
+});
+export type CancelLotInput = z.infer<typeof cancelLotSchema>;

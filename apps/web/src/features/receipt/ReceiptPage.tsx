@@ -8,6 +8,7 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { CancelledNotice } from '../../components/CancelledNotice';
 import { ApiError, apiFetch } from '../../lib/api';
 import { messageFor } from '../../lib/errorMessages';
 
@@ -66,7 +67,16 @@ export function ReceiptPage() {
   const verified = local?.receipt === data ? local : null;
   return (
     <section className="receipt-page" aria-labelledby="receipt-title">
-      <h1 id="receipt-title">Comprovante de arremate</h1>
+      <h1 id="receipt-title">
+        {data.revoked ? 'Comprovante revogado' : 'Comprovante de arremate'}
+      </h1>
+      {data.revoked && (
+        <CancelledNotice>
+          O leiloeiro cancelou este lote em{' '}
+          {data.revokedAt ? new Date(data.revokedAt).toLocaleString('pt-BR') : 'data não informada'}
+          . O valor foi estornado ao vencedor e este comprovante não vale mais como arremate.
+        </CancelledNotice>
+      )}
       <h2>{data.lot.title}</h2>
       <img className="receipt-image" src={data.lot.imageUrl} alt={`Imagem de ${data.lot.title}`} />
       {data.lot.item.artist && <p>Artista: {data.lot.item.artist}</p>}
@@ -103,11 +113,6 @@ export function ReceiptPage() {
           : 'Verificando assinatura neste navegador…'}
       </p>
       {verified && <p>Verificação local concluída em {verified.durationMs} ms.</p>}
-      {data.revoked && (
-        <p className="form-error" role="alert">
-          Este comprovante foi revogado.
-        </p>
-      )}
       <Link to={data.auditUrl}>Auditar este lote</Link>
     </section>
   );

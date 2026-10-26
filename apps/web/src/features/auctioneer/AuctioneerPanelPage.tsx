@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { useMe } from '../auth/session';
 import { apiFetch } from '../../lib/api';
 import { messageFor } from '../../lib/errorMessages';
+import { CancelLotControl } from './CancelLotControl';
 
 const phaseLabels: Record<AuctioneerLot['phase'], string> = {
   SCHEDULED: 'Agendado',
@@ -80,6 +81,7 @@ export function AuctioneerPanelPage() {
                   <Link to={`/lotes/${lot.id}`}>Ver sala</Link>
                   <Link to={`/auditoria/${lot.id}`}>Auditar lote</Link>
                 </p>
+                <CancelLotControl lot={lot} />
               </div>
             </li>
           ))}
