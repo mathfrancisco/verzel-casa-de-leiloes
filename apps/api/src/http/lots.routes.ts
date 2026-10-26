@@ -4,9 +4,17 @@ import {
   placeBidSchema,
   type LotDetail,
   type LotListResponse,
+  type AuctioneerLotsResponse,
 } from '@leilao/shared';
 import type { FastifyInstance } from 'fastify';
-import { createLot, getImage, getLotDetail, listLots, type LotDeps } from '../application/lots';
+import {
+  createLot,
+  getImage,
+  getLotDetail,
+  listAuctioneerLots,
+  listLots,
+  type LotDeps,
+} from '../application/lots';
 import { getAuditReport, type AuditDeps } from '../application/audit';
 import { placeBid, type BidDeps } from '../application/bids';
 import { DomainError } from '../domain/errors';
@@ -32,6 +40,13 @@ export function lotRoutes(app: FastifyInstance, deps: LotDeps & BidDeps & AuditD
     '/api/lots',
     async (request): Promise<LotListResponse> =>
       listLots(deps.db, lotListQuerySchema.parse(request.query)),
+  );
+
+  app.get(
+    '/api/auctioneer/lots',
+    { preHandler: requireRole('AUCTIONEER') },
+    async (request): Promise<AuctioneerLotsResponse> =>
+      listAuctioneerLots(deps.db, request.user.sub),
   );
 
   app.get<{ Params: { id: string } }>('/api/lots/:id', async (request): Promise<LotDetail> => {

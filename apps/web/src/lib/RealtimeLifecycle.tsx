@@ -10,6 +10,7 @@ function invalidateSnapshot(queryClient: ReturnType<typeof useQueryClient>, lotI
   void queryClient.invalidateQueries({ queryKey: ['lots'] });
   void queryClient.invalidateQueries({ queryKey: ['wallet'] });
   void queryClient.invalidateQueries({ queryKey: ['participations'] });
+  void queryClient.invalidateQueries({ queryKey: ['auctioneer-lots'] });
   if (lotId) void queryClient.invalidateQueries({ queryKey: ['lot', lotId] });
 }
 
@@ -36,6 +37,7 @@ export function RealtimeLifecycle() {
     const onWalletEvent = (event: { serverTime: string }) => {
       sync(event);
       void queryClient.invalidateQueries({ queryKey: ['wallet'] });
+      void queryClient.invalidateQueries({ queryKey: ['auctioneer-lots'] });
     };
     const onBidAccepted: ServerToClientEvents['bid.accepted'] = (event) => onLotEvent(event);
     const onLotExtended: ServerToClientEvents['lot.extended'] = (event) => onLotEvent(event);

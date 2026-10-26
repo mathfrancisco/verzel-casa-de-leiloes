@@ -1,6 +1,8 @@
 import {
   lotStartIssue,
   type CatalogItem,
+  type AuctioneerLot,
+  type AuctioneerLotsResponse,
   type CreateLotInput,
   type LotDetail,
   type LotListQuery,
@@ -16,7 +18,7 @@ import { DomainError } from '../domain/errors';
 import { lotPhase } from '../domain/lotPhase';
 import { pseudonym } from '../domain/pseudonym';
 import type { Db } from '../infra/db/client';
-import { images, lotEntries, lots } from '../infra/db/schema';
+import { images, lotEntries, lots, walletEntries } from '../infra/db/schema';
 import type { CatalogProvider } from '../ports/catalog';
 
 export interface LotDeps {
@@ -178,6 +180,65 @@ function summary(lot: LotRow, now: Date) {
     bidCount: lot.bidCount,
     serverTime: now.toISOString(),
   };
+}
+
+/** Projeção privada do leiloeiro; o horário vem da mesma transação do banco. */
+export async function listAuctioneerLots(
+  db: Db,
+  sellerId: string,
+): Promise<AuctioneerLotsResponse> {
+  return db.transaction(
+    async (tx) => {
+      const [clock] = await tx.execute<{ now: string }>(sql`SELECT now() AS now`);
+      const now = new Date(clock!.now);
+      const [ledger] = await tx
+        .select({
+          total: sql<number>`coalesce(sum(${walletEntries.amountCents}), 0)::bigint`.mapWith(
+            Number,
+          ),
+        })
+        .from(walletEntries)
+        .where(
+          and(
+            eq(walletEntries.userId, sellerId),
+            sql`${walletEntries.type} IN ('SETTLEMENT_CREDIT', 'REFUND_DEBIT')`,
+          ),
+        );
+      const rows = await tx
+        .select()
+        .from(lots)
+        .where(eq(lots.sellerId, sellerId))
+        .orderBy(desc(lots.createdAt), desc(lots.id));
+
+      return {
+        items: rows.map((lot): AuctioneerLot => {
+          const phase = lotPhase(lot, now);
+          const result =
+            lot.state === 'SETTLED'
+              ? 'SOLD'
+              : lot.state === 'CLOSED_NO_WINNER'
+                ? 'UNSOLD'
+                : lot.state === 'CANCELLED'
+                  ? 'CANCELLED'
+                  : 'PENDING';
+          return {
+            ...summary(lot, now),
+            result,
+            finalPriceCents: result === 'SOLD' ? lot.currentPriceCents : null,
+            settledAt: lot.settledAt?.toISOString() ?? null,
+            // RN-12 permite ativo sem lances; a opção RN-13, adotada para o LC-018, também cobre
+            // lotes com lance (inclusive SETTLED), mas nunca os sem vencedor ou já cancelados.
+            cancellable:
+              lot.state === 'SETTLED' ||
+              (lot.state === 'ACTIVE' &&
+                (lot.bidCount > 0 || phase === 'SCHEDULED' || phase === 'LIVE')),
+          };
+        }),
+        totalReceivedCents: ledger!.total,
+      };
+    },
+    { isolationLevel: 'repeatable read', accessMode: 'read only' },
+  );
 }
 
 function itemView(item: CatalogItem): LotDetail['item'] {

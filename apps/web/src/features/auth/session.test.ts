@@ -23,12 +23,14 @@ describe('clearPrivateSessionQueries', () => {
     const client = new QueryClient();
     client.setQueryData(['wallet', 'user-a'], { totalCents: 100 });
     client.setQueryData(['wallet', 'user-b'], { totalCents: 200 });
+    client.setQueryData(['auctioneer-lots', 'user-a'], { items: [{ id: 'lot-a' }] });
     client.setQueryData(['lots'], { items: [] });
 
     clearPrivateSessionQueries(client);
 
     expect(client.getQueryData(['wallet', 'user-a'])).toBeUndefined();
     expect(client.getQueryData(['wallet', 'user-b'])).toBeUndefined();
+    expect(client.getQueryData(['auctioneer-lots', 'user-a'])).toBeUndefined();
     expect(client.getQueryData(['lots'])).toEqual({ items: [] });
   });
 
@@ -36,6 +38,7 @@ describe('clearPrivateSessionQueries', () => {
     const client = new QueryClient({ defaultOptions: { mutations: { retry: false } } });
     client.setQueryData(['wallet', 'user-a'], { totalCents: 100 });
     client.setQueryData(['participations'], { items: [{ lotId: 'a' }] });
+    client.setQueryData(['auctioneer-lots', 'user-a'], { items: [{ id: 'lot-a' }] });
     vi.mocked(apiFetch).mockResolvedValue({
       user: { id: 'user-b', name: 'B', role: 'BIDDER' },
     });
@@ -49,6 +52,7 @@ describe('clearPrivateSessionQueries', () => {
     await vi.waitFor(() => expect(client.getQueryData(['me'])).toMatchObject({ id: 'user-b' }));
     expect(client.getQueryData(['wallet', 'user-a'])).toBeUndefined();
     expect(client.getQueryData(['participations'])).toBeUndefined();
+    expect(client.getQueryData(['auctioneer-lots', 'user-a'])).toBeUndefined();
     act(() => root.unmount());
     container.remove();
   });
