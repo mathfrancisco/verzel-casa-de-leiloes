@@ -247,4 +247,17 @@ describe('formato de erro e proteções', () => {
     const res = await app.inject({ method: 'GET', url: '/api/health' });
     expect(res.headers['x-content-type-options']).toBe('nosniff');
   });
+
+  it('CSP libera imagens só do próprio site e do Art Institute (miniaturas da busca)', async () => {
+    const res = await app.inject({ method: 'GET', url: '/api/health' });
+    const imgSrc = String(res.headers['content-security-policy'])
+      .split(';')
+      .find((d) => d.trim().startsWith('img-src'));
+    expect(imgSrc?.trim().split(/\s+/)).toEqual([
+      'img-src',
+      "'self'",
+      'data:',
+      'https://www.artic.edu',
+    ]);
+  });
 });
