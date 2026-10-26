@@ -71,7 +71,9 @@ AuctioneerLot = LotSummary & { result: 'PENDING' | 'SOLD' | 'UNSOLD' | 'CANCELLE
 - Base (RN-12): `SCHEDULED`/`LIVE` sem lances.
 - Opcional (RN-13): com lances, antes ou depois da liquidação — estorno conforme a RN.
   Corpo opcional `{ reason }` (≤ 200 caracteres) registrado no evento `CANCELLED`.
-- Eventos: `lot.cancelled` na sala; `wallet.changed` para afetados.
+  Lote `CLOSING` (fim passou, sem liquidar) só é cancelável com lances; sem lances é `LOT_NOT_CANCELLABLE`.
+  Após a liquidação: `REFUND_DEBIT` (leiloeiro) e `REFUND_CREDIT` (vencedor), `receipts.revoked_at` = instante do elo `CANCELLED`, `state = CANCELLED`.
+- Eventos (após o commit): `lot.cancelled` na sala e no canal pessoal de cada licitante do lote; `wallet.changed` para o líder (antes da liquidação) ou vencedor e leiloeiro (depois).
 
 ## Casos de teste
 

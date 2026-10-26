@@ -9,6 +9,7 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { CancelledNotice } from '../../components/CancelledNotice';
 import { apiFetch } from '../../lib/api';
 import { messageFor } from '../../lib/errorMessages';
 
@@ -16,6 +17,12 @@ function shortHash(hash: string) {
   return `${hash.slice(0, 12)}…${hash.slice(-8)}`;
 }
 
+function cancelReason(report: AuditReportResponse): string | null {
+  const payload = report.entries.find((entry) => entry.type === 'CANCELLED')?.payload;
+  const reason =
+    payload && typeof payload === 'object' && !Array.isArray(payload) ? payload.reason : null;
+  return typeof reason === 'string' && reason ? reason : null;
+}
 function dateTime(value: string) {
   return new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short', timeStyle: 'medium' }).format(
     new Date(value),
@@ -90,6 +97,12 @@ export function AuditPage() {
       <Link to={`/lotes/${lotId}`}>Voltar ao lote</Link>
       <h1 id="audit-title">Auditoria pública</h1>
       <h2>{report.lot.title}</h2>
+      {report.lot.state === 'CANCELLED' && (
+        <CancelledNotice>
+          {cancelReason(report) ? `Motivo informado: ${cancelReason(report)}. ` : ''}
+          Os elos abaixo continuam verificáveis; o evento CANCELLED faz parte da cadeia.
+        </CancelledNotice>
+      )}
       <p
         className={`audit-verdict ${localVerdict ? (verified ? 'audit-intact' : 'audit-tampered') : ''}`}
         aria-live="polite"
