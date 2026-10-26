@@ -81,7 +81,8 @@ export async function placeBid(
 
     const [lockedLot] = await tx.select().from(lots).where(eq(lots.id, lotId)).for('update');
     if (!lockedLot) throw new DomainError('LOT_NOT_FOUND');
-    const [nowRow] = await tx.execute<{ now: string }>(sql`select now() as now`);
+    // clock_timestamp(): o relógio depois da trava; now() seria o início da transação, antes da espera.
+    const [nowRow] = await tx.execute<{ now: string }>(sql`select clock_timestamp() as now`);
     const now = new Date(nowRow!.now);
 
     // Defesa de consistência caso um vendedor seja representado com papel incorreto.
