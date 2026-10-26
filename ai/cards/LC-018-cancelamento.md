@@ -39,5 +39,6 @@ Decisões: lote `ACTIVE` em `CLOSING` (fim passou, ainda sem liquidar) é cancel
 
 - [x] `pnpm lint`, `pnpm typecheck`, `pnpm test` padrão e `pnpm build` verdes (433: shared 104, web 94, API 235). Saída local em `../work/lc018-validation.log`; PR pendente. Painel ainda não testado no navegador
 - [x] Todos os critérios de aceite com evidência
+- [x] Navegador (harness local, FakeCatalog, banco descartável): botão só em lotes canceláveis; confirmação explicou estorno; total recebido caiu de R$ 26,00 para R$ 11,00 após cancelar arrematado; sala e auditoria mostraram aviso e elo `CANCELLED`. Evidência em `../work/lc018-validation.log`
 - [x] Status atualizado aqui e em `ai/cards/README.md`
 - [ ] `docs/CHECKLIST.md` atualizado; `docs/USO-DE-IA.md` fica a cargo do coordenador
