@@ -111,6 +111,10 @@ número de consultas da vitrine, do painel do leiloeiro e da carteira (igual com
 
 `SERVER_LIMITS` em `apps/api/src/app.ts`: `bodyLimit` 100 KiB (maior corpo legítimo é a criação de
 lote), `requestTimeout` 30 s, `connectionTimeout` 120 s, `keepAliveTimeout` 65 s (> 60 s dos
-balanceadores). `statement_timeout` de 15 s no pool (`infra/db/client.ts`; migrations usam
-conexão própria, sem o limite). Corpo grande demais responde `413` com `VALIDATION_ERROR` no
-envelope da SP-00 (a SP-00 não tem código próprio para isso).
+balanceadores), `headersTimeout` 66 s (> `keepAliveTimeout`). Corpo grande demais responde `413`
+com `VALIDATION_ERROR` no envelope da SP-00 (registrado na tabela de erros da SP-00).
+
+**`statement_timeout` no pool: avaliado e descartado.** O timeout conta o tempo de espera por
+travas: no `placeBid` (trava consultiva + `FOR UPDATE` de lote e carteira) uma disputa longa viraria
+erro 500 em vez de apenas esperar a vez. Além disso, como parâmetro de startup da conexão, pode
+quebrar poolers (ex.: PgBouncer em modo transação rejeita parâmetros de startup desconhecidos).

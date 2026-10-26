@@ -1,4 +1,4 @@
-import type { ApiErrorBody } from '@leilao/shared';
+import { PAYLOAD_TOO_LARGE_MESSAGE, type ApiErrorBody } from '@leilao/shared';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { SERVER_LIMITS } from '../../src/app';
@@ -57,7 +57,7 @@ describe('limites do servidor', () => {
     expect(res.statusCode).toBe(413);
     const body = res.json<ApiErrorBody>();
     expect(body.error.code).toBe('VALIDATION_ERROR');
-    expect(body.error.message).toBe('Corpo da requisição grande demais.');
+    expect(body.error.message).toBe(PAYLOAD_TOO_LARGE_MESSAGE);
   });
 
   it('corpo normal continua passando', async () => {
@@ -69,9 +69,9 @@ describe('limites do servidor', () => {
     expect(res.statusCode).toBe(200);
   });
 
-  it('o pool do Postgres aplica statement_timeout', async () => {
-    const [row] = await testDb.sql<{ statement_timeout: string }[]>`SHOW statement_timeout`;
-    expect(row!.statement_timeout).toBe('15s');
+  it('headersTimeout fica acima do keepAliveTimeout', () => {
+    expect(app.server.headersTimeout).toBe(SERVER_LIMITS.headersTimeout);
+    expect(app.server.headersTimeout).toBeGreaterThan(app.server.keepAliveTimeout);
   });
 });
 
@@ -95,6 +95,17 @@ describe('GET /api/images/:id', () => {
     expect(res.body).toBe('');
     expect(res.headers['cache-control']).toBe('public, max-age=31536000, immutable');
     expect(res.headers.etag).toBe(etag);
+  });
+
+  it('validador fraco (W/) e "*" também dão 304', async () => {
+    for (const value of [`W/"${'0'.repeat(64)}"`, '*']) {
+      const res = await app.inject({
+        method: 'GET',
+        url: imageUrl,
+        headers: { 'if-none-match': value },
+      });
+      expect(res.statusCode, value).toBe(304);
+    }
   });
 
   it('If-None-Match diferente -> 200 com corpo', async () => {
