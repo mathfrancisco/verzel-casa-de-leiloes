@@ -78,7 +78,13 @@ export function ReceiptPage() {
         </CancelledNotice>
       )}
       <h2>{data.lot.title}</h2>
-      <img className="receipt-image" src={data.lot.imageUrl} alt={`Imagem de ${data.lot.title}`} />
+      <img
+        className="receipt-image"
+        src={data.lot.imageUrl}
+        alt={`Imagem de ${data.lot.title}`}
+        fetchPriority="high"
+        decoding="async"
+      />
       {data.lot.item.artist && <p>Artista: {data.lot.item.artist}</p>}
       <dl>
         <div>

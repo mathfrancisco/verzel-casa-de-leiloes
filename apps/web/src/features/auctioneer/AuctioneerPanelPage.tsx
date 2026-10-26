@@ -67,7 +67,14 @@ export function AuctioneerPanelPage() {
         <ul className="auctioneer-lot-list">
           {items.map((lot) => (
             <li key={lot.id}>
-              <img src={lot.imageUrl} alt="" />
+              <img
+                src={lot.imageUrl}
+                alt=""
+                width={112}
+                height={112}
+                loading="lazy"
+                decoding="async"
+              />
               <div>
                 <h2>{lot.title}</h2>
                 <p>
