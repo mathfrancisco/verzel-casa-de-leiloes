@@ -15,21 +15,50 @@ services:
       timeout: 3s
       retries: 15
 
+  # Gera uma chave Ed25519 local na primeira subida e a guarda no volume `keys`.
+  # A mesma chave é reutilizada depois, então a auditoria continua íntegra entre reinícios.
+  # Em produção, a chave vem de AUDIT_SIGNING_PRIVATE_KEY no provedor.
+  keys:
+    build: .
+    user: root
+    volumes:
+      - keys:/keys
+    command:
+      - node
+      - -e
+      - >-
+        const fs = require('node:fs'); const f = '/keys/audit-signing-private.pem';
+        if (!fs.existsSync(f)) { const { privateKey } = require('node:crypto').generateKeyPairSync('ed25519');
+        fs.writeFileSync(f, privateKey.export({ format: 'pem', type: 'pkcs8' }), { mode: 0o600 }); }
+        fs.chownSync(f, 1000, 1000);
+
   app:
     build: .
     depends_on:
       db:
         condition: service_healthy
+      keys:
+        condition: service_completed_successfully
+    volumes:
+      - keys:/keys:ro
     environment:
       DATABASE_URL: postgres://leilao:leilao@db:5432/leilao
       # Segredos só para uso local. Em produção, defina-os no provedor.
       JWT_SECRET: ${JWT_SECRET:-segredo-local-somente-para-desenvolvimento}
       PSEUDONYM_SECRET: ${PSEUDONYM_SECRET:-pseudonimos-local-somente-para-desenvolvimento}
       NODE_ENV: production
+      CATALOG_PROVIDER: artic
+    # Usa AUDIT_SIGNING_PRIVATE_KEY do ambiente, se definida; senão, a chave local do volume.
     # Seed idempotente antes do servidor: na primeira subida cria os dados de demonstração.
-    command: ['sh', '-c', 'node dist/seed.js && node dist/main.js']
+    command:
+      - sh
+      - -c
+      - >-
+        export AUDIT_SIGNING_PRIVATE_KEY="$${AUDIT_SIGNING_PRIVATE_KEY:-$$(cat /keys/audit-signing-private.pem)}"
+        && node dist/seed.js && exec node dist/main.js
     ports:
       - '3000:3000'
 
 volumes:
   db-data:
+  keys:
