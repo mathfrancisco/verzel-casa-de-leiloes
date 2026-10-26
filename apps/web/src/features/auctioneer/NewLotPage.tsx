@@ -70,7 +70,12 @@ export function NewLotPage() {
         >
           <h2 id="titulo-dados">2. Dados do lote</h2>
           <div className="selected-item">
-            <img src={item.imageUrl} alt={`Obra selecionada: ${item.title}`} />
+            <img
+              src={item.imageUrl}
+              alt={`Obra selecionada: ${item.title}`}
+              loading="lazy"
+              decoding="async"
+            />
             <dl>
               <dt>Artista</dt>
               <dd>{item.artist ?? '—'}</dd>

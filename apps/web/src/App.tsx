@@ -1,17 +1,42 @@
+import { lazy } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { RequireRole } from './components/RequireRole';
-import { NewLotPage } from './features/auctioneer/NewLotPage';
-import { AuctioneerPanelPage } from './features/auctioneer/AuctioneerPanelPage';
-import { LoginPage } from './features/auth/LoginPage';
-import { RegisterPage } from './features/auth/RegisterPage';
 import { ShowcasePage } from './features/showcase/ShowcasePage';
-import { LotRoomPage } from './features/lotRoom/LotRoomPage';
-import { WalletPage } from './features/wallet/WalletPage';
-import { AuditPage } from './features/audit/AuditPage';
-import { ReceiptPage } from './features/receipt/ReceiptPage';
-import { ParticipationsPage } from './features/participations/ParticipationsPage';
 import { NotFoundPage } from './routes/NotFoundPage';
+
+// A vitrine fica no bundle principal; as demais rotas carregam sob demanda.
+const LoginPage = lazy(() =>
+  import('./features/auth/LoginPage').then((m) => ({ default: m.LoginPage })),
+);
+const RegisterPage = lazy(() =>
+  import('./features/auth/RegisterPage').then((m) => ({ default: m.RegisterPage })),
+);
+const LotRoomPage = lazy(() =>
+  import('./features/lotRoom/LotRoomPage').then((m) => ({ default: m.LotRoomPage })),
+);
+const AuditPage = lazy(() =>
+  import('./features/audit/AuditPage').then((m) => ({ default: m.AuditPage })),
+);
+const ReceiptPage = lazy(() =>
+  import('./features/receipt/ReceiptPage').then((m) => ({ default: m.ReceiptPage })),
+);
+const WalletPage = lazy(() =>
+  import('./features/wallet/WalletPage').then((m) => ({ default: m.WalletPage })),
+);
+const ParticipationsPage = lazy(() =>
+  import('./features/participations/ParticipationsPage').then((m) => ({
+    default: m.ParticipationsPage,
+  })),
+);
+const AuctioneerPanelPage = lazy(() =>
+  import('./features/auctioneer/AuctioneerPanelPage').then((m) => ({
+    default: m.AuctioneerPanelPage,
+  })),
+);
+const NewLotPage = lazy(() =>
+  import('./features/auctioneer/NewLotPage').then((m) => ({ default: m.NewLotPage })),
+);
 
 export function App() {
   return (
