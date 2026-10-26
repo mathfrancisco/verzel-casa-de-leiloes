@@ -25,6 +25,8 @@ export interface SettlementDeps {
   signer: Signer;
   crypto: AuditCrypto;
   collectEvents?: (events: RealtimeEvent[]) => void;
+  /** Relógio controlado do seed; sem ele vale o `now()` do banco. */
+  clock?: () => Date;
 }
 
 export interface SettleDueLotsOptions {
@@ -47,7 +49,7 @@ async function settleOne(deps: SettlementDeps, skippedIds: string[]) {
         .where(
           and(
             eq(lots.state, 'ACTIVE'),
-            lte(lots.endsAt, sql`now()`),
+            lte(lots.endsAt, deps.clock?.() ?? sql`now()`),
             skippedIds.length ? notInArray(lots.id, skippedIds) : undefined,
           ),
         )
@@ -64,7 +66,7 @@ async function settleOne(deps: SettlementDeps, skippedIds: string[]) {
       const [nowRow] = await tx.execute<{ now: string }>(
         sql`SELECT date_trunc('milliseconds', now()) AS now`,
       );
-      const now = new Date(nowRow!.now);
+      const now = deps.clock?.() ?? new Date(nowRow!.now);
       const common = {
         lotId: lot.id,
         seq: lot.chainLength + 1,

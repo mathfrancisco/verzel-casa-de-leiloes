@@ -1,7 +1,7 @@
 import { defineConfig } from 'tsup';
 
 export default defineConfig({
-  entry: ['src/main.ts'],
+  entry: { main: 'src/main.ts', seed: 'src/seed/cli.ts' },
   format: ['esm'],
   target: 'node22',
   clean: true,

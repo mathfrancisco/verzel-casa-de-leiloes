@@ -26,6 +26,8 @@ export interface LotDeps {
   db: Db;
   catalog: CatalogProvider;
   pseudonymSecret: string;
+  /** Relógio controlado do seed; sem ele vale o `now()` do banco. */
+  clock?: () => Date;
 }
 
 export interface Viewer {
@@ -51,7 +53,7 @@ export async function createLot(
   seller: Viewer,
   input: CreateLotInput,
 ): Promise<LotDetail> {
-  const startIssue = lotStartIssue(input.startsAt, await dbNow(deps.db));
+  const startIssue = lotStartIssue(input.startsAt, deps.clock?.() ?? (await dbNow(deps.db)));
   if (startIssue) {
     throw new DomainError('VALIDATION_ERROR', {
       issues: [{ path: ['startsAt'], message: startIssue }],
