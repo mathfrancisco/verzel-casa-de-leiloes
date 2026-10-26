@@ -20,6 +20,7 @@ Vale para todas as specs.
 | Código | HTTP | Uso |
 |---|---|---|
 | `VALIDATION_ERROR` | 400 | Corpo/query inválidos (`details.issues` do Zod) |
+| `VALIDATION_ERROR` | 413 | Corpo acima do limite do servidor (100 KiB); mesmo código, mensagem `PAYLOAD_TOO_LARGE_MESSAGE` |
 | `IDEMPOTENCY_KEY_REQUIRED` | 400 | Falta `Idempotency-Key` onde é exigido |
 | `UNAUTHENTICATED` | 401 | Sem sessão válida |
 | `INVALID_CREDENTIALS` | 401 | Login falhou (mensagem genérica) |

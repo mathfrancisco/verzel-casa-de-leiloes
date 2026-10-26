@@ -46,6 +46,22 @@ export interface AppDeps {
 
 const MUTATING_METHODS = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);
 
+/**
+ * Limites do servidor HTTP. Os corpos JSON da API são pequenos (maior: criação de lote); o resto
+ * protege contra clientes lentos. `keepAliveTimeout` fica acima dos 60 s típicos de balanceadores
+ * (Render, nginx) para evitar 502 em conexão reaproveitada na hora em que o servidor a fecha.
+ */
+export const SERVER_LIMITS = {
+  bodyLimit: 100 * 1024,
+  /** Tempo máximo para receber a requisição inteira (cabeçalhos + corpo). */
+  requestTimeout: 30_000,
+  /** Inatividade máxima de um socket; o upgrade do WebSocket zera esse timer no Node. */
+  connectionTimeout: 120_000,
+  keepAliveTimeout: 65_000,
+  /** Deve ser maior que `keepAliveTimeout`, senão o Node fecha a conexão ociosa antes. */
+  headersTimeout: 66_000,
+} as const;
+
 export function buildApp({
   db,
   sql,
@@ -58,7 +74,9 @@ export function buildApp({
   config,
   logger = false,
 }: AppDeps) {
-  const app = Fastify({ logger });
+  const { headersTimeout, ...fastifyLimits } = SERVER_LIMITS;
+  const app = Fastify({ logger, ...fastifyLimits });
+  app.server.headersTimeout = headersTimeout;
 
   registerErrorHandling(app, { serveSpa: Boolean(config.webDistDir) });
   app.register(helmet, {
