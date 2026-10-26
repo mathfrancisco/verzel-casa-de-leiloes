@@ -15,6 +15,7 @@ export function CatalogSearch({ selectedId, onSelect }: CatalogSearchProps) {
   const [text, setText] = useState('');
   const [page, setPage] = useState(1);
   const q = useDebouncedValue(text.trim());
+  const hasValidQuery = text.trim().length >= 2;
 
   const search = useQuery({
     queryKey: ['catalog', q, page],
@@ -44,17 +45,21 @@ export function CatalogSearch({ selectedId, onSelect }: CatalogSearchProps) {
 
       <div aria-live="polite">
         {q.length > 0 && q.length < 2 && <p>Digite pelo menos 2 caracteres.</p>}
-        {search.isFetching && <p role="status">Buscando…</p>}
-        {search.isError && <p className="form-error">{messageFor(search.error)}</p>}
-        {search.data?.fromCache && (
+        {hasValidQuery && search.isFetching && <p role="status">Buscando…</p>}
+        {hasValidQuery && search.isError && (
+          <p className="form-error">{messageFor(search.error)}</p>
+        )}
+        {hasValidQuery && search.data?.fromCache && (
           <p className="notice">
             O catálogo está indisponível agora; mostrando resultados salvos de uma busca anterior.
           </p>
         )}
-        {search.isSuccess && search.data.items.length === 0 && <p>Nenhuma obra encontrada.</p>}
+        {hasValidQuery && search.isSuccess && search.data.items.length === 0 && (
+          <p>Nenhuma obra encontrada.</p>
+        )}
       </div>
 
-      {search.data && search.data.items.length > 0 && (
+      {hasValidQuery && search.data && search.data.items.length > 0 && (
         <>
           <ul className="catalog-grid">
             {search.data.items.map((item) => (

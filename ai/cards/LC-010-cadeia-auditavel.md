@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Status | REVIEW |
+| Status | DONE |
 | Épico / dia | E3 Lances e carteira · Dia 3 |
 | Depende de | LC-006 |
 | Requisitos | RNF-05 |
@@ -46,4 +46,4 @@ Funções puras que criam e verificam elos, idênticas no servidor e no navegado
 
 - Local: `pnpm lint` concluiu com `All matched files use Prettier code style!`; `pnpm typecheck` concluiu nos três pacotes; `pnpm test` concluiu 325 testes (103 shared, 166 API e 56 web), sem skips, usando o banco descartável `127.0.0.1:55439` e `FakeCatalog`; `pnpm build` concluiu `tsup` e Vite.
 - Revisão técnica assistida: os quatro achados sobre recibo, revogação, transições terminais e paridade do navegador foram corrigidos e a re-revisão não encontrou pendências.
-- Pendente: publicar a PR e obter a CI da PR; por isso o status permanece `REVIEW`.
+- Integração: PR #10 integrada em `0b6dfaa`; CI da PR (run 40262860918) e pós-merge (run 40263027354) passaram.

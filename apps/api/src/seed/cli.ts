@@ -1,8 +1,8 @@
-import { createPrivateKey } from 'node:crypto';
 import { EnvError, loadEnv } from '../config/env';
 import { Ed25519Signer, NodeAuditCrypto } from '../infra/auditCrypto';
 import { createDb } from '../infra/db/client';
 import { runMigrations } from '../infra/db/migrate';
+import { parseEd25519PrivateKey } from '../infra/privateKeyPem';
 import { resetDemo, seedCatalog, seedDemo } from './seed';
 
 // `pnpm seed` (idempotente) e `pnpm seed:reset` (apaga e recria). Em produção só o `seed`.
@@ -39,7 +39,7 @@ try {
   const { created, partial } = await seedDemo({
     db,
     catalog: seedCatalog(),
-    signer: new Ed25519Signer(createPrivateKey(env.AUDIT_SIGNING_PRIVATE_KEY)),
+    signer: new Ed25519Signer(parseEd25519PrivateKey(env.AUDIT_SIGNING_PRIVATE_KEY)),
     crypto: new NodeAuditCrypto(),
     pseudonymSecret: env.PSEUDONYM_SECRET,
   });
