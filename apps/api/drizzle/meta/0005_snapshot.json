@@ -46,12 +46,8 @@
           "name": "idempotency_keys_user_id_users_id_fk",
           "tableFrom": "idempotency_keys",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -59,10 +55,7 @@
       "compositePrimaryKeys": {
         "idempotency_keys_pkey": {
           "name": "idempotency_keys_pkey",
-          "columns": [
-            "user_id",
-            "key"
-          ]
+          "columns": ["user_id", "key"]
         }
       },
       "uniqueConstraints": {},
@@ -242,12 +235,8 @@
           "name": "lot_entries_lot_id_lots_id_fk",
           "tableFrom": "lot_entries",
           "tableTo": "lots",
-          "columnsFrom": [
-            "lot_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["lot_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -255,12 +244,8 @@
           "name": "lot_entries_bidder_id_users_id_fk",
           "tableFrom": "lot_entries",
           "tableTo": "users",
-          "columnsFrom": [
-            "bidder_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["bidder_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -618,12 +603,8 @@
           "name": "lots_seller_id_users_id_fk",
           "tableFrom": "lots",
           "tableTo": "users",
-          "columnsFrom": [
-            "seller_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["seller_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -631,12 +612,8 @@
           "name": "lots_image_id_images_id_fk",
           "tableFrom": "lots",
           "tableTo": "images",
-          "columnsFrom": [
-            "image_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["image_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -644,12 +621,8 @@
           "name": "lots_leader_id_users_id_fk",
           "tableFrom": "lots",
           "tableTo": "users",
-          "columnsFrom": [
-            "leader_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["leader_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -787,12 +760,8 @@
           "name": "receipts_lot_id_lots_id_fk",
           "tableFrom": "receipts",
           "tableTo": "lots",
-          "columnsFrom": [
-            "lot_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["lot_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -800,12 +769,8 @@
           "name": "receipts_winner_id_users_id_fk",
           "tableFrom": "receipts",
           "tableTo": "users",
-          "columnsFrom": [
-            "winner_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["winner_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -976,12 +941,8 @@
           "name": "wallet_entries_user_id_users_id_fk",
           "tableFrom": "wallet_entries",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -989,12 +950,8 @@
           "name": "wallet_entries_lot_id_lots_id_fk",
           "tableFrom": "wallet_entries",
           "tableTo": "lots",
-          "columnsFrom": [
-            "lot_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["lot_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1045,12 +1002,8 @@
           "name": "wallets_user_id_users_id_fk",
           "tableFrom": "wallets",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1071,42 +1024,22 @@
     "public.chain_entry_type": {
       "name": "chain_entry_type",
       "schema": "public",
-      "values": [
-        "BID",
-        "CLOSED",
-        "CANCELLED"
-      ]
+      "values": ["BID", "CLOSED", "CANCELLED"]
     },
     "public.lot_category": {
       "name": "lot_category",
       "schema": "public",
-      "values": [
-        "PAINTING",
-        "SCULPTURE",
-        "PHOTOGRAPHY",
-        "PRINT",
-        "DRAWING",
-        "TEXTILE",
-        "OTHER"
-      ]
+      "values": ["PAINTING", "SCULPTURE", "PHOTOGRAPHY", "PRINT", "DRAWING", "TEXTILE", "OTHER"]
     },
     "public.lot_state": {
       "name": "lot_state",
       "schema": "public",
-      "values": [
-        "ACTIVE",
-        "SETTLED",
-        "CLOSED_NO_WINNER",
-        "CANCELLED"
-      ]
+      "values": ["ACTIVE", "SETTLED", "CLOSED_NO_WINNER", "CANCELLED"]
     },
     "public.user_role": {
       "name": "user_role",
       "schema": "public",
-      "values": [
-        "AUCTIONEER",
-        "BIDDER"
-      ]
+      "values": ["AUCTIONEER", "BIDDER"]
     },
     "public.wallet_entry_type": {
       "name": "wallet_entry_type",
