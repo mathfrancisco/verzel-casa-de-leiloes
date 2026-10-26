@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Status | TODO |
+| Status | REVIEW |
 | Épico / dia | E6 Qualidade e entrega · Dia 7 |
 | Depende de | LC-021, LC-022 |
 | Requisitos | RNF-01, RNF-07, RNF-08 |
