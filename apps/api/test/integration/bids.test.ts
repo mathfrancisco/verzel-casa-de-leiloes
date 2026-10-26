@@ -238,6 +238,25 @@ describe('POST /api/lots/:id/bids (SP-05)', () => {
     expect(events).toEqual([]);
   });
 
+  it('julga o encerramento pelo relógio depois da trava do lote, não pelo início da transação', async () => {
+    const seller = await register('AUCTIONEER');
+    const bidder = await register();
+    await deposit(bidder.cookie, 'fundos-trava');
+    const lot = await createLiveLot(seller.cookie, '1007');
+    await testDb.sql`UPDATE lots SET ends_at = now() + interval '1 second', original_ends_at = now() + interval '1 second' WHERE id = ${lot.id}`;
+
+    let pending: ReturnType<typeof bid> | undefined;
+    await testDb.sql.begin(async (tx) => {
+      await tx`SELECT id FROM lots WHERE id = ${lot.id} FOR UPDATE`;
+      pending = bid(bidder.cookie, lot.id, 'lance-na-fila', 1_000);
+      await tx`SELECT pg_sleep(1.5)`;
+    });
+
+    const response = await pending!;
+    expect(response.statusCode).toBe(409);
+    expect(response.json<ApiErrorBody>().error.code).toBe('LOT_CLOSED');
+  });
+
   it('mantém o 201 quando a entrega pós-commit de eventos falha', async () => {
     await app.close();
     app = buildTestApp(
