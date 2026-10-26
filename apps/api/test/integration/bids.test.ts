@@ -1,3 +1,4 @@
+import { idemKey } from '../support/idempotency';
 import { utf8Bytes } from '@leilao/shared';
 import type { ApiErrorBody, BidResponse, CatalogItem, LotDetail } from '@leilao/shared';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
@@ -93,7 +94,7 @@ async function deposit(cookie: Record<string, string>, key: string, amountCents 
     method: 'POST',
     url: '/api/wallet/deposits',
     cookies: cookie,
-    headers: { 'idempotency-key': key },
+    headers: { 'idempotency-key': idemKey(key) },
     payload: { amountCents },
   });
 }
@@ -123,7 +124,7 @@ function bid(cookie: Record<string, string>, lotId: string, key: string, amountC
     method: 'POST',
     url: `/api/lots/${lotId}/bids`,
     cookies: cookie,
-    headers: { 'idempotency-key': key },
+    headers: { 'idempotency-key': idemKey(key) },
     payload: { amountCents },
   });
 }
@@ -194,7 +195,7 @@ describe('POST /api/lots/:id/bids (SP-05)', () => {
     const noAuth = await app.inject({
       method: 'POST',
       url: `/api/lots/${live.id}/bids`,
-      headers: { 'idempotency-key': 'x' },
+      headers: { 'idempotency-key': idemKey('x') },
       payload: { amountCents: 1_000 },
     });
     const sellerBid = await bid(seller.cookie, live.id, 'seller', 1_000);
@@ -203,6 +204,27 @@ describe('POST /api/lots/:id/bids (SP-05)', () => {
     expect(
       [noAuth, sellerBid, tooLow, tooHigh].map((res) => res.json<ApiErrorBody>().error.code),
     ).toEqual(['UNAUTHENTICATED', 'SELLER_CANNOT_BID', 'BELOW_MINIMUM', 'INSUFFICIENT_FUNDS']);
+  });
+
+  it.each([
+    ['ausente', undefined, 'IDEMPOTENCY_KEY_REQUIRED'],
+    ['vazia', '', 'IDEMPOTENCY_KEY_REQUIRED'],
+    ['que não é UUID', 'lance-1', 'VALIDATION_ERROR'],
+    ['com UUID mais lixo', `${idemKey('a')}x`, 'VALIDATION_ERROR'],
+  ])('Idempotency-Key %s é recusada (SP-00)', async (_name, key, code) => {
+    const bidder = await register();
+    const response = await app.inject({
+      method: 'POST',
+      url: `/api/lots/00000000-0000-4000-8000-000000000000/bids`,
+      cookies: bidder.cookie,
+      headers: key === undefined ? {} : { 'idempotency-key': key },
+      payload: { amountCents: 1_000 },
+    });
+    expect(response.statusCode).toBe(400);
+    const body = response.json<ApiErrorBody>();
+    expect(body.error.code).toBe(code);
+    if (code === 'VALIDATION_ERROR')
+      expect(body.error.details).toMatchObject({ field: 'Idempotency-Key' });
   });
 
   it('recusa id de lote malformado sem expor erro do PostgreSQL', async () => {

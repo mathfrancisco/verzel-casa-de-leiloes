@@ -1,3 +1,4 @@
+import { idemKey } from '../support/idempotency';
 import {
   base64urlToBytes,
   BrowserAuditCrypto,
@@ -81,7 +82,7 @@ async function createBid() {
     method: 'POST',
     url: '/api/wallet/deposits',
     cookies: cookie,
-    headers: { 'idempotency-key': `audit-deposit-${sequence}` },
+    headers: { 'idempotency-key': idemKey(`audit-deposit-${sequence}`) },
     payload: { amountCents: 5_000 },
   });
   const seller = await app.inject({
@@ -115,7 +116,7 @@ async function createBid() {
     method: 'POST',
     url: `/api/lots/${id}/bids`,
     cookies: cookie,
-    headers: { 'idempotency-key': `audit-bid-${sequence}` },
+    headers: { 'idempotency-key': idemKey(`audit-bid-${sequence}`) },
     payload: { amountCents: 1_000 },
   });
   expect(bid.statusCode).toBe(201);

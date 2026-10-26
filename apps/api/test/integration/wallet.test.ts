@@ -1,3 +1,4 @@
+import { idemKey } from '../support/idempotency';
 import type { ApiErrorBody, LotDetail, Wallet } from '@leilao/shared';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { FakeCatalog } from '../../src/infra/catalog/fake-catalog';
@@ -51,7 +52,10 @@ function deposit(cookie: Record<string, string>, amountCents: unknown, key?: str
     method: 'POST',
     url: '/api/wallet/deposits',
     cookies: cookie,
-    headers: { 'idempotency-key': key ?? '', 'content-type': 'application/json' },
+    headers: {
+      'idempotency-key': key === undefined ? '' : idemKey(key),
+      'content-type': 'application/json',
+    },
     payload: { amountCents },
   });
 }
@@ -90,6 +94,22 @@ describe('carteira (SP-04)', () => {
 
     expect(response.statusCode).toBe(400);
     expect(response.json<ApiErrorBody>().error.code).toBe('IDEMPOTENCY_KEY_REQUIRED');
+  });
+
+  it('recusa Idempotency-Key que não é UUID (SP-00)', async () => {
+    const { cookie } = await register();
+    const response = await app.inject({
+      method: 'POST',
+      url: '/api/wallet/deposits',
+      cookies: cookie,
+      headers: { 'idempotency-key': 'deposito-1', 'content-type': 'application/json' },
+      payload: { amountCents: 10_000 },
+    });
+
+    expect(response.statusCode).toBe(400);
+    const body = response.json<ApiErrorBody>();
+    expect(body.error.code).toBe('VALIDATION_ERROR');
+    expect(body.error.details).toMatchObject({ field: 'Idempotency-Key' });
   });
 
   it.each([0, -1, 100.5, 100_000_001])(
