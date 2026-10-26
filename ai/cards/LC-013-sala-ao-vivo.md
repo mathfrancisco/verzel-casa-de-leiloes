@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Status | TODO |
+| Status | REVIEW |
 | Épico / dia | E4 Tempo real e liquidação · Dia 4 |
 | Depende de | LC-012, LC-007 |
 | Requisitos | RF-10, RF-11, RF-20 |
@@ -26,18 +26,40 @@ Licitante disputa o lote vendo tudo em tempo real e entende por que um lance foi
 
 ## Critérios de aceite
 
-- [ ] Dois navegadores: o superado vê o aviso em < 1 s sem recarregar
-- [ ] Cada código de erro mostra a mensagem da SP-09
-- [ ] Leiloeiro dono e visitante veem a sala sem formulário de lance
+- [x] Dois navegadores: o superado vê o aviso em < 1 s sem recarregar
+- [x] Cada código de erro mostra a mensagem da SP-09
+- [x] Leiloeiro dono e visitante veem a sala sem formulário de lance
 
 ## Testes obrigatórios
 
-- CT-09-01
-- CT-06-06 (manual até o LC-022 automatizar)
+- CT-09-01: navegador local validou os 10 códigos previstos, com mensagem SP-09
+  em `role="alert"` e `aria-live="assertive"`; Playwright enviou o formulário
+  contra respostas HTTP injetadas no endpoint de lance.
+- CT-06-06 (manual até o LC-022 automatizar): duas sessões reais no navegador,
+  com o catálogo fake e banco PostgreSQL descartável; aviso de superação em
+  258 ms na primeira medição e 243 ms no build final.
 
 ## Definição de pronto
 
-- [ ] `pnpm lint && pnpm typecheck && pnpm test` verdes, saída real no PR
-- [ ] Todos os critérios de aceite com evidência
-- [ ] Status atualizado aqui e em `ai/cards/README.md`
-- [ ] `docs/CHECKLIST.md` (só com evidência) e `docs/USO-DE-IA.md` atualizados
+- [ ] `pnpm lint`, `pnpm typecheck`, `pnpm test` e `pnpm build` passaram
+  localmente; registrar a saída no PR quando publicar
+- [x] Todos os critérios de aceite têm evidência local
+- [x] Status atualizado aqui e em `ai/cards/README.md`
+- [x] `docs/CHECKLIST.md` atualizado com evidência local e pendência de PR;
+  `docs/USO-DE-IA.md` atualizado
+
+## Evidência e pendências
+
+Os gates locais completos passaram com exit 0: lint, typecheck, testes (379:
+104 shared, 196 API e 79 web) e build. Após um ajuste restrito ao teste de
+fallback, o foco passou 10/10 e o Prettier passou. No navegador, o toast de
+superação apareceu apenas na sessão correta; fora da sala apareceu em 130 ms.
+Logout removeu o toast privado e o formulário. Visitante e leiloeiro dono não
+receberam formulário, e a largura de 360 px não apresentou overflow.
+
+Revisão técnica assistida por `cavecrew-reviewer` encontrou vazamento do toast
+privado entre sessões e cobertura incompleta de mensagens; os ajustes foram
+feitos e revistos com os ensaios de navegador. Não houve revisão humana
+registrada. Evidência em `../work/lc013-validation.log`.
+
+O card permanece em `REVIEW` enquanto publicação e CI estiverem pendentes.
