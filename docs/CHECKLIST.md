@@ -26,7 +26,7 @@ do README), registrada no PR do card. IDs em [`01-requisitos.md`](01-requisitos.
 |---|---|---|---|---|
 | [x] | Vitrine: ao vivo / agendados / encerrados, sem cancelados | RF-04 | LC-007 | Testes da API por aba + teste no Chromium com troca de aba automática (LC-007) |
 | [ ] | Painel: buscar na API e criar lote (imagem, título, atributos, início/fim, valor mínimo) | RF-02, RF-03 | LC-008 | LC-008 integrado na PR #9; CI da PR (run 40248272220) e pós-merge (run 40248403542), incluindo Docker, passaram; GitGuardian passou. Navegador real e busca contra a AIC continuam pendentes; ver card para evidências locais e históricas |
-| [ ] | Painel: cancelar lote sem lances | RF-05 | LC-018 | |
+| [x] | Painel: cancelar lote sem lances | RF-05 | LC-018 | CT-03-08/09/12 no PostgreSQL descartável: 200 com elo `CANCELLED` assinado e auditoria `INTACT`, ausente da vitrine, 403 de outro leiloeiro e de licitante, 401 visitante, 409 `LOT_NOT_CANCELLABLE`; botão com confirmação coberto em teste de componente. Não testado no navegador. Evidência em `../work/lc018-validation.log`. |
 | [x] | Painel: resultado de cada encerrado e total recebido | RF-06 | LC-017 | CT-03-13 (sem estorno, que é do LC-018) passou no PostgreSQL descartável: total conferido contra o razão, lotes de outro leiloeiro ausentes, 401/403 e painel sem botão de cancelar em teste de componente. No navegador (harness local, FakeCatalog, banco descartável), /painel mostrou total R$ 26,00 igual ao razão e seis lotes com fase/resultado corretos, links de sala e auditoria e sem botão de cancelar. Evidência em `../work/lc017-validation.log`. |
 | [ ] | Sala: lance atual, histórico, posição, contagem regressiva | RF-10 | LC-013 | Build final validado no navegador a 360 px sem overflow; estado do lance e histórico carregados no teste de duas sessões; registro local em `../work/lc013-validation.log`. Aguardar registro da evidência no PR para marcar. |
 | [ ] | Sala: "você está ganhando" / "você foi superado" sem recarregar | RF-10 | LC-012, LC-013 | Duas sessões reais no navegador: evento de superação exibido apenas ao licitante correto em 243 ms no build final; toast fora da sala em 130 ms; em teste separado, logout removeu toast e formulário. Sem formulário para visitante/leiloeiro. LC-012 passou foco API 17/17 e cliente 4/4; LC-013 passou testes e gates locais. Evidências em `../work/lc013-validation.log` e `../work/lc012-validation.log`; aguardar registro no PR para marcar. |
@@ -54,7 +54,7 @@ do README), registrada no PR do card. IDs em [`01-requisitos.md`](01-requisitos.
 | ✓ | Item do PDF | Requisito | Card | Evidência |
 |---|---|---|---|---|
 | [ ] | Busca e filtro de lotes | RF-17 | LC-019 | |
-| [ ] | Cancelamento com estorno automático | RF-18 | LC-018 | |
+| [x] | Cancelamento com estorno automático | RF-18 | LC-018 | CT-03-10/11/13 no PostgreSQL descartável: liberação do comprometido, `REFUND_DEBIT`/`REFUND_CREDIT`, comprovante revogado, auditoria `INTACT` (revokedAt = elo CANCELLED), I-1 e I-7, cancelamentos concorrentes estornam uma vez. Eventos `lot.cancelled` e `wallet.changed` só após o commit. Evidência em `../work/lc018-validation.log`. |
 | [x] | Docker Compose | RNF-13 | LC-002, LC-004 | `docker compose up` sobe Postgres + app em `localhost:3000` com migrations no start |
 | [ ] | Testes automatizados | RNF-12 | todos + LC-022 | |
 | [ ] | Dark mode | RF-19 | LC-021 | |

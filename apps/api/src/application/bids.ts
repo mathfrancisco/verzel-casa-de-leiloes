@@ -24,7 +24,8 @@ export interface BidEvent {
     | 'bid.outbid'
     | 'wallet.changed'
     | 'lot.closed'
-    | 'lot.won';
+    | 'lot.won'
+    | 'lot.cancelled';
   userId?: string;
   serverTime: string;
   payload:
