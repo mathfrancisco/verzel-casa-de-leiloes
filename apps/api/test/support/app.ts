@@ -18,13 +18,13 @@ export const TEST_AUDIT_PUBLIC_KEY = new Uint8Array(Buffer.from(testAuditPublicJ
 export function buildTestApp(
   testDb: TestDb,
   overrides: Partial<AppDeps['config']> = {},
-  deps: Partial<Pick<AppDeps, 'catalog' | 'bidEventCollector'>> = {},
+  deps: Partial<Pick<AppDeps, 'db' | 'catalog' | 'bidEventCollector' | 'auditSigner'>> = {},
 ) {
   return buildApp({
-    db: testDb.db,
+    db: deps.db ?? testDb.db,
     sql: testDb.sql,
     catalog: deps.catalog ?? new FakeCatalog(),
-    auditSigner: new Ed25519Signer(TEST_AUDIT_KEY),
+    auditSigner: deps.auditSigner ?? new Ed25519Signer(TEST_AUDIT_KEY),
     auditCrypto: new NodeAuditCrypto(),
     bidEventCollector: deps.bidEventCollector,
     config: {

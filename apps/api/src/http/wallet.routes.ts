@@ -1,11 +1,10 @@
 import { depositSchema } from '@leilao/shared';
 import type { FastifyInstance } from 'fastify';
-import { createDeposit, getWallet } from '../application/wallet';
-import type { Db } from '../infra/db/client';
+import { createDeposit, getWallet, type WalletDeps } from '../application/wallet';
 import { DomainError } from '../domain/errors';
 import { requireAuth, requireRole } from './auth-guard';
 
-export function walletRoutes(app: FastifyInstance, deps: { db: Db }) {
+export function walletRoutes(app: FastifyInstance, deps: WalletDeps) {
   app.get('/api/wallet', { preHandler: requireAuth }, async (request) =>
     getWallet(deps, { id: request.user.sub }),
   );
