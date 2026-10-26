@@ -55,7 +55,7 @@ export function CatalogSearch({ selectedId, onSelect }: CatalogSearchProps) {
           </p>
         )}
         {hasValidQuery && search.isSuccess && search.data.items.length === 0 && (
-          <p>Nenhuma obra encontrada.</p>
+          <p className="empty-state">Nenhuma obra encontrada.</p>
         )}
       </div>
 
