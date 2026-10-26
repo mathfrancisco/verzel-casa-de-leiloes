@@ -7,7 +7,7 @@ const PEM = /-----BEGIN ([A-Z ]+)-----([\s\S]*?)-----END \1-----/;
  * numa linha só (quebras viram espaços ou `\n` literal); aqui o PEM é remontado antes do parse.
  */
 export function parseEd25519PrivateKey(raw: string): KeyObject {
-  const text = raw.replace(/\n/g, '\n');
+  const text = raw.replace(/\\r/g, '').replace(/\\n/g, '\n');
   const match = PEM.exec(text);
   const pem = match
     ? `-----BEGIN ${match[1]}-----\n${match[2]!.replace(/\s+/g, '')}\n-----END ${match[1]}-----\n`
