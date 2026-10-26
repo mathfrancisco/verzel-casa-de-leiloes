@@ -11,10 +11,12 @@
     "test": "vitest run"
   },
   "devDependencies": {
+    "happy-dom": "17.6.3",
     "typescript": "5.8.3",
     "vitest": "3.2.4"
   },
   "dependencies": {
+    "@noble/ed25519": "2.2.3",
     "zod": "3.25.67"
   }
 }

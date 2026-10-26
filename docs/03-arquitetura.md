@@ -227,7 +227,8 @@ flowchart LR
    vendedor, lance inicial, incremento, início, fim original, título, descrição, categoria,
    `item_snapshot` completo, id do item e hash da imagem.
 2. **Cada elo:** `hash = SHA-256(JSON canônico {lotId, seq, type, bidderPseudonym, amountCents,
-   createdAt, prevHash})` e `signature = Ed25519(chave privada, hash)`. JSON canônico = chaves
+   createdAt, payload, prevHash})` e `signature = Ed25519(chave privada, bytes UTF-8 do hash
+   hexadecimal)`. JSON canônico = chaves
    ordenadas, sem espaços, números inteiros, datas ISO-8601 UTC com milissegundos.
 3. **Chave privada só em variável de ambiente** do servidor, nunca no banco. A chave pública fica
    em `GET /api/audit/public-key` e embutida no build do front.
