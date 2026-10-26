@@ -31,6 +31,21 @@ describe('apiFetch', () => {
     expect(init?.body).toBe('{}');
   });
 
+  it('preserva cabeçalhos específicos da operação', async () => {
+    let init: RequestInit | undefined;
+    await apiFetch(
+      '/api/wallet/deposits',
+      { method: 'POST', headers: { 'Idempotency-Key': 'deposito-1' } },
+      async (_url, requestInit) => {
+        init = requestInit;
+        return new Response(null, { status: 204 });
+      },
+    );
+
+    expect(new Headers(init?.headers).get('idempotency-key')).toBe('deposito-1');
+    expect(new Headers(init?.headers).get('content-type')).toBe('application/json');
+  });
+
   it('resposta 204 devolve undefined', async () => {
     const result = await apiFetch(
       '/api/x',

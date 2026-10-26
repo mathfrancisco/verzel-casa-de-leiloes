@@ -16,18 +16,20 @@ type FetchFn = (url: string, init: RequestInit) => Promise<Response>;
 interface ApiRequest {
   method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
   body?: unknown;
+  headers?: HeadersInit;
 }
 
 /** Chama a API no mesmo domínio (cookie de sessão) e converte erros em `ApiError`. */
 export async function apiFetch<T>(
   path: string,
-  { method = 'GET', body }: ApiRequest = {},
+  { method = 'GET', body, headers }: ApiRequest = {},
   fetchFn: FetchFn = (url, init) => fetch(url, init),
 ): Promise<T> {
-  const init: RequestInit = { method, credentials: 'same-origin', headers: {} };
+  const requestHeaders = new Headers(headers);
+  const init: RequestInit = { method, credentials: 'same-origin', headers: requestHeaders };
   if (method !== 'GET') {
     // A API recusa requisições mutáveis sem JSON (proteção contra CSRF).
-    init.headers = { 'Content-Type': 'application/json' };
+    requestHeaders.set('Content-Type', 'application/json');
     init.body = JSON.stringify(body ?? {});
   }
 
