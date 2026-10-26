@@ -29,8 +29,9 @@ export async function cancelLot(
     if (!lot) throw new DomainError('LOT_NOT_FOUND');
     if (lot.sellerId !== viewer.id) throw new DomainError('FORBIDDEN');
 
+    // clock_timestamp(): relógio depois da trava; now() seria o início da transação, antes da espera.
     const [nowRow] = await tx.execute<{ now: string }>(
-      sql`SELECT date_trunc('milliseconds', now()) AS now`,
+      sql`SELECT date_trunc('milliseconds', clock_timestamp()) AS now`,
     );
     const now = new Date(nowRow!.now);
     const phase = lotPhase(lot, now);

@@ -34,6 +34,7 @@ function statusText(lot: LotDetail) {
     myBestBidCents: lot.me?.myBestBidCents,
     leaderPseudonym: lot.leaderPseudonym,
     bidCount: lot.bidCount,
+    isSeller: lot.me?.isSeller,
   });
   if (status === 'winning') return '✓ Você está ganhando';
   if (status === 'outbid') return '⚠ Você foi superado';
