@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { createLotSchema, lotListQuerySchema, lotStartIssue } from './lots';
+import { createLotSchema, lotListQuerySchema, lotStartIssue, placeBidSchema } from './lots';
 
 const valid = {
   externalId: '16568',
@@ -64,6 +64,14 @@ describe('lotStartIssue', () => {
     expect(lotStartIssue(new Date('2026-10-24T17:58:59.999Z'), now)).toBe(
       'O início não pode estar no passado.',
     );
+  });
+});
+
+describe('placeBidSchema (RN-05)', () => {
+  it('aceita o próximo lance acima do teto do lance inicial permitido', () => {
+    expect(placeBidSchema.parse({ amountCents: 1_000_000_100 })).toEqual({
+      amountCents: 1_000_000_100,
+    });
   });
 });
 

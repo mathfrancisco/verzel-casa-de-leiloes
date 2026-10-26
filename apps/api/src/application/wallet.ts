@@ -14,7 +14,7 @@ export interface WalletViewer {
 }
 
 const DEPOSIT_ROUTE = '/api/wallet/deposits';
-type Transaction = Parameters<Parameters<Db['transaction']>[0]>[0];
+export type WalletTransaction = Parameters<Parameters<Db['transaction']>[0]>[0];
 
 /** Consulta saldo, compromissos ativos e os últimos lançamentos da carteira. */
 export async function getWallet(deps: WalletDeps, viewer: WalletViewer): Promise<Wallet> {
@@ -76,7 +76,7 @@ export async function createDeposit(
   });
 }
 
-async function walletView(tx: Transaction, userId: string): Promise<Wallet> {
+export async function walletView(tx: WalletTransaction, userId: string): Promise<Wallet> {
   const [wallet] = await tx
     .select({ userId: wallets.userId })
     .from(wallets)

@@ -132,6 +132,23 @@ export const lotListQuerySchema = z.object({
 
 export type LotListQuery = z.infer<typeof lotListQuerySchema>;
 
+export const placeBidSchema = z.object({
+  // Drizzle entrega bigint como number; preserve precisão até o limite seguro do JavaScript.
+  amountCents: z.number().int().positive().max(Number.MAX_SAFE_INTEGER),
+});
+export type PlaceBidInput = z.infer<typeof placeBidSchema>;
+
+export interface BidResponse {
+  bid: {
+    seq: number;
+    amountCents: number;
+    bidderPseudonym: string;
+    createdAt: string;
+    hash: string;
+  };
+  lot: LotDetail;
+}
+
 export interface LotListResponse {
   items: LotSummary[];
   nextCursor: string | null;
