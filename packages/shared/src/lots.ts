@@ -138,11 +138,51 @@ export interface AuctioneerLotsResponse {
 export const SHOWCASE_TABS = ['live', 'scheduled', 'closed'] as const;
 export type ShowcaseTab = (typeof SHOWCASE_TABS)[number];
 
-export const lotListQuerySchema = z.object({
-  phase: z.enum(SHOWCASE_TABS, { errorMap: () => ({ message: 'Aba inválida.' }) }),
-  cursor: z.string().max(200).optional(),
-  limit: z.coerce.number().int().min(1).max(24).default(12),
-});
+/** Ordenações da vitrine (SP-03). Sem `sort`, cada aba usa o seu padrão. */
+export const LOT_SORTS = ['ending_soon', 'price_desc', 'price_asc', 'newest'] as const;
+export type LotSort = (typeof LOT_SORTS)[number];
+
+/** Parâmetro de URL vazio (`?q=`) equivale a ausente. */
+const emptyAsMissing = (value: unknown) =>
+  typeof value === 'string' && value.trim() === '' ? undefined : value;
+
+const priceFilter = z.preprocess(
+  emptyAsMissing,
+  z.coerce
+    .number({ invalid_type_error: 'Preço inválido.' })
+    .int('Preço inválido.')
+    .min(0, 'Preço inválido.')
+    .max(Number.MAX_SAFE_INTEGER, 'Preço inválido.')
+    .optional(),
+);
+
+export const lotListQuerySchema = z
+  .object({
+    phase: z.enum(SHOWCASE_TABS, { errorMap: () => ({ message: 'Aba inválida.' }) }),
+    q: z.preprocess(
+      emptyAsMissing,
+      z.string().trim().max(100, 'A busca deve ter no máximo 100 caracteres.').optional(),
+    ),
+    category: z.preprocess(
+      emptyAsMissing,
+      z.enum(categories, { errorMap: () => ({ message: 'Categoria inválida.' }) }).optional(),
+    ),
+    minPriceCents: priceFilter,
+    maxPriceCents: priceFilter,
+    sort: z.preprocess(
+      emptyAsMissing,
+      z.enum(LOT_SORTS, { errorMap: () => ({ message: 'Ordenação inválida.' }) }).optional(),
+    ),
+    cursor: z.string().max(200).optional(),
+    limit: z.coerce.number().int().min(1).max(24).default(12),
+  })
+  .refine(
+    (query) =>
+      query.minPriceCents === undefined ||
+      query.maxPriceCents === undefined ||
+      query.minPriceCents <= query.maxPriceCents,
+    { path: ['minPriceCents'], message: 'O preço mínimo não pode ser maior que o máximo.' },
+  );
 
 export type LotListQuery = z.infer<typeof lotListQuerySchema>;
 

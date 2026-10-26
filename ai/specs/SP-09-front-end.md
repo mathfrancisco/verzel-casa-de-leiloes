@@ -24,7 +24,10 @@ Rota protegida sem sessão → `/entrar?next=…`; papel errado → página "sem
 **Vitrine:** abas Ao vivo / Agendados / Encerrados (contagem em cada); grid de cards (imagem,
 título, preço atual ou inicial, nº de lances, contagem regressiva ou "encerrado"/"arrematado por
 R$ X"). Filtros (RF-17): busca com debounce de 300 ms, categoria, faixa de preço, ordenação;
-estado refletido na URL (`?phase=live&q=…`). Estados: carregando (skeleton), vazio, erro.
+estado refletido na URL (`?aba=ao-vivo&q=…&categoria=PRINT&min=1000&max=550000&ordem=price_asc`;
+`min`/`max` em centavos, digitados em reais; valores inválidos na URL são ignorados); as abas
+mantêm os filtros e "Limpar filtros" os remove. Texto e preços aplicam após 300 ms parado, categoria
+e ordenação na hora; preço inválido ou mínimo > máximo mostra aviso e não consulta. Estados: carregando (skeleton), vazio, erro.
 
 **Sala do lote:** imagem e atributos; preço atual e mínimo do próximo lance; contagem regressiva
 (com selo "prorrogado" quando `extended`); faixa de status:

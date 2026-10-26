@@ -1,0 +1,3 @@
+ALTER TABLE "lots" ADD COLUMN "search_vector" "tsvector" GENERATED ALWAYS AS (to_tsvector('simple', coalesce(title, '') || ' ' || coalesce(description, '') || ' ' || coalesce(item_snapshot ->> 'artist', ''))) STORED;--> statement-breakpoint
+CREATE INDEX "lots_search_idx" ON "lots" USING gin ("search_vector");--> statement-breakpoint
+CREATE INDEX "lots_category_price_idx" ON "lots" USING btree ("category","current_price_cents");
