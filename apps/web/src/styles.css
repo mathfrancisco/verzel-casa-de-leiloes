@@ -1,23 +1,50 @@
-/* Estilo mínimo e acessível com tokens em variáveis CSS (base para o dark mode do LC-021). */
+/* Estilo mínimo e acessível com tokens em variáveis CSS; o tema escuro (classe `dark` em <html>)
+   só redefine os tokens. Contraste AA: texto >= 4.5:1, bordas de controles >= 3:1. */
 :root {
   --bg: #f7f7fb;
   --surface: #fff;
   --text: #1a1a2e;
   --muted: #555;
   --border: #ddd;
+  --control-border: #767676;
   --accent: #3b2fb0;
+  --accent-bg: #3b2fb0;
+  --on-accent: #fff;
+  --danger: #b00020;
+  --ok: #126b35;
+  --warn-text: #8a4b00;
+  --warn-border: #9a5b00;
+  --warn-bg: #fff6e5;
+  color-scheme: light;
   font-family: system-ui, sans-serif;
   color: var(--text);
   background: var(--bg);
+}
+:root.dark {
+  --bg: #11111b;
+  --surface: #1b1b2a;
+  --text: #ececf4;
+  --muted: #b8b8cc;
+  --border: #3a3a52;
+  --control-border: #8f8fa8;
+  --accent: #b0a9ff;
+  --accent-bg: #4b3fd0;
+  --on-accent: #fff;
+  --danger: #ff8d9a;
+  --ok: #6fdc9a;
+  --warn-text: #ffc266;
+  --warn-border: #d99a2b;
+  --warn-bg: #33260a;
+  color-scheme: dark;
 }
 body {
   margin: 0;
 }
 a {
-  color: #3b2fb0;
+  color: var(--accent);
 }
 :focus-visible {
-  outline: 3px solid #3b2fb0;
+  outline: 3px solid var(--accent);
   outline-offset: 2px;
 }
 .site-header {
@@ -27,8 +54,8 @@ a {
   align-items: center;
   justify-content: space-between;
   padding: 0.75rem 1rem;
-  background: #fff;
-  border-bottom: 1px solid #ddd;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
 }
 .site-header nav {
   display: flex;
@@ -49,8 +76,8 @@ main {
   max-width: 26rem;
   margin: 2rem auto;
   padding: 1.5rem;
-  background: #fff;
-  border: 1px solid #ddd;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 8px;
 }
 .field {
@@ -66,11 +93,13 @@ main {
 .field textarea {
   padding: 0.5rem;
   font-size: 1rem;
-  border: 1px solid #888;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--control-border);
   border-radius: 4px;
 }
 .field input[aria-invalid='true'] {
-  border-color: #b00020;
+  border-color: var(--danger);
 }
 .radio {
   display: flex;
@@ -80,16 +109,16 @@ main {
 }
 .field-error,
 .form-error {
-  color: #b00020;
+  color: var(--danger);
   margin: 0;
 }
 button {
   padding: 0.5rem 1rem;
   font-size: 1rem;
   border-radius: 4px;
-  border: 1px solid #3b2fb0;
-  background: #3b2fb0;
-  color: #fff;
+  border: 1px solid var(--accent-bg);
+  background: var(--accent-bg);
+  color: var(--on-accent);
   cursor: pointer;
 }
 button:disabled {
@@ -97,7 +126,7 @@ button:disabled {
   cursor: default;
 }
 .user-badge {
-  color: #444;
+  color: var(--muted);
 }
 
 .tabs {
@@ -113,8 +142,8 @@ button:disabled {
   text-decoration: none;
 }
 .tabs a[aria-current='page'] {
-  background: var(--accent);
-  color: #fff;
+  background: var(--accent-bg);
+  color: var(--on-accent);
 }
 .lot-grid {
   display: grid;
@@ -168,8 +197,8 @@ button:disabled {
 
 .notice {
   padding: 0.5rem 0.75rem;
-  border-left: 4px solid #b26a00;
-  background: #fff6e5;
+  border-left: 4px solid var(--warn-border);
+  background: var(--warn-bg);
 }
 .catalog-grid {
   list-style: none;
@@ -316,7 +345,7 @@ button:disabled {
 }
 .lot-extended {
   font-weight: 700;
-  color: #8a4b00;
+  color: var(--warn-text);
 }
 .lot-status {
   font-weight: 700;
@@ -347,9 +376,10 @@ button:disabled {
   bottom: 1rem;
   max-width: 22rem;
   padding: 1rem;
-  border: 2px solid #9a5b00;
+  border: 2px solid var(--warn-border);
   border-radius: 4px;
-  background: #fff6e5;
+  color: var(--text);
+  background: var(--warn-bg);
   box-shadow: 0 3px 12px #0003;
 }
 .outbid-toast p {
@@ -376,10 +406,10 @@ button:disabled {
   font-weight: 700;
 }
 .audit-intact {
-  color: #126b35;
+  color: var(--ok);
 }
 .audit-tampered {
-  color: #a00020;
+  color: var(--danger);
 }
 .audit-checks {
   display: grid;
@@ -433,8 +463,8 @@ button:disabled {
 .button-link {
   display: inline-block;
   padding: 0.55rem 0.75rem;
-  color: var(--surface);
-  background: var(--accent);
+  color: var(--on-accent);
+  background: var(--accent-bg);
   border-radius: 4px;
   font-weight: 700;
   text-decoration: none;
@@ -505,7 +535,7 @@ button:disabled {
 .cancelled-notice {
   margin: 1rem 0;
   padding: 0.75rem 1rem;
-  border: 1px solid var(--danger, #b42318);
+  border: 1px solid var(--danger);
   border-radius: 8px;
 }
 
@@ -538,4 +568,35 @@ button:disabled {
 .filters-error {
   flex-basis: 100%;
   margin-bottom: 0.5rem;
+}
+.theme-toggle {
+  color: var(--text);
+  background: transparent;
+  border-color: var(--control-border);
+}
+.theme-toggle[aria-pressed='true'] {
+  border-color: var(--accent);
+}
+/* Alvos de toque confortáveis e sem rolagem horizontal a partir de 360 px. */
+img {
+  max-width: 100%;
+}
+.site-header nav a {
+  padding: 0.25rem 0;
+}
+@media (max-width: 30rem) {
+  .selected-item {
+    grid-template-columns: 1fr;
+  }
+  .lot-card-link,
+  .user-badge {
+    overflow-wrap: anywhere;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  * {
+    scroll-behavior: auto !important;
+    transition: none !important;
+    animation: none !important;
+  }
 }

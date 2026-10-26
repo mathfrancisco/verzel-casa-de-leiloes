@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Status | REVIEW |
+| Status | DONE |
 | Épico / dia | E6 Qualidade e entrega · Dia 6 |
 | Depende de | LC-014, LC-018 |
 | Requisitos | RF-16 |
@@ -61,3 +61,5 @@ Avaliador entra e percorre o fluxo sem montar nada do zero.
   ela, nem a API nem o seed sobem no compose. CT-10-01 fica para LC-023.
 - Esta branch tem o `placeBid` com `now()`; a correção `clock_timestamp()` publicada no LC-011
   entra ao integrar `main`, ao lado do `clock` opcional.
+
+Integração: PR #21 integrada em `9c19b4f`; CI da PR (run 40387584676) e pós-merge (run 40387958180) passaram.
