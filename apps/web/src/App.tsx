@@ -2,6 +2,7 @@ import { Route, Routes } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { RequireRole } from './components/RequireRole';
 import { NewLotPage } from './features/auctioneer/NewLotPage';
+import { AuctioneerPanelPage } from './features/auctioneer/AuctioneerPanelPage';
 import { LoginPage } from './features/auth/LoginPage';
 import { RegisterPage } from './features/auth/RegisterPage';
 import { ShowcasePage } from './features/showcase/ShowcasePage';
@@ -10,7 +11,6 @@ import { WalletPage } from './features/wallet/WalletPage';
 import { AuditPage } from './features/audit/AuditPage';
 import { ReceiptPage } from './features/receipt/ReceiptPage';
 import { ParticipationsPage } from './features/participations/ParticipationsPage';
-import { ComingSoonPage } from './routes/ComingSoonPage';
 import { NotFoundPage } from './routes/NotFoundPage';
 
 export function App() {
@@ -43,7 +43,7 @@ export function App() {
           path="painel"
           element={
             <RequireRole role="AUCTIONEER">
-              <ComingSoonPage title="Painel do leiloeiro" />
+              <AuctioneerPanelPage />
             </RequireRole>
           }
         />
