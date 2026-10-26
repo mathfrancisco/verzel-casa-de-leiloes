@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { canonicalJson } from '@leilao/shared';
+import { canonicalJson, type CatalogItem, type LotCategory } from '@leilao/shared';
 
 // Cadeia de auditoria (docs/03-arquitetura.md §5, ai/specs/SP-08-auditoria.md). Aqui só a gênese;
 // os elos assinados entram no LC-010.
@@ -9,6 +9,9 @@ export interface GenesisTerms {
   externalId: string;
   imageSha256: string;
   title: string;
+  description: string;
+  category: LotCategory;
+  itemSnapshot: CatalogItem;
   sellerPseudonym: string;
   startingPriceCents: number;
   minIncrementCents: number;

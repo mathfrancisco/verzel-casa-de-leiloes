@@ -14,9 +14,11 @@ lexicográfica, sem espaços, strings UTF-8, inteiros sem notação científica,
 **Gênese:**
 
 ```json
-{"externalId":"27992","imageSha256":"…","lotId":"…","minIncrementCents":10000,
- "originalEndsAt":"…","sellerPseudonym":"Leiloeiro 3KD9QA","startingPriceCents":100000,
- "startsAt":"…","title":"…"}
+{"category":"PAINTING","description":"…","externalId":"27992","imageSha256":"…",
+ "itemSnapshot":{"artist":"…","date":"…","dimensions":"…","externalId":"27992",
+ "imageUrl":"…","medium":"…","origin":"…","sourceUrl":"…","suggestedCategory":"PAINTING",
+ "title":"…"},"lotId":"…","minIncrementCents":10000,"originalEndsAt":"…",
+ "sellerPseudonym":"Leiloeiro 3KD9QA","startingPriceCents":100000,"startsAt":"…","title":"…"}
 ```
 
 `genesisHash = hex(SHA-256(canonical(genesis)))`.
