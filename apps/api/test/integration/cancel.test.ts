@@ -464,4 +464,24 @@ describe('cancelamento de lote (SP-03, RN-12, RN-13)', () => {
     expect(byId.get(c.id)).toMatchObject({ result: 'SOLD' });
     await expectLedgerInvariants();
   });
+
+  it('data o elo CANCELLED pelo relógio depois da trava do lote, não pelo início da transação', async () => {
+    const seller = await register('AUCTIONEER');
+    const lot = await createLot(seller.cookie, '2011');
+
+    let pending: ReturnType<typeof cancel> | undefined;
+    let lockReleasedAt = '';
+    await testDb.sql.begin(async (tx) => {
+      await tx`SELECT id FROM lots WHERE id = ${lot.id} FOR UPDATE`;
+      pending = cancel(seller.cookie, lot.id);
+      await tx`SELECT pg_sleep(1)`;
+      const [row] = await tx<{ at: Date }[]>`SELECT clock_timestamp() AS at`;
+      lockReleasedAt = row!.at.toISOString();
+    });
+    expect((await pending!).statusCode).toBe(200);
+
+    const [entry] = await testDb.sql<{ created_at: Date }[]>`
+      SELECT created_at FROM lot_entries WHERE lot_id = ${lot.id} AND type = 'CANCELLED'`;
+    expect(entry!.created_at.toISOString() >= lockReleasedAt).toBe(true);
+  });
 });
