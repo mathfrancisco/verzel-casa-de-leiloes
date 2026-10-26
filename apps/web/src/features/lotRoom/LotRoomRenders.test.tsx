@@ -73,16 +73,22 @@ describe('LotRoomPage re-renders', () => {
   });
 
   afterEach(() => {
-    vi.restoreAllMocks();
     act(() => root.unmount());
     container.remove();
     queryClient.clear();
+    vi.useRealTimers();
+    vi.restoreAllMocks();
   });
 
-  // O histórico cria um Intl.DateTimeFormat por render: o número de construções
-  // do formatador é o número de renders do histórico.
+  // Proxy de renders: o histórico cria um Intl.DateTimeFormat por render (e nada mais na sala
+  // o usa), então o número de construções do formatador é o número de renders do histórico.
   it('não re-renderiza o histórico no tick do cronômetro, ao digitar o lance nem quando só o preço muda', async () => {
+    vi.useFakeTimers({ now });
     const formatter = vi.spyOn(Intl, 'DateTimeFormat');
+    const advance = (ms: number) =>
+      act(async () => {
+        await vi.advanceTimersByTimeAsync(ms);
+      });
 
     await act(async () => {
       root.render(
@@ -95,19 +101,17 @@ describe('LotRoomPage re-renders', () => {
         </QueryClientProvider>,
       );
     });
-    for (let i = 0; i < 200 && !container.querySelector('.lot-history li'); i++) {
-      await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 25));
-      });
-    }
+    await advance(50);
+    await advance(50);
     expect(container.querySelector('.lot-history li')).not.toBeNull();
     const afterMount = formatter.mock.calls.length;
     expect(afterMount).toBeGreaterThan(0);
 
-    // tick do cronômetro (pelo menos um intervalo de 1 s)
-    await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 1_200));
-    });
+    // tick do cronômetro: o texto muda, o histórico não re-renderiza
+    const countdown = () => container.querySelector('.countdown time')!.textContent;
+    const before = countdown();
+    await advance(3_000);
+    expect(countdown()).not.toBe(before);
     expect(formatter.mock.calls.length).toBe(afterMount);
 
     // digitar no campo do lance
@@ -120,20 +124,12 @@ describe('LotRoomPage re-renders', () => {
     expect(input.value).toBe('120,00');
     expect(formatter.mock.calls.length).toBe(afterMount);
 
-    // sem busca em andamento que sobrescreva o cache
+    // evento que muda só a prorrogação (mesmos lances no histórico)
     await act(async () => {
       await queryClient.cancelQueries();
-    });
-
-    // evento que muda só o preço/prorrogação (mesmos lances no histórico)
-    await act(async () => {
       queryClient.setQueryData(['lot', 'l1', 'u1'], { ...lot, extended: true });
     });
-    for (let i = 0; i < 200 && !container.querySelector('.lot-extended'); i++) {
-      await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 25));
-      });
-    }
+    await advance(50);
     expect(container.querySelector('.lot-extended')).not.toBeNull();
     expect(formatter.mock.calls.length).toBe(afterMount);
   });
