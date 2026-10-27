@@ -31,6 +31,8 @@ Tipos em `packages/shared/src/realtime.ts`. Todos levam `serverTime`.
 - Nenhum payload público contém dado pessoal (só pseudônimos).
 - Cliente: ao (re)conectar ou voltar à aba, invalida queries do lote e da carteira e refaz o
   snapshot via REST; eventos com `seq` ≤ ao já exibido são ignorados.
+- Servidor: `connectionStateRecovery` de 2 min. Numa queda curta do transporte, a reconexão
+  recebe os eventos perdidos (inclusive `bid.outbid`, que o snapshot não reconstrói) e as salas.
 - "Você está ganhando/foi superado" é derivado no cliente comparando `bidderPseudonym` com o
   pseudônimo do usuário naquele lote (fornecido em `LotDetail.me`) — sem expor ids.
 

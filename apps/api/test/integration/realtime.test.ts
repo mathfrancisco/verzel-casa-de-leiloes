@@ -172,6 +172,34 @@ describe('WebSocket (Socket.IO)', () => {
     }
   });
 
+  it('reentrega bid.outbid perdido numa queda curta da conexão', async () => {
+    const seller = await register('AUCTIONEER');
+    const firstBidder = await register();
+    const secondBidder = await register();
+    await Promise.all([
+      deposit(firstBidder.cookie, 'fundos-rec-a'),
+      deposit(secondBidder.cookie, 'fundos-rec-b'),
+    ]);
+    const lot = await createLiveLot(seller.cookie, '5004');
+    const firstSocket = await socket(firstBidder.cookie);
+    try {
+      const ownWallet = once(firstSocket, 'wallet.changed');
+      expect((await bid(firstBidder.cookie, lot.id, 'bid-rec-a', 1_000)).statusCode).toBe(201);
+      await ownWallet;
+
+      // Queda do transporte (não um disconnect manual): o cliente reconecta sozinho.
+      const dropped = once(firstSocket, 'disconnect');
+      firstSocket.io.engine.close();
+      await dropped;
+      const outbid = once(firstSocket, 'bid.outbid');
+      expect((await bid(secondBidder.cookie, lot.id, 'bid-rec-b', 1_100)).statusCode).toBe(201);
+      expect(await outbid).toMatchObject({ lotId: lot.id, newPriceCents: 1_100 });
+      expect(firstSocket.recovered).toBe(true);
+    } finally {
+      firstSocket.close();
+    }
+  });
+
   it('mantém a sala pessoal privada e tolera join inválido sem ack (CT-06-04)', async () => {
     const bidder = await register();
     const privateSocket = await socket(bidder.cookie);
