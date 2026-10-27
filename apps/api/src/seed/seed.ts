@@ -58,7 +58,10 @@ export function seedCatalog(): FakeCatalog {
   const images = Object.fromEntries(
     fixtures.map((f) => [
       f.externalId,
-      { bytes: new Uint8Array(readFileSync(join(folder, f.image))), contentType: 'image/png' },
+      {
+        bytes: new Uint8Array(readFileSync(join(folder, f.image))),
+        contentType: f.image.endsWith('.png') ? 'image/png' : 'image/jpeg',
+      },
     ]),
   );
   return new FakeCatalog(items, 0, images);
