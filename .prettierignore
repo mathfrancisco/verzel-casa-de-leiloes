@@ -1,4 +1,5 @@
 dist
 coverage
+.claude/worktrees/**
 pnpm-lock.yaml
 *.md
