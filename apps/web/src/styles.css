@@ -2245,3 +2245,22 @@ button,
 .profile-balance {
   margin-left: var(--space-2);
 }
+
+.app-shell {
+  grid-template-columns: 17rem minmax(0, 1fr);
+}
+.profile-name {
+  flex: 0 0 auto;
+  overflow: visible;
+  text-overflow: clip;
+}
+.profile-balance {
+  flex: 1 1 auto;
+  min-width: 0;
+  text-align: right;
+}
+@media (max-width: 64rem) {
+  .app-shell {
+    grid-template-columns: none;
+  }
+}
