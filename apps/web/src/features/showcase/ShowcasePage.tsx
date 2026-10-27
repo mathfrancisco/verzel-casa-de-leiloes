@@ -148,6 +148,7 @@ export function ShowcasePage() {
           .reduce<
             string | undefined
           >((soonest, at) => (soonest === undefined || Date.parse(at) < Date.parse(soonest) ? at : soonest), undefined);
+  const totalBids = items.reduce((sum, lot) => sum + (lot.currentPriceCents ?? 0), 0);
   const total = counts ? counts.live + counts.scheduled + counts.closed : 0;
 
   return (
@@ -157,27 +158,27 @@ export function ShowcasePage() {
           <h1 id="titulo-vitrine">
             Leilões <span className="accent">{TITLE_ACCENT[tab]}</span>
           </h1>
-          <p className="page-sub">
-            Escolha um lote, dê seu lance e acompanhe cada oferta em tempo real.
-          </p>
+          <p className="page-sub">Total em lances: {formatBRL(totalBids)}</p>
+        </div>
+        <div className="page-head-side">
           {counts && total > 0 && (
             <p className="progress-chip">
               <span>
-                {counts.closed} / {total} lotes encerrados
+                <strong className="accent-num">{counts.closed}</strong> / {total} lotes encerrados
               </span>
               <span className="progress-bar" aria-hidden="true">
                 <span style={{ width: `${Math.round((counts.closed / total) * 100)}%` }} />
               </span>
             </p>
           )}
+          {clockTarget && (
+            <CountdownBoxes
+              caption={tab === 'live' ? 'para encerrar' : 'para começar'}
+              target={clockTarget}
+              onElapsed={refresh}
+            />
+          )}
         </div>
-        {clockTarget && (
-          <CountdownBoxes
-            caption={tab === 'live' ? 'para encerrar' : 'para começar'}
-            target={clockTarget}
-            onElapsed={refresh}
-          />
-        )}
       </div>
       <IntroStrip />
       <nav aria-label="Fases dos lotes" className="tabs">

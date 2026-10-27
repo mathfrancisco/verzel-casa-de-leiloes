@@ -18,25 +18,27 @@ export function LotCard({ lot, onPhaseChange }: { lot: LotSummary; onPhaseChange
   const chip = PHASE_CHIP[lot.phase as keyof typeof PHASE_CHIP];
   return (
     <article className="lot-card">
-      <Link to={`/lotes/${lot.id}`} className="lot-card-link">
-        <span className="lot-media">
+      <div className="lot-media">
+        <Link to={`/lotes/${lot.id}`} className="lot-media-link" tabIndex={-1} aria-hidden="true">
           <img src={lot.imageUrl} alt="" loading="lazy" decoding="async" width={400} height={300} />
-          {chip && <span className={`phase-chip phase-${chip.tone}`}>{chip.text}</span>}
-        </span>
-        <h2>{lot.title}</h2>
-      </Link>
+        </Link>
+        {chip && <span className={`phase-chip phase-${chip.tone}`}>{chip.text}</span>}
+      </div>
       <p className="lot-meta">
-        <span className="lot-category">{LOT_CATEGORIES[lot.category]}</span>
         <span className="lot-bids">
-          <Icon name="users" size={16} />
+          <Icon name="users" size={14} />
           {lot.bidCount === 1 ? '1 lance' : `${lot.bidCount} lances`}
         </span>
+        <span className="lot-category">{LOT_CATEGORIES[lot.category]}</span>
       </p>
+      <h2>
+        <Link to={`/lotes/${lot.id}`} className="lot-card-link">
+          {lot.title}
+        </Link>
+      </h2>
       <div className="lot-foot">
         <div className="lot-foot-info">
-          {price.label !== 'Lance inicial' && (
-            <p className="lot-min">Lance inicial {formatBRL(lot.startingPriceCents)}</p>
-          )}
+          <p className="lot-min">Lance inicial {formatBRL(lot.startingPriceCents)}</p>
           {lot.phase === 'LIVE' && (
             <Countdown label="Termina em" target={lot.endsAt} onElapsed={onPhaseChange} />
           )}
@@ -46,8 +48,14 @@ export function LotCard({ lot, onPhaseChange }: { lot: LotSummary; onPhaseChange
           {lot.phase === 'CLOSING' && <p className="countdown">Encerrado — apurando resultado</p>}
         </div>
         <p className="lot-price">
-          <span className="lot-price-label">{price.label}</span>
-          {price.amountCents !== null && <strong>{formatBRL(price.amountCents)}</strong>}
+          {price.amountCents === null ? (
+            <span>{price.label}</span>
+          ) : (
+            <>
+              <span className="sr-only">{price.label} </span>
+              <strong>{formatBRL(price.amountCents)}</strong>
+            </>
+          )}
         </p>
       </div>
     </article>
