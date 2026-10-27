@@ -102,8 +102,8 @@ bancos para os testes de integração.
 - **Zerar (somente local):** `pnpm seed:reset` apaga o schema inteiro e recria tudo. Recusa rodar
   com `NODE_ENV=production` e recusa bancos que não sejam `localhost`, `127.0.0.1`, `::1` ou `db`.
 - O seed usa os mesmos casos de uso da API (com relógio controlado), então a cadeia assinada de
-  cada lote semeado é válida. Usa um catálogo local (`apps/api/seed/fixtures`) e **não chama a
-  API externa**.
+  cada lote semeado é válida. Usa um catálogo local (`apps/api/seed/fixtures`): cinco obras reais do Art Institute em
+  domínio público (CC0), com imagens e metadados versionados, e **não chama a API externa**.
 
 ## Variáveis de ambiente
 
@@ -326,7 +326,8 @@ verificações).
 
 ## Uso de IA
 
-Onde e como a IA foi usada, e como o resultado foi verificado: [`docs/USO-DE-IA.md`](docs/USO-DE-IA.md).
+O processo de desenvolvimento com IA (specs, cards, prompts e revisão humana) está em
+[`ai/README.md`](ai/README.md). O resumo do uso de IA vai no formulário de entrega.
 
 ## Documentação
 
@@ -340,5 +341,4 @@ Onde e como a IA foi usada, e como o resultado foi verificado: [`docs/USO-DE-IA.
 | [Checklist](docs/CHECKLIST.md) | Cada item do PDF → requisito → card → evidência |
 | [Smoke de produção](docs/smoke-producao.md) | Passos executados no deploy |
 | [Desempenho](docs/perf/api-explain.md) | EXPLAIN da API e bundle do front |
-| [Uso de IA](docs/USO-DE-IA.md) | Onde e como a IA foi usada |
 | [Desenvolvimento com IA](ai/README.md) | Specs, cards, prompts e `AGENTS.md` |

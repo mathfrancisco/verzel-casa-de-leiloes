@@ -17,7 +17,7 @@ Entrega completa: app no ar, README que permite avaliar sem perguntar nada, form
 
 - Deploy final com seed; smoke test com os usuários de demonstração e com a API externa bloqueada
 - README com todas as seções obrigatórias de SP-10 (incluindo técnica anti-adulteração, interpretações e limitações)
-- `docs/CHECKLIST.md` 100% revisado com evidências; `docs/USO-DE-IA.md` completo
+- `docs/CHECKLIST.md` 100% revisado com evidências
 - Envio do formulário (feito por mim, não pelo agente)
 
 ## Fora do escopo
@@ -38,4 +38,4 @@ Entrega completa: app no ar, README que permite avaliar sem perguntar nada, form
 - [ ] `pnpm lint && pnpm typecheck && pnpm test` verdes, saída real no PR
 - [ ] Todos os critérios de aceite com evidência
 - [ ] Status atualizado aqui e em `ai/cards/README.md`
-- [ ] `docs/CHECKLIST.md` (só com evidência) e `docs/USO-DE-IA.md` atualizados
+- [ ] `docs/CHECKLIST.md` (só com evidência) atualizado

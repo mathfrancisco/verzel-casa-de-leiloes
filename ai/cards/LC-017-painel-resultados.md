@@ -36,5 +36,5 @@ Leiloeiro vê o resultado de cada lote e quanto recebeu no total.
 - [x] `pnpm lint`, `pnpm typecheck`, `pnpm build` e `pnpm test` padrão verdes (418: shared 104, web 87, API 227, duas execuções seguidas); timeouts de `startup.test.ts` (25 s) e do teste longo do painel (30 s) ajustados à carga da suíte paralela. No navegador, /painel mostrou total R$ 26,00 igual ao razão, seis lotes com fase/resultado corretos, links de sala e auditoria e sem botão de cancelar. Saída local em `../work/lc017-validation.log`; PR pendente
 - [x] Todos os critérios de aceite com evidência
 - [x] Status atualizado aqui e em `ai/cards/README.md`
-- [x] `docs/CHECKLIST.md` (só com evidência) e `docs/USO-DE-IA.md` atualizados
+- [x] `docs/CHECKLIST.md` (só com evidência) atualizado
 - Integração: PR #18 integrada em `ac90fc0`; CI da PR (run 40384004031) e pós-merge (run 40384379860) passaram.

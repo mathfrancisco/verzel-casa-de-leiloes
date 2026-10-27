@@ -40,7 +40,7 @@ Funções puras que criam e verificam elos, idênticas no servidor e no navegado
 - [x] `pnpm lint && pnpm typecheck && pnpm test` verdes localmente
 - [x] Todos os critérios de aceite com evidência local
 - [x] Status atualizado aqui e em `ai/cards/README.md`
-- [x] `docs/CHECKLIST.md` (só com evidência) e `docs/USO-DE-IA.md` atualizados
+- [x] `docs/CHECKLIST.md` (só com evidência) atualizado
 
 ## Evidências
 

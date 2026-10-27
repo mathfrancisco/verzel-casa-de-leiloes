@@ -33,4 +33,4 @@ Uma ou duas frases sobre o resultado visível.
 
 - [ ] `pnpm lint && pnpm typecheck && pnpm test` verdes, saída no PR
 - [ ] Critérios de aceite com evidência
-- [ ] Quadro, checklist e `USO-DE-IA.md` atualizados
+- [ ] Quadro e checklist atualizados

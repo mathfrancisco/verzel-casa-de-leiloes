@@ -38,6 +38,6 @@ Interface agradável nos dois temas, utilizável no celular e por teclado/leitor
 - [ ] `pnpm lint && pnpm typecheck && pnpm test` verdes, saída real no PR
 - [ ] Todos os critérios de aceite com evidência
 - [ ] Status atualizado aqui e em `ai/cards/README.md`
-- [ ] `docs/CHECKLIST.md` (só com evidência) e `docs/USO-DE-IA.md` atualizados
+- [ ] `docs/CHECKLIST.md` (só com evidência) atualizado
 
 Integração: PR #22 integrada em `6597069`; CI da PR (run 40388593058) e pós-merge (run 40388949773) passaram.

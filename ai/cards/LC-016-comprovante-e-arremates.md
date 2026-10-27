@@ -37,5 +37,5 @@ Vencedor acessa e compartilha o comprovante; licitante acompanha tudo em que deu
 - [x] `pnpm lint && pnpm typecheck && pnpm test` verdes, saída local real; PR ainda pendente
 - [x] Todos os critérios de aceite com evidência
 - [x] Status atualizado aqui e em `ai/cards/README.md`
-- [x] `docs/CHECKLIST.md` (só com evidência) e `docs/USO-DE-IA.md` atualizados
+- [x] `docs/CHECKLIST.md` (só com evidência) atualizado
 - Integração: PR #17 integrada em `84b58d2`; CI da PR (run 40382967358) e pós-merge (run 40383341310) passaram.

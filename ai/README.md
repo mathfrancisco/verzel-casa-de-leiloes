@@ -40,7 +40,7 @@ flowchart LR
     C --> D[Implementar o mínimo]
     D --> E[lint · typecheck · test]
     E -->|falhou| D
-    E -->|ok| F[Atualizar card, quadro,<br/>checklist, USO-DE-IA]
+    E -->|ok| F[Atualizar card, quadro,<br/>checklist]
     F --> G[PR com evidências]
     G --> H[Revisão humana<br/>+ /revisar]
     H -->|ajustes| D
@@ -51,7 +51,7 @@ flowchart LR
   marca card como `DONE` sem a saída dos testes no PR.
 - **Uma sessão de agente por card.** Contexto limpo reduz alucinação e mistura de escopo.
 - **Testes primeiro.** Os casos `CT` da spec viram testes antes do código.
-- **Tudo que a IA fez e o que eu revisei** vai para `docs/USO-DE-IA.md` (o formulário pede isso).
+- **Tudo que a IA fez e o que eu revisei** é revisado por mim antes do merge; o resumo vai no formulário de entrega.
 
 ## Como usar
 

@@ -45,8 +45,7 @@ Licitante disputa o lote vendo tudo em tempo real e entende por que um lance foi
   localmente; registrar a saída no PR quando publicar
 - [x] Todos os critérios de aceite têm evidência local
 - [x] Status atualizado aqui e em `ai/cards/README.md`
-- [x] `docs/CHECKLIST.md` atualizado com evidência local e pendência de PR;
-  `docs/USO-DE-IA.md` atualizado
+- [x] `docs/CHECKLIST.md` atualizado com evidência local e pendência de PR
 
 ## Evidência e pendências
 

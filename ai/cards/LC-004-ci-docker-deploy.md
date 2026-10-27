@@ -44,7 +44,7 @@ Esqueleto (login funcionando) publicado num link público e CI rodando a cada pu
 - [ ] `pnpm lint && pnpm typecheck && pnpm test` verdes, saída real no PR
 - [ ] Todos os critérios de aceite com evidência
 - [ ] Status atualizado aqui e em `ai/cards/README.md`
-- [ ] `docs/CHECKLIST.md` (só com evidência) e `docs/USO-DE-IA.md` atualizados
+- [ ] `docs/CHECKLIST.md` (só com evidência) atualizado
 
 ## Evidências (22/10/2026)
 

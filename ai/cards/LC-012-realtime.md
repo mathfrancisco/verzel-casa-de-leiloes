@@ -39,4 +39,4 @@ Mudanças de lote e carteira chegam aos clientes sem recarregar.
 - [x] Gates registrados na PR #12 (integração com `main`: 365 testes — shared 104, API 197, web 64); PR integrada em `3749d9c`; CI da PR (run 40333632167) e pós-merge (run 40333960247) passaram
 - [x] Todos os critérios de aceite com evidência local
 - [x] Status atualizado aqui e em `ai/cards/README.md`
-- [x] `docs/CHECKLIST.md` (só com evidência) e `docs/USO-DE-IA.md` atualizados
+- [x] `docs/CHECKLIST.md` (só com evidência) atualizado

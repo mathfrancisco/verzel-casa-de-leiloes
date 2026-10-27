@@ -40,7 +40,7 @@ Leiloeiro busca obras na API externa e o app sobrevive à lentidão ou queda del
 - [x] `pnpm lint && pnpm typecheck && pnpm test` verdes, saída real no PR
 - [ ] Todos os critérios de aceite com evidência
 - [x] Status atualizado aqui e em `ai/cards/README.md`
-- [x] `docs/CHECKLIST.md` (só com evidência) e `docs/USO-DE-IA.md` atualizados
+- [x] `docs/CHECKLIST.md` (só com evidência) atualizado
 
 ## Evidências (22/10/2026)
 

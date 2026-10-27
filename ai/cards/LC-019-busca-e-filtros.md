@@ -40,5 +40,5 @@ Decisões: busca com configuração `simple` e prefixo, sem remoção de acentos
 - [x] `pnpm lint`, `pnpm typecheck`, `pnpm test` padrão e `pnpm build` verdes (503: shared 114, web 120, API 269). Saída local em `../work/lc019-validation.log`; PR pendente. Navegador (26/10/2026, banco descartável e `CATALOG_PROVIDER=fake`): busca "estrelada" filtra lista e contagens das abas; categoria Desenho na aba Agendados; preço máximo R$ 5 gera `max=500` e estado vazio; ordenação "Mais recentes" (`ordem=newest`) inverte a lista; recarregar URL com filtros mantém resultado; "Limpar filtros" volta a `?aba=ao-vivo`; "lirios" sem acento não encontra "Lírios", como decidido na SP-03
 - [x] Todos os critérios de aceite com evidência
 - [x] Status atualizado aqui e em `ai/cards/README.md`
-- [x] `docs/CHECKLIST.md` atualizado; `docs/USO-DE-IA.md` fica a cargo do coordenador
+- [x] `docs/CHECKLIST.md` atualizado
 - Integração: PR #20 integrada em `34f1f52`; CI da PR (run 40386524198) e pós-merge (run 40386893542) passaram.

@@ -41,7 +41,7 @@ Lances corretos sob concorrência, com saldo comprometido e prorrogação garant
 - [x] `pnpm lint`, `pnpm typecheck`, `pnpm test` e `pnpm build` verdes localmente em Node 22; CI da PR #11 e pós-merge verdes
 - [x] Todos os critérios de aceite com evidência local: 12 testes de domínio, suíte final de integração 9/9 e 8 casos repetidos 5× no PostgreSQL descartável
 - [x] Status atualizado aqui e em `ai/cards/README.md`
-- [x] `docs/CHECKLIST.md` (só com evidência) e `docs/USO-DE-IA.md` atualizados
+- [x] `docs/CHECKLIST.md` (só com evidência) atualizado
 
 ## Evidência local
 

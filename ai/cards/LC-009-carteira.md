@@ -38,6 +38,6 @@ Licitante deposita saldo e vê total, comprometido e disponível.
 - [ ] `pnpm lint && pnpm typecheck && pnpm test` verdes, saída real no PR
 - [x] Todos os critérios de aceite com evidência
 - [x] Status atualizado aqui e em `ai/cards/README.md`
-- [x] `docs/CHECKLIST.md` atualizado com evidência; `docs/USO-DE-IA.md` é mantido pelo coordenador
+- [x] `docs/CHECKLIST.md` atualizado com evidência
 
 Integração local sobre a main da PR #9 em 26/10/2026: lint, typecheck, build e 303 testes (81 shared, 165 API, 57 web) passaram no PostgreSQL descartável; revisão assistida sem achados, LC-009 integrado à `main` pela PR #7 em 2026-10-26T02:15:27Z (merge `1b777fd`); CI pós-merge, run 40258206330, passou.

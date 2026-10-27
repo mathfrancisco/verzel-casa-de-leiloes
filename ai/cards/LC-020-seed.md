@@ -37,7 +37,7 @@ Avaliador entra e percorre o fluxo sem montar nada do zero.
 - [x] `pnpm lint && pnpm typecheck && pnpm test` verdes (507: shared 114, web 120, API 273). Saída em `../work/lc020-validation.log`; PR pendente. Implementado sobre LC-014 e LC-018 em `REVIEW`, por decisão do coordenador
 - [x] Todos os critérios de aceite com evidência
 - [x] Status atualizado aqui e em `ai/cards/README.md`
-- [x] `docs/CHECKLIST.md` atualizado; `docs/USO-DE-IA.md` fica a cargo do coordenador
+- [x] `docs/CHECKLIST.md` atualizado
 
 ## Decisões
 

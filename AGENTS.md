@@ -38,7 +38,7 @@ pare, aponte-o e proponha a correção no documento — não escolha sozinho em 
    falharem, implemente o mínimo para passarem.
 4. Rode as verificações (abaixo) e registre a **saída real** no PR.
 5. Atualize: status do card, `ai/cards/README.md`, `docs/CHECKLIST.md` (só com evidência),
-   specs/regras se o comportamento mudou, `docs/USO-DE-IA.md`.
+   specs/regras se o comportamento mudou.
 6. Commit em português, no imperativo, citando o card: `feat(lances): motor de lance transacional (LC-011)`.
 7. Nunca marque `DONE` com teste falhando, pulado ou não executado.
 

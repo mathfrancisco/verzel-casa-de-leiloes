@@ -38,7 +38,7 @@ Qualquer pessoa confere, sem login, se o histórico de um lote está íntegro.
 - [x] `pnpm lint && pnpm typecheck && pnpm test` verdes, saída real no PR
 - [ ] Todos os critérios de aceite com evidência
 - [x] Status atualizado aqui e em `ai/cards/README.md`
-- [ ] `docs/CHECKLIST.md` (só com evidência) e `docs/USO-DE-IA.md` atualizados
+- [ ] `docs/CHECKLIST.md` (só com evidência) atualizado
 
 ## Evidência local
 

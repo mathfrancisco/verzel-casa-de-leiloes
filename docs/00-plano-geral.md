@@ -348,7 +348,7 @@ recria tudo com datas relativas a "agora".
 | 4 | 26/10 | Sala ao vivo com WebSocket, mensagens de feedback, anti-sniping, worker de liquidação, comprovante | Disputa completa entre 2 navegadores até o comprovante |
 | 5 | 27/10 | Auditoria (servidor + navegador), Meus arremates + compartilhar, resultados e total no painel, cancelamento com estorno, busca/filtro | Testes de adulteração via SQL verdes |
 | 6 | 28/10 | E2E Playwright, dark mode, acessibilidade/responsivo, seed final, deploy final, teste com API fora | Fluxo E2E verde contra o build de produção |
-| 7 | 29/10 | README completo, `USO-DE-IA.md`, revisão final do checklist, folga para imprevistos, envio do formulário | Formulário enviado |
+| 7 | 29/10 | README completo, revisão final do checklist, folga para imprevistos, envio do formulário | Formulário enviado |
 
 Ordem de corte se o prazo apertar (do último a cair para o primeiro): busca/filtro → dark mode →
 estorno pós-liquidação → E2E. Requisitos base e deploy **nunca** entram no corte.

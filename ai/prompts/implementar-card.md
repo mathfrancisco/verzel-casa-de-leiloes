@@ -24,6 +24,6 @@ Ao terminar, entregue:
 - cada critério de aceite do card com a evidência (teste ou print);
 - riscos, limitações e decisões tomadas;
 - cards que ficam desbloqueados.
-Atualize o status do card e do quadro, docs/CHECKLIST.md (só com evidência) e docs/USO-DE-IA.md.
+Atualize o status do card e do quadro, docs/CHECKLIST.md (só com evidência).
 Não marque DONE se algum critério falhar ou não tiver sido verificado.
 ```
