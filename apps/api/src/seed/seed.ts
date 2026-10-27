@@ -3,7 +3,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { AuditCrypto, CatalogItem, CreateLotInput, Signer } from '@leilao/shared';
-import { eq, sql } from 'drizzle-orm';
+import { and, eq, gt, sql } from 'drizzle-orm';
 import postgres from 'postgres';
 import { registerUser } from '../application/auth';
 import { placeBid } from '../application/bids';
@@ -168,6 +168,48 @@ export async function seedDemo(deps: SeedDeps): Promise<{ created: boolean; part
   await lot(4, DAY, 4 * DAY, 40_000);
 
   return { created: true };
+}
+
+/**
+ * Mantém a vitrine com lances possíveis: se nenhum lote ativo termina no futuro, o leiloeiro demo
+ * abre dois lotes ao vivo novos, revezando as obras das fixtures. Sem leiloeiro demo, não faz nada.
+ */
+export async function refreshDemoLots(deps: SeedDeps): Promise<{ created: number }> {
+  const [seller] = await deps.db
+    .select({ id: users.id })
+    .from(users)
+    .where(eq(users.email, DEMO_USERS[0].email));
+  if (!seller) return { created: 0 };
+  const [open] = await deps.db
+    .select({ count: sql<number>`count(*)::int` })
+    .from(lots)
+    .where(and(eq(lots.state, 'ACTIVE'), gt(lots.endsAt, sql`now()`)));
+  if (open!.count > 0) return { created: 0 };
+
+  const [total] = await deps.db.select({ count: sql<number>`count(*)::int` }).from(lots);
+  const [row] = await deps.db.execute<{ now: string }>(sql`SELECT now() AS now`);
+  const now = new Date(row!.now).getTime();
+  const { items } = await deps.catalog.search('', 1);
+  const durations = [7 * DAY, 2 * DAY];
+  for (const [offset, duration] of durations.entries()) {
+    const item = items[(total!.count + offset) % items.length]!;
+    const startingPriceCents = 30_000 + 10_000 * offset;
+    await createLot(
+      deps,
+      { id: seller.id, role: 'AUCTIONEER' },
+      {
+        externalId: item.externalId,
+        title: item.title,
+        description: `Obra do acervo de demonstração: ${item.title}.`,
+        category: item.suggestedCategory,
+        startingPriceCents,
+        minIncrementCents: startingPriceCents / 10,
+        startsAt: new Date(now),
+        endsAt: new Date(now + duration),
+      },
+    );
+  }
+  return { created: durations.length };
 }
 
 /** Apaga todo o banco e reaplica as migrations (`seed:reset`). */

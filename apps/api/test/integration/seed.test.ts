@@ -2,7 +2,14 @@ import type { AuditReportResponse } from '@leilao/shared';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { NodeAuditCrypto } from '../../src/infra/auditCrypto';
 import { registerUser } from '../../src/application/auth';
-import { DEMO_PASSWORD, DEMO_USERS, resetDemo, seedCatalog, seedDemo } from '../../src/seed/seed';
+import {
+  DEMO_PASSWORD,
+  DEMO_USERS,
+  refreshDemoLots,
+  resetDemo,
+  seedCatalog,
+  seedDemo,
+} from '../../src/seed/seed';
 import { buildTestApp, TEST_AUDIT_SIGNER, TEST_PSEUDONYM_SECRET } from '../support/app';
 import { createTestDatabase } from '../support/database';
 
@@ -112,5 +119,20 @@ describe('seed de demonstração (SP-10, CT-10-03)', () => {
     await resetDemo(testDb.url);
     await registerUser(deps(), { ...DEMO_USERS[0], password: DEMO_PASSWORD });
     expect(await seedDemo(deps())).toEqual({ created: false, partial: true });
+  });
+
+  it('repõe dois lotes ao vivo quando nenhum lote ativo termina no futuro', async () => {
+    await resetDemo(testDb.url);
+    expect(await refreshDemoLots(deps())).toEqual({ created: 0 });
+    await seedDemo(deps());
+    expect(await refreshDemoLots(deps())).toEqual({ created: 0 });
+
+    await testDb.sql`UPDATE lots SET state = 'CANCELLED', cancelled_at = now()
+      WHERE state = 'ACTIVE' AND ends_at > now()`;
+    expect(await refreshDemoLots(deps())).toEqual({ created: 2 });
+    const lots = await lotRows();
+    expect(lots).toHaveLength(7);
+    expect(lots.filter((lot) => lot.live)).toHaveLength(2);
+    expect(await refreshDemoLots(deps())).toEqual({ created: 0 });
   });
 });
