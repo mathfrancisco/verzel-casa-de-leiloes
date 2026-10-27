@@ -47,16 +47,12 @@ export function LotCard({ lot, onPhaseChange }: { lot: LotSummary; onPhaseChange
           )}
           {lot.phase === 'CLOSING' && <p className="countdown">Encerrado — apurando resultado</p>}
         </div>
-        <p className="lot-price">
-          {price.amountCents === null ? (
-            <span>{price.label}</span>
-          ) : (
-            <>
-              <span className="sr-only">{price.label} </span>
-              <strong>{formatBRL(price.amountCents)}</strong>
-            </>
-          )}
-        </p>
+        {lot.currentPriceCents !== null && price.amountCents !== null && (
+          <p className="lot-price">
+            <span className="sr-only">{price.label} </span>
+            <strong>{formatBRL(price.amountCents)}</strong>
+          </p>
+        )}
       </div>
     </article>
   );
