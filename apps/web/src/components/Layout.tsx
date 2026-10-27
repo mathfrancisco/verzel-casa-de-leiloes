@@ -70,19 +70,22 @@ function ProfileRow({ user }: { user: UserDto }) {
       <span className="avatar" aria-hidden="true">
         {user.name.trim().charAt(0).toUpperCase()}
       </span>
-      <div className="profile-info">
-        <span className="profile-name">{user.name}</span>
-        <span className="profile-sub">{ROLE_LABEL[user.role]}</span>
-        {bidder && (
-          <span className="profile-balance">
-            Saldo {wallet.data ? formatBRL(wallet.data.availableCents) : '…'}
-          </span>
-        )}
-      </div>
+      <span className="profile-name">
+        Meu perfil
+        <span className="sr-only">
+          : {user.name}, {ROLE_LABEL[user.role]}
+        </span>
+      </span>
       {bidder && (
-        <Link to="/carteira" className="plus-button" aria-label="Depositar saldo">
-          <Icon name="plus" />
-        </Link>
+        <>
+          <span className="profile-balance">
+            <span className="sr-only">Saldo </span>
+            {wallet.data ? formatBRL(wallet.data.availableCents) : '…'}
+          </span>
+          <Link to="/carteira" className="plus-button" aria-label="Depositar saldo">
+            <Icon name="plus" size={14} />
+          </Link>
+        </>
       )}
     </div>
   );

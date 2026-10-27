@@ -46,8 +46,9 @@ export function CountdownBoxes({ caption, target, onElapsed }: CountdownBoxesPro
   return (
     <div className="digit-clock">
       <div role="timer" aria-label={`${formatCountdown(remaining)} ${caption}`} className="digits">
-        {groups.map((group) => (
+        {groups.map((group, g) => (
           <span key={group.unit} className="digit-group" aria-hidden="true">
+            {g > 0 && <span className="digit-colon">:</span>}
             <span className="digit-boxes">
               {[...group.digits].map((digit) => {
                 const active = firstActive !== -1 && index++ >= firstActive;
@@ -58,7 +59,6 @@ export function CountdownBoxes({ caption, target, onElapsed }: CountdownBoxesPro
                 );
               })}
             </span>
-            <span className="digit-unit">{group.unit}</span>
           </span>
         ))}
       </div>
