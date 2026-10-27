@@ -20,8 +20,7 @@ descrita aqui é a final (segunda passada, mais leve e densa que a primeira).
   é por lote (`/auditoria/:lotId`) e continua acessível a partir do lote.
 - **Topo do conteúdo**: botão quadrado de voltar (36px, contorno; fora da home) e trilha
   "Início › …" por rota, com o último item em cinza.
-- **Vitrine**: título "Leilões **ao vivo**" (o acento muda com a aba), subtítulo "Total em lances:
-  R$ x" (soma dos preços atuais dos lotes carregados), chip de progresso branco "8 / 24 lotes
+- **Vitrine**: título "Leilões **ao vivo**" (o acento muda com a aba), subtítulo estático "Obras do Art Institute of Chicago em leilão", chip de progresso branco (só sem filtros ativos) "8 / 24 lotes
   encerrados" com o número em acento e barra fina de acento na borda inferior, e relógio
   (`CountdownBoxes.tsx`): caixas brancas com borda e sombra leves, dígitos de 18px (zeros à
   esquerda em cinza, dígitos ativos em texto de acento), dois-pontos entre os grupos e legenda
@@ -37,7 +36,7 @@ descrita aqui é a final (segunda passada, mais leve e densa que a primeira).
 - **Mobile (<= 64rem)**: a barra lateral vira gaveta aberta por um botão (`aria-expanded`,
   `aria-controls`, fecha com Esc, ao navegar ou tocando no fundo); barra superior com o wordmark;
   o painel ocupa a tela inteira. Sem rolagem horizontal em 360 px.
-- **Tipografia**: Inter (Google Fonts em `index.html`, com fallback de sistema), base de 14px, h1
+- **Tipografia**: Inter auto-hospedada (`@fontsource-variable/inter`, sem terceiros no carregamento), com fallback de sistema; tamanhos em `rem` (respeitam a configuração do usuário), corpo equivalente a 14px, h1
   peso 700, títulos de card 15px peso 600, rótulos de 11–12px, `letter-spacing` -0.02em nos
   títulos.
 - **Tokens (`styles.css`)**: fundo `#f4efe6`, texto `#1d1d1f`, `--brand #e5532d` (fundos

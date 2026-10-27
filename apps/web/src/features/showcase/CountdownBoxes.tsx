@@ -39,9 +39,14 @@ export function CountdownBoxes({ caption, target, onElapsed }: CountdownBoxesPro
   }, [remaining, onElapsed, target]);
 
   const groups = digitGroups(remaining);
-  const all = groups.map((g) => g.digits).join('');
-  const firstActive = all.search(/[1-9]/u);
-  let index = 0;
+  const firstActive = groups
+    .map((g) => g.digits)
+    .join('')
+    .search(/[1-9]/u);
+  // Posição global de cada dígito (chave estável, mesmo com tudo zerado).
+  const offsets = groups.map((_, g) =>
+    groups.slice(0, g).reduce((sum, prev) => sum + prev.digits.length, 0),
+  );
 
   return (
     <div className="digit-clock">
@@ -50,10 +55,11 @@ export function CountdownBoxes({ caption, target, onElapsed }: CountdownBoxesPro
           <span key={group.unit} className="digit-group" aria-hidden="true">
             {g > 0 && <span className="digit-colon">:</span>}
             <span className="digit-boxes">
-              {[...group.digits].map((digit) => {
-                const active = firstActive !== -1 && index++ >= firstActive;
+              {[...group.digits].map((digit, i) => {
+                const position = offsets[g]! + i;
+                const active = firstActive !== -1 && position >= firstActive;
                 return (
-                  <span key={`${group.unit}-${index}`} className={active ? 'digit on' : 'digit'}>
+                  <span key={`${group.unit}-${i}`} className={active ? 'digit on' : 'digit'}>
                     {digit}
                   </span>
                 );

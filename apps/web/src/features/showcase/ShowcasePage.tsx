@@ -148,7 +148,6 @@ export function ShowcasePage() {
           .reduce<
             string | undefined
           >((soonest, at) => (soonest === undefined || Date.parse(at) < Date.parse(soonest) ? at : soonest), undefined);
-  const totalBids = items.reduce((sum, lot) => sum + (lot.currentPriceCents ?? 0), 0);
   const total = counts ? counts.live + counts.scheduled + counts.closed : 0;
 
   return (
@@ -158,10 +157,10 @@ export function ShowcasePage() {
           <h1 id="titulo-vitrine">
             Leilões <span className="accent">{TITLE_ACCENT[tab]}</span>
           </h1>
-          <p className="page-sub">Total em lances: {formatBRL(totalBids)}</p>
+          <p className="page-sub">Obras do Art Institute of Chicago em leilão</p>
         </div>
         <div className="page-head-side">
-          {counts && total > 0 && (
+          {counts && total > 0 && !filtering && (
             <p className="progress-chip">
               <span>
                 <strong className="accent-num">{counts.closed}</strong> / {total} lotes encerrados

@@ -1,4 +1,4 @@
-import { type CSSProperties, Suspense, useEffect, useState } from 'react';
+import { type CSSProperties, Suspense, useEffect, useRef, useState } from 'react';
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { ChunkErrorBoundary } from './ChunkErrorBoundary';
 import { formatBRL, type UserDto, type Wallet } from '@leilao/shared';
@@ -129,6 +129,10 @@ export function Layout() {
   const crumbs = crumbsFor(location.pathname);
   const atHome = location.pathname === '/';
 
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const mainRef = useRef<HTMLElement>(null);
+  const wasOpen = useRef(false);
+
   // O menu em gaveta (telas estreitas) fecha ao navegar e com Esc.
   useEffect(() => setMenuOpen(false), [location.pathname]);
   useEffect(() => {
@@ -136,6 +140,19 @@ export function Layout() {
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setMenuOpen(false);
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
+  }, [menuOpen]);
+
+  // Foco: abre no primeiro link; ao fechar volta ao botão. O conteúdo fica inerte enquanto aberta.
+  useEffect(() => {
+    const main = mainRef.current;
+    if (menuOpen) {
+      main?.setAttribute('inert', '');
+      document.querySelector<HTMLElement>('#menu-lateral .side-nav a')?.focus();
+    } else {
+      main?.removeAttribute('inert');
+      if (wasOpen.current) menuButtonRef.current?.focus();
+    }
+    wasOpen.current = menuOpen;
   }, [menuOpen]);
 
   return (
@@ -146,6 +163,7 @@ export function Layout() {
       <header className="topbar">
         <Wordmark />
         <button
+          ref={menuButtonRef}
           type="button"
           className="menu-button"
           aria-expanded={menuOpen}
@@ -231,7 +249,7 @@ export function Layout() {
         </div>
       </div>
 
-      <main id="conteudo" className="app-main">
+      <main id="conteudo" ref={mainRef} tabIndex={-1} className="app-main">
         <div className="crumb-row">
           {!atHome && (
             <button
