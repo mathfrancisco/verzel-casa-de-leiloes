@@ -12,6 +12,7 @@ import { apiFetch } from '../../lib/api';
 import { messageFor } from '../../lib/errorMessages';
 import { syncServerTime } from '../../lib/serverClock';
 import { useDebouncedValue } from '../../lib/useDebouncedValue';
+import { CountdownBoxes } from './CountdownBoxes';
 import { IntroStrip } from './IntroStrip';
 import { LotCard } from './LotCard';
 import {
@@ -32,6 +33,8 @@ const EMPTY_TEXT = {
   scheduled: 'Nenhum lote agendado.',
   closed: 'Nenhum lote encerrado ainda.',
 } as const;
+
+const TITLE_ACCENT = { live: 'ao vivo', scheduled: 'agendados', closed: 'encerrados' } as const;
 
 const filterKey = (f: ShowcaseFilters) => `${f.q}|${f.min}|${f.max}`;
 const NO_FILTERS: ShowcaseFilters = { q: '', category: '', min: null, max: null, sort: '' };
@@ -136,9 +139,46 @@ export function ShowcasePage() {
     apply(NO_FILTERS);
   };
 
+  // Relógio do cabeçalho: próximo encerramento (ao vivo) ou próximo início (agendados).
+  const clockTarget =
+    tab === 'closed'
+      ? undefined
+      : items
+          .map((lot) => (tab === 'live' ? lot.endsAt : lot.startsAt))
+          .reduce<
+            string | undefined
+          >((soonest, at) => (soonest === undefined || Date.parse(at) < Date.parse(soonest) ? at : soonest), undefined);
+  const total = counts ? counts.live + counts.scheduled + counts.closed : 0;
+
   return (
     <section aria-labelledby="titulo-vitrine">
-      <h1 id="titulo-vitrine">Vitrine</h1>
+      <div className="page-head">
+        <div className="page-head-text">
+          <h1 id="titulo-vitrine">
+            Leilões <span className="accent">{TITLE_ACCENT[tab]}</span>
+          </h1>
+          <p className="page-sub">Obras do Art Institute of Chicago em leilão</p>
+        </div>
+        <div className="page-head-side">
+          {counts && total > 0 && !filtering && (
+            <p className="progress-chip">
+              <span>
+                <strong className="accent-num">{counts.closed}</strong> / {total} lotes encerrados
+              </span>
+              <span className="progress-bar" aria-hidden="true">
+                <span style={{ width: `${Math.round((counts.closed / total) * 100)}%` }} />
+              </span>
+            </p>
+          )}
+          {clockTarget && (
+            <CountdownBoxes
+              caption={tab === 'live' ? 'para encerrar' : 'para começar'}
+              target={clockTarget}
+              onElapsed={refresh}
+            />
+          )}
+        </div>
+      </div>
       <IntroStrip />
       <nav aria-label="Fases dos lotes" className="tabs">
         {SHOWCASE_TABS.map((t) => (
