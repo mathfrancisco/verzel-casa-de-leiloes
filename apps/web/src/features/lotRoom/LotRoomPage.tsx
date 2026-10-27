@@ -1,4 +1,10 @@
-import { formatBRL, parseBRL, type BidResponse, type LotDetail } from '@leilao/shared';
+import {
+  formatBRL,
+  LOT_CATEGORIES,
+  parseBRL,
+  type BidResponse,
+  type LotDetail,
+} from '@leilao/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
@@ -224,7 +230,7 @@ export function LotRoomPage() {
           decoding="async"
         />
         <div>
-          <p className="lot-category">{detail.category}</p>
+          <p className="lot-category">{LOT_CATEGORIES[detail.category]}</p>
           <h1>{detail.title}</h1>
           <p>{detail.description}</p>
           <dl className="lot-attributes">
