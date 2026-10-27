@@ -102,8 +102,10 @@ bancos para os testes de integração.
 - **Zerar (somente local):** `pnpm seed:reset` apaga o schema inteiro e recria tudo. Recusa rodar
   com `NODE_ENV=production` e recusa bancos que não sejam `localhost`, `127.0.0.1`, `::1` ou `db`.
 - O seed usa os mesmos casos de uso da API (com relógio controlado), então a cadeia assinada de
-  cada lote semeado é válida. Usa um catálogo local (`apps/api/seed/fixtures`): cinco obras reais do Art Institute em
+  cada lote semeado é válida. Usa um catálogo local (`apps/api/seed/fixtures`): dez obras reais do Art Institute em
   domínio público (CC0), com imagens e metadados versionados, e **não chama a API externa**.
+  As cinco primeiras viram os lotes iniciais. A cada hora, se nenhum lote ativo termina no futuro,
+  o leiloeiro demo abre dois lotes ao vivo novos, revezando as dez obras.
 
 ## Variáveis de ambiente
 

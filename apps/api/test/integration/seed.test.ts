@@ -133,6 +133,9 @@ describe('seed de demonstração (SP-10, CT-10-03)', () => {
     const lots = await lotRows();
     expect(lots).toHaveLength(7);
     expect(lots.filter((lot) => lot.live)).toHaveLength(2);
+    const [first, second] = await testDb.sql<{ item_external_id: string }[]>`
+      SELECT item_external_id FROM lots ORDER BY created_at DESC LIMIT 2`;
+    expect([second!.item_external_id, first!.item_external_id]).toEqual(['27992', '20684']);
     expect(await refreshDemoLots(deps())).toEqual({ created: 0 });
   });
 });
