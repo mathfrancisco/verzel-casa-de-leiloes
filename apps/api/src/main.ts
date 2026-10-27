@@ -88,7 +88,9 @@ const refreshDemo = () =>
     crypto: new NodeAuditCrypto(),
     pseudonymSecret: env.PSEUDONYM_SECRET,
   })
-    .then(({ created }) => created > 0 && app.log.info(`${created} lotes de demonstração repostos.`))
+    .then(
+      ({ created }) => created > 0 && app.log.info(`${created} lotes de demonstração repostos.`),
+    )
     .catch(() => app.log.warn('Falha ao repor lotes de demonstração; nova tentativa em 1 hora.'));
 void refreshDemo();
 const demoTimer = setInterval(() => void refreshDemo(), REFRESH_DEMO_MS);
