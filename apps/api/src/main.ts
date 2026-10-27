@@ -10,6 +10,7 @@ import { runMigrations } from './infra/db/migrate';
 import { Ed25519Signer, NodeAuditCrypto } from './infra/auditCrypto';
 import { parseEd25519PrivateKey } from './infra/privateKeyPem';
 import { startSettlementWorker } from './jobs/settlementWorker';
+import { refreshDemoLots, seedCatalog } from './seed/seed';
 import type { RealtimeEvent } from './application/bids';
 
 let env;
@@ -77,8 +78,24 @@ const stopSettlementWorker = startSettlementWorker({
   onError: () => app.log.warn('Falha no ciclo de liquidação; nova tentativa no próximo ciclo.'),
 });
 
+// Repõe lotes ao vivo do leiloeiro demo quando todos encerraram (só age se o seed existir).
+const REFRESH_DEMO_MS = 60 * 60 * 1_000;
+const refreshDemo = () =>
+  refreshDemoLots({
+    db,
+    catalog: seedCatalog(),
+    signer: auditSigner,
+    crypto: new NodeAuditCrypto(),
+    pseudonymSecret: env.PSEUDONYM_SECRET,
+  })
+    .then(({ created }) => created > 0 && app.log.info(`${created} lotes de demonstração repostos.`))
+    .catch(() => app.log.warn('Falha ao repor lotes de demonstração; nova tentativa em 1 hora.'));
+void refreshDemo();
+const demoTimer = setInterval(() => void refreshDemo(), REFRESH_DEMO_MS);
+
 for (const signal of ['SIGINT', 'SIGTERM'] as const) {
   process.on(signal, () => {
+    clearInterval(demoTimer);
     void Promise.resolve()
       .then(stopSettlementWorker)
       .then(() => app.close())
