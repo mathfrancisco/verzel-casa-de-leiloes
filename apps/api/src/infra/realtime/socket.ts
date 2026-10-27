@@ -36,6 +36,9 @@ export function attachRealtime(app: FastifyInstance, db: Db) {
     {
       path: '/socket.io',
       serveClient: false,
+      // Numa queda curta (rede móvel, proxy), a reconexão recebe os eventos perdidos e as salas
+      // de volta. O middleware de sessão roda de novo, então o cookie continua valendo.
+      connectionStateRecovery: { maxDisconnectionDuration: 2 * 60_000 },
       allowRequest(request, callback) {
         const origin = request.headers.origin;
         if (!origin) return callback(null, true);
