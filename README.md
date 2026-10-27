@@ -328,8 +328,31 @@ verificações).
 
 ## Uso de IA
 
-O processo de desenvolvimento com IA (specs, cards, prompts e revisão humana) está em
-[`ai/README.md`](ai/README.md). O resumo do uso de IA vai no formulário de entrega.
+Usei IA como par de programação, com regras escritas no repositório. As decisões de produto,
+regras de negócio e arquitetura foram minhas. A IA executou tarefas pequenas e verificáveis.
+
+1. **Documentação antes do código.** Escrevi primeiro os requisitos (RF/RNF), as regras de
+   negócio, a arquitetura e a modelagem de dados em `docs/`. Esses documentos são a fonte de
+   verdade. Quando havia conflito, a ordem de precedência era: regras de negócio > spec > card >
+   plano.
+2. **Specs e cards como contrato.** Dividi o sistema em specs por módulo (`ai/specs/SP-xx`) com
+   API, códigos de erro e casos de teste positivos e negativos. Dividi o trabalho em cards
+   pequenos (`ai/cards/LC-xxx`) com dependências e critérios de aceite. A IA trabalhava em um card
+   por vez.
+3. **Instruções para os agentes.** O [`AGENTS.md`](AGENTS.md) define o protocolo e os invariantes
+   que nenhuma tarefa pode quebrar. Exemplos: lances em transação no servidor, dinheiro em
+   centavos inteiros, histórico append-only com hash encadeado e assinatura Ed25519, respostas
+   públicas só com pseudônimos, e testes que nunca chamam a API externa real.
+4. **TDD e verificação.** Para cada card, a IA escrevia os testes primeiro, via os testes falharem
+   e depois implementava o mínimo para eles passarem. Nenhum card foi fechado sem lint, typecheck
+   e testes rodados. Cada PR registra a saída real dos comandos.
+5. **Revisão e testes de ponta a ponta.** Usei a IA para revisar diffs em busca de bugs e para
+   rodar testes E2E: vitrine, lance ao vivo, aviso de "superado" em tempo real, integridade da
+   auditoria e criação de lote via API do Art Institute of Chicago.
+6. **Controle humano.** Revisei e aprovei cada PR. Ações sensíveis ficaram comigo: senhas, reset
+   do banco de produção e merges.
+
+O processo completo (specs, cards e prompts) está em [`ai/README.md`](ai/README.md).
 
 ## Documentação
 
