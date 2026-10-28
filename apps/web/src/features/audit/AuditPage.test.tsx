@@ -10,8 +10,13 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { BrowserAuditCrypto } from '@leilao/shared';
 import { AuditPage } from './AuditPage';
 import { apiFetch } from '../../lib/api';
+import type * as ApiModule from '../../lib/api';
 
-vi.mock('../../lib/api', () => ({ apiFetch: vi.fn() }));
+// Mantém ApiError real: messageFor (erro de rede) faz instanceof contra ele.
+vi.mock('../../lib/api', async (importOriginal) => ({
+  ...(await importOriginal<typeof ApiModule>()),
+  apiFetch: vi.fn(),
+}));
 
 const genesis = (lotId: string): AuditGenesis => ({
   lotId,
@@ -108,11 +113,7 @@ describe('AuditPage', () => {
     expect(container.textContent).not.toContain('Cadeia íntegra');
   });
 
-  it('mostra inconsistência, sem quebrar a página, quando a chave pública é inválida', async () => {
-    vi.mocked(apiFetch).mockResolvedValue({
-      ...(await reportFor('lot-a', true)),
-      publicKey: '!!! chave inválida !!!',
-    });
+  async function renderAudit() {
     await act(async () => {
       root.render(
         <QueryClientProvider client={queryClient}>
@@ -124,8 +125,82 @@ describe('AuditPage', () => {
         </QueryClientProvider>,
       );
     });
+  }
+
+  const status = () => container.querySelector('[role="status"]')!;
+  const copyButton = () =>
+    [...container.querySelectorAll('button')].find((b) => b.textContent === 'Copiar hash')!;
+
+  it('mostra resultado inconclusivo, sem quebrar a página, quando a chave pública é malformada', async () => {
+    vi.mocked(apiFetch).mockResolvedValue({
+      ...(await reportFor('lot-a', true)),
+      publicKey: '!!! chave inválida !!!',
+    });
+    await renderAudit();
+
+    await vi.waitFor(() => expect(container.textContent).toContain('Verificação inconclusiva'));
+    expect(container.textContent).not.toContain('Cadeia íntegra');
+    expect(container.textContent).not.toContain('Cadeia com inconsistências');
+    expect(container.textContent).toContain('Limites desta verificação');
+  });
+
+  it('mostra resultado inconclusivo, nunca íntegro, em erro de rede', async () => {
+    vi.mocked(apiFetch).mockRejectedValue(new TypeError('Failed to fetch'));
+    await renderAudit();
+
+    await vi.waitFor(() => expect(container.textContent).toContain('Verificação inconclusiva'));
+    expect(container.textContent).not.toContain('Cadeia íntegra');
+    expect(container.textContent).toContain('Limites desta verificação');
+  });
+
+  it('em cadeia íntegra mostra resumo, detalhes expansíveis e limites explícitos', async () => {
+    vi.mocked(apiFetch).mockResolvedValue(await reportFor('lot-a', true));
+    await renderAudit();
+
+    await vi.waitFor(() => expect(container.textContent).toContain('✓ Cadeia íntegra'));
+    expect(container.textContent).toContain('conferem com a chave pública enviada pelo servidor');
+    expect(container.querySelector('details')).not.toBeNull();
+    expect(container.textContent).toContain('não a identidade independente do servidor');
+    expect(container.textContent).toContain('não é detectável');
+    expect(container.textContent).toContain('controla o banco de dados e a chave privada');
+    expect(container.querySelector('.audit-tampered')).toBeNull();
+  });
+
+  it('em cadeia inválida mostra a primeira verificação que falhou no resumo', async () => {
+    vi.mocked(apiFetch).mockResolvedValue(await reportFor('lot-a', false));
+    await renderAudit();
 
     await vi.waitFor(() => expect(container.textContent).toContain('Cadeia com inconsistências'));
+    expect(container.textContent).toContain('Primeira verificação que falhou:');
+    expect(container.textContent).not.toContain('Cadeia íntegra');
+  });
+
+  it('copia o hash final e anuncia o feedback em região role=status', async () => {
+    const report = await reportFor('lot-a', true);
+    vi.mocked(apiFetch).mockResolvedValue(report);
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText } });
+    await renderAudit();
+    await vi.waitFor(() => expect(container.textContent).toContain('✓ Cadeia íntegra'));
+
+    await act(async () => copyButton().click());
+
+    expect(writeText).toHaveBeenCalledWith(report.lot.headHash);
+    expect(status().textContent).toBe('Hash copiado.');
+  });
+
+  it('mantém o hash visível e mostra erro quando a cópia falha', async () => {
+    const report = await reportFor('lot-a', true);
+    vi.mocked(apiFetch).mockResolvedValue(report);
+    const writeText = vi.fn().mockRejectedValue(new Error('negado'));
+    Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText } });
+    await renderAudit();
+    await vi.waitFor(() => expect(container.textContent).toContain('✓ Cadeia íntegra'));
+
+    await act(async () => copyButton().click());
+
+    expect(status().textContent).toContain('Não foi possível copiar');
+    expect(container.querySelector('.audit-key')!.textContent).toBe(report.lot.headHash);
   });
 
   it('não mostra o veredito local do lote anterior durante a troca de rota', async () => {

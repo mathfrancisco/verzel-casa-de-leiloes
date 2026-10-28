@@ -29,6 +29,29 @@ function dateTime(value: string) {
   );
 }
 
+// Camada 3: o que a verificação NÃO prova. Fica visível em qualquer resultado, inclusive o inconclusivo.
+function LimitsNote() {
+  return (
+    <aside className="audit-limits" aria-labelledby="audit-limits-title">
+      <h3 id="audit-limits-title">Limites desta verificação</h3>
+      <ul>
+        <li>
+          A chave pública vem da própria API: a verificação prova a consistência da cadeia com
+          aquela chave, não a identidade independente do servidor.
+        </li>
+        <li>
+          Remover os últimos elos de um lote ativo não é detectável; só lotes liquidados têm o
+          comprovante para cruzar o hash final.
+        </li>
+        <li>
+          Quem controla o banco de dados e a chave privada ao mesmo tempo poderia reescrever a
+          cadeia.
+        </li>
+      </ul>
+    </aside>
+  );
+}
+
 export function AuditPage() {
   const { lotId = '' } = useParams();
   const audit = useQuery({
@@ -39,19 +62,26 @@ export function AuditPage() {
   });
   const [localVerification, setLocalVerification] = useState<{
     report: AuditReportResponse;
-    verdict: AuditVerdict;
+    // verdict nulo = a verificação não terminou (exceção): inconclusivo, nunca íntegro.
+    verdict: AuditVerdict | null;
     durationMs: number;
   } | null>(null);
+  const [copyState, setCopyState] = useState<'idle' | 'copied' | 'failed'>('idle');
 
   useEffect(() => {
     let active = true;
     setLocalVerification(null);
+    setCopyState('idle');
     if (!audit.data) return;
     const startedAt = performance.now();
-    // Decodifica dentro da promessa: uma chave malformada vira inconsistência, não erro de render.
+    // Decodifica dentro da promessa: uma chave malformada vira resultado inconclusivo, não erro de render.
     void Promise.resolve()
       .then(() =>
         verifyChain(audit.data, base64urlToBytes(audit.data.publicKey), new BrowserAuditCrypto()),
+      )
+      .then(
+        (verdict): AuditVerdict | null => verdict,
+        (): AuditVerdict | null => null,
       )
       .then((verdict) => {
         if (!active) return;
@@ -60,41 +90,51 @@ export function AuditPage() {
           verdict,
           durationMs: Math.round(performance.now() - startedAt),
         });
-      })
-      .catch(() => {
-        if (!active) return;
-        setLocalVerification({
-          report: audit.data,
-          verdict: {
-            status: 'TAMPERED',
-            checks: [
-              { id: 'SIGNATURES', ok: false, detail: 'Não foi possível verificar a assinatura.' },
-            ],
-          },
-          durationMs: Math.round(performance.now() - startedAt),
-        });
       });
     return () => {
       active = false;
     };
   }, [audit.data]);
 
+  async function copyHash(hash: string) {
+    try {
+      await navigator.clipboard.writeText(hash);
+      setCopyState('copied');
+    } catch {
+      setCopyState('failed');
+    }
+  }
+
   if (audit.isPending) return <p>Carregando auditoria…</p>;
   if (audit.isError) {
     return (
       <section>
         <h1>Auditoria indisponível</h1>
+        <p className="audit-verdict">Verificação inconclusiva</p>
         <p className="form-error" role="alert">
           {messageFor(audit.error)}
         </p>
+        <p>
+          Não foi possível obter os dados da cadeia, então nenhuma verificação foi feita. Isso não
+          indica que o lote foi alterado nem que está correto.
+        </p>
+        <LimitsNote />
       </section>
     );
   }
   if (!audit.data) return null;
   const report = audit.data;
-  const localVerdict = localVerification?.report === report ? localVerification.verdict : null;
-  const verificationMs = localVerification?.report === report ? localVerification.durationMs : null;
-  const verified = localVerdict?.status === 'INTACT';
+  const current = localVerification?.report === report ? localVerification : null;
+  const localVerdict = current?.verdict ?? null;
+  const verificationMs = current ? current.durationMs : null;
+  const outcome: 'pending' | 'intact' | 'invalid' | 'inconclusive' = !current
+    ? 'pending'
+    : !localVerdict
+      ? 'inconclusive'
+      : localVerdict.status === 'INTACT'
+        ? 'intact'
+        : 'invalid';
+  const firstFailure = localVerdict?.checks.find((check) => !check.ok);
 
   return (
     <section className="audit-page" aria-labelledby="audit-title">
@@ -107,24 +147,66 @@ export function AuditPage() {
           Os elos abaixo continuam verificáveis; o evento CANCELLED faz parte da cadeia.
         </CancelledNotice>
       )}
-      <p
-        className={`audit-verdict ${localVerdict ? (verified ? 'audit-intact' : 'audit-tampered') : ''}`}
-        aria-live="polite"
-      >
-        {localVerdict
-          ? verified
-            ? '✓ Cadeia íntegra'
-            : '✗ Cadeia com inconsistências'
-          : 'Verificando a cadeia neste navegador…'}
-      </p>
-      {verificationMs !== null && <p>Verificação local concluída em {verificationMs} ms.</p>}
 
-      <section aria-labelledby="audit-checks-title">
-        <h2 id="audit-checks-title">Verificações</h2>
+      <section aria-labelledby="audit-summary-title">
+        <h2 id="audit-summary-title">Resultado da verificação</h2>
+        <p
+          className={`audit-verdict ${outcome === 'intact' ? 'audit-intact' : outcome === 'invalid' ? 'audit-tampered' : ''}`}
+          aria-live="polite"
+        >
+          {outcome === 'pending' && 'Verificando a cadeia neste navegador…'}
+          {outcome === 'intact' && '✓ Cadeia íntegra'}
+          {outcome === 'invalid' && '✗ Cadeia com inconsistências'}
+          {outcome === 'inconclusive' && 'Verificação inconclusiva'}
+        </p>
+        {outcome === 'intact' && (
+          <p>
+            A sequência, os hashes e as assinaturas conferem com a chave pública enviada pelo
+            servidor.
+          </p>
+        )}
+        {outcome === 'invalid' && firstFailure && (
+          <p>
+            Primeira verificação que falhou: {firstFailure.id}
+            {firstFailure.failedAtSeq !== undefined ? ` (elo ${firstFailure.failedAtSeq})` : ''}
+            {firstFailure.detail ? `: ${firstFailure.detail}` : ''}
+          </p>
+        )}
+        {outcome === 'inconclusive' && (
+          <p>
+            A verificação não foi concluída (por exemplo, chave pública malformada ou falha ao
+            calcular as assinaturas). Nenhum resultado de integridade foi produzido; isso não
+            significa que a cadeia está correta nem que foi alterada.
+          </p>
+        )}
+        {verificationMs !== null && outcome !== 'inconclusive' && (
+          <p>Verificação local concluída em {verificationMs} ms.</p>
+        )}
+        <p>
+          Hash final da cadeia: <code className="audit-key">{report.lot.headHash}</code>{' '}
+          <button type="button" onClick={() => void copyHash(report.lot.headHash)}>
+            Copiar hash
+          </button>
+        </p>
+        <p role="status" className={copyState === 'failed' ? 'form-error' : undefined}>
+          {copyState === 'copied' && 'Hash copiado.'}
+          {copyState === 'failed' &&
+            'Não foi possível copiar automaticamente. Selecione o hash acima e copie manualmente.'}
+        </p>
+        <LimitsNote />
+      </section>
+
+      <details className="audit-details">
+        <summary>Detalhes técnicos: verificações, hashes e elos</summary>
+        <h3 id="audit-checks-title">Verificações</h3>
         {!localVerdict ? (
-          <p>Calculando hashes e assinaturas com a chave pública.</p>
+          <p>
+            {outcome === 'pending'
+              ? 'Calculando hashes e assinaturas com a chave pública.'
+              : 'Sem verificações individuais: a verificação não foi concluída.'}
+          </p>
         ) : (
-          <ul className="audit-checks">
+          <ul className="audit-checks" aria-labelledby="audit-checks-title">
             {localVerdict.checks.map((check) => (
               <li key={check.id} className={check.ok ? 'audit-intact' : 'audit-tampered'}>
                 {check.ok ? '✓' : '✗'} {check.id}
@@ -134,15 +216,13 @@ export function AuditPage() {
             ))}
           </ul>
         )}
-      </section>
 
-      <section aria-labelledby="audit-entries-title">
-        <h2 id="audit-entries-title">Elos da cadeia</h2>
+        <h3 id="audit-entries-title">Elos da cadeia</h3>
         {report.entries.length === 0 ? (
           <p>O lote ainda não possui elos além da gênese.</p>
         ) : (
           <div className="audit-table-wrap">
-            <table>
+            <table aria-labelledby="audit-entries-title">
               <thead>
                 <tr>
                   <th>Seq.</th>
@@ -172,10 +252,8 @@ export function AuditPage() {
             </table>
           </div>
         )}
-      </section>
 
-      <section aria-labelledby="audit-how-title">
-        <h2 id="audit-how-title">Como verificar</h2>
+        <h3>Como verificar</h3>
         <p>
           Esta página recalcula a gênese, todos os hashes e as assinaturas Ed25519 localmente no seu
           navegador.
@@ -187,7 +265,7 @@ export function AuditPage() {
           Snapshot do servidor:{' '}
           <time dateTime={report.serverTime}>{dateTime(report.serverTime)}</time>.
         </p>
-      </section>
+      </details>
     </section>
   );
 }
