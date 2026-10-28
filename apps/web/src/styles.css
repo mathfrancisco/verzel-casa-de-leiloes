@@ -2355,7 +2355,16 @@ main:focus {
   }
   .lot-room-image {
     order: 1;
-    aspect-ratio: 16 / 9;
+    aspect-ratio: 2 / 1;
+  }
+  /* LC-035: os três atalhos numa linha mantêm "Dar lance" na primeira tela em 390 × 844. */
+  .bid-shortcuts {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .bid-shortcuts button {
+    padding-inline: 0.25rem;
+    font-size: var(--fs-sm);
   }
   .lot-room-head {
     order: 2;

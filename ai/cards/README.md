@@ -92,7 +92,7 @@ LC-024 audita e registra; não autoriza promover status herdado sem prova.
 | [LC-032](LC-032-explicar-auditoria-em-camadas.md) | Explicar auditoria em camadas | P1 | LC-024 | 4–7 h | DONE |
 | [LC-033](LC-033-documentar-estudo-de-caso-de-engenharia.md) | Documentar estudo de caso de engenharia | P1 | LC-024, LC-026 | 3–5 h | DONE |
 | [LC-034](LC-034-preparar-capturas-e-video-da-demonstracao.md) | Preparar capturas e vídeo da demonstração | P0 | LC-025, LC-028 | 3–5 h | DONE |
-| [LC-035](LC-035-verificar-acessibilidade-manual-e-regressoes.md) | Verificar acessibilidade manual e regressões | P1 | LC-030, LC-031, LC-032 | 4–7 h | TODO |
+| [LC-035](LC-035-verificar-acessibilidade-manual-e-regressoes.md) | Verificar acessibilidade manual e regressões | P1 | LC-030, LC-031, LC-032 | 4–7 h | REVIEW |
 | [LC-036](LC-036-montar-pacote-de-publicacao.md) | Montar pacote de publicação | P0 | LC-029, LC-034 | 2–3 h | DONE |
 | [LC-037](LC-037-criar-laboratorio-local-com-fixture-de-auditoria.md) | Criar laboratório local com fixture de auditoria (opcional) | P2 | LC-032 | 4–8 h | TODO |
 | [LC-038](LC-038-adicionar-favoritos-locais.md) | Adicionar favoritos locais (opcional) | P2 | LC-030 | 3–6 h | TODO |

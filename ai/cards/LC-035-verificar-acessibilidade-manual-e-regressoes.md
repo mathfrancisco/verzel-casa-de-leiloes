@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Status | TODO |
+| Status | REVIEW |
 | Prioridade | P1 |
 | Épico / janela | Portfólio · Posterior (2–3 semanas) |
 | Esforço estimado | 4–7 h |
@@ -51,7 +51,7 @@ Complementar LC-021 com validação manual de teclado, leitor de tela e mobile e
 - Node 22; executar rtk pnpm --filter @leilao/web test para regressões focadas, depois rtk pnpm test, rtk pnpm lint e rtk pnpm typecheck conforme AGENTS.md. Registrar manualmente navegador, leitor de tela, viewport, passos e achados; E2E se aplicável: rtk pnpm test:e2e.
 - Para mudanças de produto: usar FakeCatalog e banco descartável; smoke manual com catálogo real é separado e nunca reseta banco de produção.
 - Executar testes focados do módulo alterado e os gates exigidos pelo projeto; registrar comando literal e saída real. Docs-only não requer testes artificiais.
-- Evidência inicial: **Não executado; card criado para execução futura.**
+- Evidência: [docs/portfolio/lc035-acessibilidade.md](../../docs/portfolio/lc035-acessibilidade.md). Teclado, foco, reflow em 320 px e celular em 390 × 844 verificados nos temas claro e escuro; ajuste de CSS aplicado. O teste com leitor de tela real não foi executado.
 
 ## Definição de pronto
 
