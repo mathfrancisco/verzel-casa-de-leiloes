@@ -45,7 +45,7 @@ do autor.
 | Demo publicada | https://p01--verzel-casa-de-leiloes--4cj5fhqhqb2r.code.run | Produção | Smoke em 28/10/2026 ([LC-025](lc025-smoke-producao.md)) |
 | Favicon e metadados OG | `apps/web/index.html`, `apps/web/public/favicon.svg` | LC-028 | Em produção: `/favicon.svg` 200 e 6 tags `og:*` no HTML (28/10/2026) |
 | Capturas (8) | [media/](media/) | Local, LC-034 | Prontas, rotuladas como locais |
-| Vídeo de 85 s com legendas | [media/demo-local-2026-10-28.webm](media/demo-local-2026-10-28.webm) | Local, LC-034 | Pronto, com rótulo e cortes declarados |
+| Vídeo de 85 s com legendas (incorporado ao README) | [media/demo-local-2026-10-28.webm](media/demo-local-2026-10-28.webm) | Local, LC-034 | Pronto, com rótulo e cortes declarados |
 | Uso de IA | [README › Uso de IA](../../README.md#uso-de-ia) | Autor | Pronto |
 
 ## Checklist final
@@ -55,10 +55,10 @@ do autor.
 - [x] Os direitos das obras estão registrados (CC0, Art Institute of Chicago). Veja
   [lc034-midia.md](lc034-midia.md#direitos).
 - [x] Não aparece dado pessoal, senha nem segredo na mídia.
-- [ ] **Ausente:** imagem `og:image` para o preview social. O card de preview sai só com texto.
+- [x] Imagem `og:image` (captura da vitrine, `apps/web/public/og-image.png`) adicionada. A resposta 200 em produção precisa ser conferida depois do deploy.
 - [ ] **Ausente:** vídeo ou GIF gravado em produção. Só existe a gravação local.
 - [ ] **Ausente:** encerramento e comprovante testados em produção. O lote ao vivo termina em
   30/10.
 - [ ] **Ausente:** SHA confirmado no painel do Northflank.
 - [ ] **Ação do autor:** revisar o texto do post e publicar.
-- [ ] **Ação do autor:** enviar o formulário do desafio.
+- [x] Formulário do desafio enviado pelo autor em 28/10/2026.

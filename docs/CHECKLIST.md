@@ -17,8 +17,8 @@ do README), registrada no PR do card. IDs em [`01-requisitos.md`](01-requisitos.
 | [x] | Papéis leiloeiro (não dá lance) e licitante | RF-01 | LC-003, LC-011 | Papéis e autorização por papel prontos (LC-003); bloqueio de lance do leiloeiro no LC-011 Integrado nas PRs #3 e #11 (CI verde); `SELLER_CANNOT_BID` em `apps/api/test/integration/bids.test.ts`. |
 | [x] | Seed: 1 leiloeiro, 2 clientes, ≥ 1 lote com lances abertos | RF-16 | LC-020 | `test/integration/seed.test.ts` (CT-10-03); navegador 26/10/2026 |
 | [x] | README detalhado, com comportamentos inesperados | RNF-07 | LC-023 | README com todas as seções de SP-10, inclusive técnica anti-adulteração e "Comportamentos inesperados e limitações conhecidas" |
-| [ ] | Entrega em até 7 dias (29/10/2026) | RNF-08 | LC-023 | |
-| [ ] | Formulário enviado, com o resumo do uso de IA | — | LC-023 | |
+| [x] | Entrega em até 7 dias (29/10/2026) | RNF-08 | LC-023 | Formulário enviado em 28/10/2026, segundo o autor. |
+| [x] | Formulário enviado, com o resumo do uso de IA | — | LC-023 | Enviado em 28/10/2026, segundo o autor. |
 
 ## Front-End
 

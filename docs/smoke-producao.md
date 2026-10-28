@@ -25,3 +25,12 @@ Produção (Northflank):
 - Banco zerado (`DROP SCHEMA`) e serviço reiniciado; o seed recriou usuários e 5 lotes com obras
   reais. `/ready` 200; `/api/images/:id` 200 `image/jpeg`; auditoria do lote 200.
 - Pendente: fluxo com login em produção após o reset (lances, encerramento, comprovante, leiloeiro).
+
+# Smoke autenticado em produção — 28/10/2026 (CI da main em a5b3afa; SHA implantado não confirmado)
+
+- Duas sessões isoladas: Ana no navegador do app e Bruno no Chromium do Playwright. O autor digitou as senhas.
+- Lance de R$ 1.250,00 recusado ("Lance abaixo do mínimo"). Lance de R$ 1.300,00 aceito. A Ana recebeu o novo preço e o aviso "Você foi superado" sem recarregar a página. O pendente de 26/10 está resolvido.
+- Carteiras coerentes: a Ana ficou sem reserva e o Bruno com R$ 1.300,00 reservados. O logout de uma sessão não afetou a outra.
+- Pendente: encerramento e comprovante, porque o lote ao vivo termina em 30/10. Também a busca do leiloeiro no catálogo ARTIC.
+- Registro completo: [portfolio/lc025-smoke-producao.md](portfolio/lc025-smoke-producao.md).
+- Diferença para o smoke local: a gravação de [portfolio/lc034-midia.md](portfolio/lc034-midia.md) usa FakeCatalog e banco descartável. Ela não comprova o comportamento em produção.
