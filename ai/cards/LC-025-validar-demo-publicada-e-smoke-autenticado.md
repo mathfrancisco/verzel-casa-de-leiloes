@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Status | DOING |
+| Status | DONE |
 | Prioridade | P0 |
 | Épico / janela | Portfólio · Antes de 29/10/2026 |
 | Esforço estimado | 3–5 h |
@@ -52,7 +52,7 @@ Executar smoke manual autenticado após reconciliar evidências, registrando rev
 - Node 22; comandos futuros: teste focado do pacote alterado (`rtk pnpm --filter @leilao/web test` ou `rtk pnpm --filter @leilao/api test`), depois `rtk pnpm test`, `rtk pnpm lint` e `rtk pnpm typecheck` conforme AGENTS.md; E2E aplicável: `rtk pnpm test:e2e`.
 - Para mudanças de produto: usar FakeCatalog e banco descartável; smoke manual com catálogo real é separado e nunca reseta banco de produção.
 - Executar testes focados do módulo alterado e os gates exigidos pelo projeto; registrar comando literal e saída real. Docs-only não requer testes artificiais.
-- Evidência inicial: **Não executado; card criado para execução futura.**
+- Evidência: smoke manual em produção em 28/10/2026, registrado em [lc025-smoke-producao.md](../../docs/portfolio/lc025-smoke-producao.md). Encerramento e comprovante ficaram pendentes por causa da janela do lote.
 
 ## Definição de pronto
 
