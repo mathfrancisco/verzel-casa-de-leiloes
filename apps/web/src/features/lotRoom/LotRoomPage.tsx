@@ -14,6 +14,7 @@ import { useLotChannel } from '../showcase/useLotChannel';
 import { ApiError, apiFetch } from '../../lib/api';
 import { bidMessageFor, messageFor } from '../../lib/errorMessages';
 import { syncServerTime } from '../../lib/serverClock';
+import { isOlderSnapshot } from '../../lib/syncState';
 import {
   BidAttempts,
   bidStatus,
@@ -23,6 +24,7 @@ import {
 import { BidErrorNotice, type BidErrorNoticeValue } from './BidErrorNotice';
 import { LotHistory } from './LotHistory';
 import { LotSummary } from './LotSummary';
+import { SyncStatus } from './SyncStatus';
 
 const attempts = new BidAttempts();
 
@@ -88,6 +90,9 @@ export function LotRoomPage() {
     queryFn: async () => {
       const detail = await apiFetch<LotDetail>(`/api/lots/${id}`);
       syncServerTime(detail.serverTime);
+      // Resposta atrasada (menos lances que o já exibido) não reverte preço, prazo nem histórico.
+      const shown = queryClient.getQueryData<LotDetail>(['lot', id, user?.id ?? 'visitor']);
+      if (shown && isOlderSnapshot(detail, shown)) return shown;
       return detail;
     },
     enabled: Boolean(id) && user !== undefined,
@@ -121,7 +126,7 @@ export function LotRoomPage() {
     if (minimumNextBidCents !== undefined) setAmount(formatBRL(minimumNextBidCents));
   }, [minimumNextBidCents]);
 
-  useLotChannel({
+  const syncState = useLotChannel({
     lotId: id,
     displayedSeq: displayed,
     onBidAccepted: (event) => {
@@ -250,6 +255,8 @@ export function LotRoomPage() {
           </div>
         </div>
       </div>
+
+      <SyncStatus state={syncState} />
 
       <LotSummary
         priceCents={detail.currentPriceCents ?? detail.startingPriceCents}

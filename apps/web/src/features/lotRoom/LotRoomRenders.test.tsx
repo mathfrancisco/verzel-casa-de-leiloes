@@ -13,7 +13,7 @@ vi.mock('../../lib/api', async (importOriginal) => ({
   ...(await importOriginal<object>()),
   apiFetch: vi.fn(),
 }));
-vi.mock('../showcase/useLotChannel', () => ({ useLotChannel: () => undefined }));
+vi.mock('../showcase/useLotChannel', () => ({ useLotChannel: () => 'synced' }));
 vi.mock('../../lib/realtime', () => ({ refreshRealtimeSession: () => undefined }));
 
 const now = Date.now();

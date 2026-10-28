@@ -2384,3 +2384,12 @@ main:focus {
     order: 0;
   }
 }
+.sync-status {
+  margin: 0;
+  font-size: var(--fs-sm, 0.875rem);
+  color: var(--muted);
+}
+.sync-status-syncing,
+.sync-status-reconnecting {
+  color: var(--warn-text);
+}
