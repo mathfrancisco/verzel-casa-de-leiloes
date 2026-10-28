@@ -28,7 +28,10 @@ describe('SyncStatus', () => {
   it.each([
     ['synced', 'Conectado e sincronizado'],
     ['syncing', 'Conectado — sincronizando dados…'],
-    ['reconnecting', 'Sem conexão em tempo real — reconectando. Os dados podem estar desatualizados.'],
+    [
+      'reconnecting',
+      'Sem conexão em tempo real — reconectando. Os dados podem estar desatualizados.',
+    ],
   ] as const)('mostra o texto de %s em uma região de status educada', (state, text) => {
     render(state);
     expect(region()?.textContent?.replace(/^\S+\s/, '')).toBe(text);

@@ -21,8 +21,7 @@ async function tabWalk(page, label, steps = 25) {
       if (!el || el === document.body) return null;
       const cs = getComputedStyle(el);
       const visible =
-        (cs.outlineStyle !== 'none' && parseFloat(cs.outlineWidth) > 0) ||
-        cs.boxShadow !== 'none';
+        (cs.outlineStyle !== 'none' && parseFloat(cs.outlineWidth) > 0) || cs.boxShadow !== 'none';
       const name = (el.getAttribute('aria-label') || el.innerText || el.value || el.id || '')
         .trim()
         .replace(/\s+/g, ' ')
@@ -41,13 +40,18 @@ async function reflow(page, label) {
   const overflow = await page.evaluate(
     () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
   );
-  log(`- ${label} em 320 px: rolagem horizontal ${overflow > 1 ? `${overflow}px [FALHA]` : 'nenhuma'}`);
+  log(
+    `- ${label} em 320 px: rolagem horizontal ${overflow > 1 ? `${overflow}px [FALHA]` : 'nenhuma'}`,
+  );
 }
 
 const browser = await chromium.launch();
 for (const scheme of ['light', 'dark']) {
   log(`\n## Tema ${scheme === 'light' ? 'claro' : 'escuro'}`);
-  const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 }, colorScheme: scheme });
+  const ctx = await browser.newContext({
+    viewport: { width: 1280, height: 800 },
+    colorScheme: scheme,
+  });
   const page = await ctx.newPage();
   await page.goto(BASE);
   await page.waitForLoadState('networkidle');
@@ -64,7 +68,9 @@ for (const scheme of ['light', 'dark']) {
   await page.getByRole('button', { name: 'Dar lance' }).waitFor();
   await page.waitForTimeout(1500);
   const status = await page.getByRole('status').allInnerTexts();
-  log(`- Sala: regiões role=status → ${JSON.stringify(status.map((s) => s.trim()).filter(Boolean))}`);
+  log(
+    `- Sala: regiões role=status → ${JSON.stringify(status.map((s) => s.trim()).filter(Boolean))}`,
+  );
   await page.locator('#bid-amount').fill('1');
   await page.getByRole('button', { name: 'Dar lance' }).click();
   await page.waitForTimeout(800);
@@ -77,7 +83,9 @@ for (const scheme of ['light', 'dark']) {
       alert: [...document.querySelectorAll('[role="alert"]')].map((e) => e.innerText.trim()),
     };
   });
-  log(`- Sala, lance inválido: aria-invalid=${err.invalid}; descrição=${JSON.stringify(err.described)}; role=alert=${JSON.stringify(err.alert)}`);
+  log(
+    `- Sala, lance inválido: aria-invalid=${err.invalid}; descrição=${JSON.stringify(err.described)}; role=alert=${JSON.stringify(err.alert)}`,
+  );
   await page.goto(`${BASE}/lotes/${LOT}`);
   await page.getByRole('button', { name: 'Dar lance' }).waitFor();
   await tabWalk(page, 'Sala (Ana)', 30);
@@ -89,7 +97,9 @@ for (const scheme of ['light', 'dark']) {
   await page.getByRole('button', { name: 'Copiar hash' }).click();
   await page.waitForTimeout(300);
   const copy = await page.getByRole('status').allInnerTexts();
-  log(`- Auditoria, copiar hash: role=status → ${JSON.stringify(copy.map((s) => s.trim()).filter(Boolean))}`);
+  log(
+    `- Auditoria, copiar hash: role=status → ${JSON.stringify(copy.map((s) => s.trim()).filter(Boolean))}`,
+  );
   await ctx.close();
 
   const mob = await browser.newContext({
@@ -109,11 +119,16 @@ for (const scheme of ['light', 'dark']) {
   await btn.waitFor();
   await m.waitForTimeout(1200);
   const box = await btn.boundingBox();
-  log(`- Celular 390×844: "Dar lance" com topo em ${Math.round(box.y)} px e base em ${Math.round(box.y + box.height)} px (${box.y + box.height <= 844 ? 'na primeira tela' : 'exige rolagem'})`);
+  log(
+    `- Celular 390×844: "Dar lance" com topo em ${Math.round(box.y)} px e base em ${Math.round(box.y + box.height)} px (${box.y + box.height <= 844 ? 'na primeira tela' : 'exige rolagem'})`,
+  );
   await m.screenshot({ path: `docs/portfolio/media/lc035-sala-390-${scheme}.png` });
   await mob.close();
 
-  const narrow = await browser.newContext({ viewport: { width: 320, height: 700 }, colorScheme: scheme });
+  const narrow = await browser.newContext({
+    viewport: { width: 320, height: 700 },
+    colorScheme: scheme,
+  });
   const n = await narrow.newPage();
   for (const [label, path] of [
     ['Vitrine', '/'],

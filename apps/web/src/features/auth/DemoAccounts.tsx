@@ -46,8 +46,8 @@ export function DemoAccounts({ onFill }: DemoAccountsProps) {
       </div>
       <p>
         Para ver o aviso de lance superado ao vivo, entre com cada conta em um perfil de navegador
-        separado (por exemplo, uma janela normal e uma anônima): na mesma janela as contas dividem
-        o cookie de sessão.
+        separado (por exemplo, uma janela normal e uma anônima): na mesma janela as contas dividem o
+        cookie de sessão.
       </p>
     </details>
   );

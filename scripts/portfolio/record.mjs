@@ -7,7 +7,8 @@ const { chromium } = require('@playwright/test');
 
 const [SHOTS, OUT] = process.argv.slice(2);
 mkdirSync(OUT, { recursive: true });
-const TAG = 'Gravação local (FakeCatalog) · 28/10/2026 · branch feat/interface-portfolio 0d09124 · saldo simulado';
+const TAG =
+  'Gravação local (FakeCatalog) · 28/10/2026 · branch feat/interface-portfolio 0d09124 · saldo simulado';
 
 const scenes = [
   {

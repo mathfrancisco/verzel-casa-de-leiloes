@@ -71,7 +71,9 @@ describe('LoginPage — contas de demonstração', () => {
   });
 
   it('mantém um único botão chamado Entrar', () => {
-    const entrar = [...container.querySelectorAll('button')].filter((b) => b.textContent === 'Entrar');
+    const entrar = [...container.querySelectorAll('button')].filter(
+      (b) => b.textContent === 'Entrar',
+    );
     expect(entrar).toHaveLength(1);
   });
 
