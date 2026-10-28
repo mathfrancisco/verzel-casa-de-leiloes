@@ -58,6 +58,9 @@ As cenas são capturas reais, e cada corte é indicado no vídeo. As legendas ta
 
 Obras: Art Institute of Chicago, domínio público (CC0).
 
+Para a explicação técnica (concorrência, idempotência, eventos após o commit, cadeia de
+auditoria e seus limites), leia o [estudo de caso](docs/estudo-de-caso.md).
+
 ### Estado da demo e evidências
 
 - **Smoke em produção, 28/10/2026:** duas sessões isoladas, um lance recusado abaixo do mínimo,
