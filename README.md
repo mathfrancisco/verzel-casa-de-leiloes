@@ -38,17 +38,25 @@ O leiloeiro (`leiloeiro@demo.com`) busca obras no catálogo e cria lotes. Ele n�
 
 ### Capturas e vídeo
 
-Gravação **local** (FakeCatalog) feita em 28/10/2026 sobre `main` `d9cc1d5`, com duas sessões isoladas.
-Origem, direitos e limites estão em [`docs/portfolio/lc034-midia.md`](docs/portfolio/lc034-midia.md).
+Gravação **local** (FakeCatalog) feita em 28/10/2026 sobre `main` `d9cc1d5`, com duas sessões
+isoladas. Origem, direitos e limites estão em
+[`docs/portfolio/lc034-midia.md`](docs/portfolio/lc034-midia.md).
 
-![Sessão da Ana mostra o novo preço e o aviso "Você foi superado" após o lance do Bruno, sem recarregar a página](docs/portfolio/media/04-ana-superada.png)
+**Vídeo da demonstração (85 s, legendado).** Clique na imagem para assistir:
 
-![Auditoria pública mostra "Cadeia íntegra" e todas as verificações aprovadas](docs/portfolio/media/07-auditoria.png)
+[![Vídeo da demonstração: vitrine, dois licitantes disputando um lote, carteira, comprovante e auditoria](docs/portfolio/media/01-vitrine.png)](https://github.com/mathfrancisco/verzel-casa-de-leiloes/raw/main/docs/portfolio/media/demo-local-2026-10-28.webm)
 
-- Vídeo de 85 s com legendas: [`demo-local-2026-10-28.webm`](docs/portfolio/media/demo-local-2026-10-28.webm)
-  ([legendas `.vtt`](docs/portfolio/media/demo-local-2026-10-28.pt-BR.vtt)). As cenas são capturas reais,
-  e cada corte é indicado no vídeo.
-- Obras: Art Institute of Chicago, domínio público (CC0).
+As cenas são capturas reais, e cada corte é indicado no vídeo. As legendas também estão em
+[`demo-local-2026-10-28.pt-BR.vtt`](docs/portfolio/media/demo-local-2026-10-28.pt-BR.vtt).
+
+| | |
+|---|---|
+| ![Vitrine com lotes ao vivo e o aviso de saldo simulado](docs/portfolio/media/01-vitrine.png) **Vitrine** | ![Sala do lote com preço atual, lance mínimo e cronômetro](docs/portfolio/media/02-sala-ana.png) **Sala do lote (sessão A, Ana)** |
+| ![Mensagem "Lance abaixo do mínimo" após um lance inválido](docs/portfolio/media/03-lance-recusado-bruno.png) **Lance recusado pelo servidor (sessão B, Bruno)** | ![Novo preço e aviso "Você foi superado", sem recarregar a página](docs/portfolio/media/04-ana-superada.png) **Superação em tempo real (sessão A)** |
+| ![Carteira com saldo simulado e nenhuma reserva](docs/portfolio/media/05-carteira-ana.png) **Carteira com saldo simulado** | ![Comprovante público do lote Water Lilies, criado pelo seed](docs/portfolio/media/06-comprovante.png) **Comprovante (dado do seed)** |
+| ![Auditoria pública com "Cadeia íntegra" e todas as verificações aprovadas](docs/portfolio/media/07-auditoria.png) **Auditoria verificada no navegador** | <img src="docs/portfolio/media/08-sala-mobile.png" alt="Sala do lote em layout mobile" width="220"> **Sala no celular** |
+
+Obras: Art Institute of Chicago, domínio público (CC0).
 
 ### Estado da demo e evidências
 
