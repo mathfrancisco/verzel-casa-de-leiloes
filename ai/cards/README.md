@@ -84,7 +84,7 @@ LC-024 audita e registra; não autoriza promover status herdado sem prova.
 | [LC-024](LC-024-reconciliar-evidencias-e-quadro-legado.md) | Reconciliar evidências e quadro legado | P0 | — | 2–3 h | DONE |
 | [LC-025](LC-025-validar-demo-publicada-e-smoke-autenticado.md) | Validar demo publicada e smoke autenticado | P0 | LC-024 | 3–5 h | DONE |
 | [LC-026](LC-026-diagnosticar-instabilidade-de-realtime-e-e2e.md) | Diagnosticar instabilidade de realtime e E2E | P0 | LC-024 | 3–6 h | DONE |
-| [LC-027](LC-027-oferecer-acesso-contextual-a-demo-e-onboarding.md) | Oferecer acesso contextual à demo e onboarding | P1 | LC-024 | 4–6 h | TODO |
+| [LC-027](LC-027-oferecer-acesso-contextual-a-demo-e-onboarding.md) | Oferecer acesso contextual à demo e onboarding | P1 | LC-024 | 4–6 h | DONE |
 | [LC-028](LC-028-adicionar-favicon-e-metadados-sociais.md) | Adicionar favicon e metadados sociais | P0 | LC-024 | 1–2 h | DONE |
 | [LC-029](LC-029-escrever-readme-de-portfolio.md) | Escrever README de portfólio | P0 | LC-025, LC-026, LC-028 | 3–5 h | DONE |
 | [LC-030](LC-030-refinar-hierarquia-da-vitrine-e-sala.md) | Refinar hierarquia da vitrine e sala | P1 | LC-027 | 6–10 h | TODO |

@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Status | TODO |
+| Status | DONE |
 | Prioridade | P1 |
 | Épico / janela | Portfólio · Posterior (2–3 semanas) |
 | Esforço estimado | 4–6 h |
@@ -51,7 +51,7 @@ Tornar os caminhos de entrada e os papéis de demonstração claros usando auten
 - Node 22; comandos futuros: teste focado do pacote alterado (`rtk pnpm --filter @leilao/web test` ou `rtk pnpm --filter @leilao/api test`), depois `rtk pnpm test`, `rtk pnpm lint` e `rtk pnpm typecheck` conforme AGENTS.md; E2E aplicável: `rtk pnpm test:e2e`.
 - Para mudanças de produto: usar FakeCatalog e banco descartável; smoke manual com catálogo real é separado e nunca reseta banco de produção.
 - Executar testes focados do módulo alterado e os gates exigidos pelo projeto; registrar comando literal e saída real. Docs-only não requer testes artificiais.
-- Evidência inicial: **Não executado; card criado para execução futura.**
+- Evidência: Vitest web 32 arquivos / 155 testes passando (inclui `LoginPage.test.tsx`); lint e typecheck sem erros (Node 24 local; o engine pede 22). E2E não executado; sem verificação visual em 390px.
 
 ## Definição de pronto
 

@@ -2295,3 +2295,28 @@ main:focus {
 .lot-card .lot-min {
   white-space: nowrap;
 }
+
+.demo-accounts {
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.8125rem;
+}
+.demo-accounts summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+.demo-accounts ul {
+  padding-left: 1.125rem;
+}
+.demo-accounts-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4375rem;
+  margin: 0.5rem 0;
+}
+.demo-accounts-actions button {
+  color: var(--text);
+  background: transparent;
+  border-color: var(--control-border);
+}
