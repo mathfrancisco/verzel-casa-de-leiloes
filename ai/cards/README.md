@@ -71,3 +71,53 @@ flowchart LR
 
 Do primeiro a cair para o último: LC-019 (busca/filtros) → LC-021 (dark mode) → parte pós-liquidação do LC-018 → LC-022 (E2E).
 Requisitos base e deploy nunca entram no corte.
+
+## Cards de profissionalização de portfólio
+
+Plano de referência: [Plano de profissionalização (27/10/2026)](../../docs/plano-profissionalizacao-portfolio-2026-10-27.md).
+Esta fila complementa os cards legados; não substitui suas dependências nem altera seus status.
+Um card novo só pode iniciar quando todas as dependências indicadas estiverem DONE com evidência.
+LC-024 audita e registra; não autoriza promover status herdado sem prova.
+
+| Card | Título | Prioridade | Depende de | Esforço | Status |
+|---|---|---:|---|---:|---|
+| [LC-024](LC-024-reconciliar-evidencias-e-quadro-legado.md) | Reconciliar evidências e quadro legado | P0 | — | 2–3 h | DONE |
+| [LC-025](LC-025-validar-demo-publicada-e-smoke-autenticado.md) | Validar demo publicada e smoke autenticado | P0 | LC-024 | 3–5 h | DONE |
+| [LC-026](LC-026-diagnosticar-instabilidade-de-realtime-e-e2e.md) | Diagnosticar instabilidade de realtime e E2E | P0 | LC-024 | 3–6 h | DONE |
+| [LC-027](LC-027-oferecer-acesso-contextual-a-demo-e-onboarding.md) | Oferecer acesso contextual à demo e onboarding | P1 | LC-024 | 4–6 h | TODO |
+| [LC-028](LC-028-adicionar-favicon-e-metadados-sociais.md) | Adicionar favicon e metadados sociais | P0 | LC-024 | 1–2 h | TODO |
+| [LC-029](LC-029-escrever-readme-de-portfolio.md) | Escrever README de portfólio | P0 | LC-025, LC-026, LC-028 | 3–5 h | TODO |
+| [LC-030](LC-030-refinar-hierarquia-da-vitrine-e-sala.md) | Refinar hierarquia da vitrine e sala | P1 | LC-027 | 6–10 h | TODO |
+| [LC-031](LC-031-distinguir-conexao-de-sincronizacao.md) | Distinguir conexão de sincronização | P1 | LC-026, LC-030 | 4–8 h | TODO |
+| [LC-032](LC-032-explicar-auditoria-em-camadas.md) | Explicar auditoria em camadas | P1 | LC-024 | 4–7 h | TODO |
+| [LC-033](LC-033-documentar-estudo-de-caso-de-engenharia.md) | Documentar estudo de caso de engenharia | P1 | LC-024, LC-026 | 3–5 h | TODO |
+| [LC-034](LC-034-preparar-capturas-e-video-da-demonstracao.md) | Preparar capturas e vídeo da demonstração | P0 | LC-025, LC-028 | 3–5 h | TODO |
+| [LC-035](LC-035-verificar-acessibilidade-manual-e-regressoes.md) | Verificar acessibilidade manual e regressões | P1 | LC-030, LC-031, LC-032 | 4–7 h | TODO |
+| [LC-036](LC-036-montar-pacote-de-publicacao.md) | Montar pacote de publicação | P0 | LC-029, LC-034 | 2–3 h | TODO |
+| [LC-037](LC-037-criar-laboratorio-local-com-fixture-de-auditoria.md) | Criar laboratório local com fixture de auditoria (opcional) | P2 | LC-032 | 4–8 h | TODO |
+| [LC-038](LC-038-adicionar-favoritos-locais.md) | Adicionar favoritos locais (opcional) | P2 | LC-030 | 3–6 h | TODO |
+| [LC-039](LC-039-definir-observabilidade-enxuta.md) | Definir observabilidade enxuta (opcional) | P2 | LC-026, LC-031 | 3–5 h | TODO |
+
+### Ordem recomendada
+
+1. LC-024 reconcilia evidências; depois LC-025, LC-026 e LC-028 podem avançar individualmente.
+2. LC-029 depende da prova reunida por LC-025/026 e dos metadados LC-028; LC-034 prepara vídeo mínimo e imagens após LC-025/028.
+3. LC-036 reúne pacote mínimo após LC-029/034. A meta de 29/10/2026 é uma meta, não garantia: as estimativas P0 somam aproximadamente 17–29 horas; se o tempo não comportar o escopo, reduzir explicitamente o pacote e manter alegações não comprovadas de fora.
+4. LC-027, LC-030, LC-031, LC-032, LC-033 e LC-035 são trabalho posterior, conforme dependências. Melhorias materiais futuras devem atualizar seus cards responsáveis e a documentação, sem transformar LC-036 em gate artificial.
+5. LC-037, LC-038 e LC-039 são opcionais: continuam TODO e só entram na fila após escolha explícita futura. Não representam bloqueio atual.
+
+LC-025 e LC-026 coletam evidência operacional complementar que LC-023 exige; eles não dependem de LC-023 estar DONE, evitando ciclo. LC-025 não duplica o envio do formulário. O smoke manual autenticado com catálogo real permanece separado dos testes normais com FakeCatalog. Nenhum status antigo é promovido por estes cards.
+
+### Mapa de fase para cards
+
+| Fase do plano | Cards |
+|---|---|
+| Fase 0 — confiança e validação | LC-024, LC-025, LC-026 |
+| Fase 1 — README | LC-029 |
+| Fase 1A — Acabamento visual da primeira visita | LC-027, LC-030, LC-031 |
+| Fase 1B — Auditoria legível por camadas | LC-032, LC-037 opcional |
+| Fase 2 — Evidência visual e narrativa curta | LC-034, LC-036 |
+| Fase 3 — Apresentação técnica verificável | LC-033 |
+| Fase 4 — Documentação e acabamento de publicação | LC-028, LC-035 |
+| Fase 5 — pacote de publicação | LC-036 |
+| Extensões opcionais posteriores | LC-038, LC-039 |

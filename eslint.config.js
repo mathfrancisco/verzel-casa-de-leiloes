@@ -9,6 +9,7 @@ export default tseslint.config(
       '**/dist/**',
       '**/node_modules/**',
       '**/coverage/**',
+      '.claude/worktrees/**',
       'playwright-report/**',
       'test-results/**',
     ],

@@ -5,12 +5,52 @@ Casa de leilões online. Leiloeiros criam lotes a partir de obras da
 saldo simulado e disputam lances ao vivo, e qualquer pessoa pode **auditar** o histórico de
 lances de um lote e verificar, no próprio navegador, que ele não foi adulterado.
 
-- **Deploy (Northflank):** <https://p01--verzel-casa-de-leiloes--4cj5fhqhqb2r.code.run>
+> **Demonstração.** Todo saldo é simulado. Nenhum dinheiro real é movimentado.
+
+- **Demo ao vivo:** <https://p01--verzel-casa-de-leiloes--4cj5fhqhqb2r.code.run>
 - **Repositório:** <https://github.com/mathfrancisco/verzel-casa-de-leiloes>
-- **Smoke test do deploy:** [`docs/smoke-producao.md`](docs/smoke-producao.md)
 - **Stack:** TypeScript · monorepo pnpm · `apps/web` React + Vite · `apps/api` Node 22 + Fastify +
   Socket.IO · PostgreSQL 16 + Drizzle · `packages/shared` (Zod, códigos de erro, eventos) ·
   Vitest + Playwright.
+
+### Experimente em três passos
+
+1. Abra a demo em **dois perfis de navegador separados**, por exemplo uma janela normal e uma
+   anônima. Na mesma janela, as duas contas dividiriam o cookie de sessão.
+2. Entre como `ana@demo.com` em um perfil e como `bruno@demo.com` no outro. A senha das duas
+   contas é `demo1234`.
+3. Abra o lote ao vivo nos dois perfis e dê um lance com o Bruno. Sem recarregar a página, a Ana
+   vê o novo preço e o aviso "Você foi superado". Depois, use "Auditar este lote" para conferir o
+   histórico.
+
+O leiloeiro (`leiloeiro@demo.com`) busca obras no catálogo e cria lotes. Ele não dá lances.
+
+### O que acontece por trás
+
+- **Lance transacional:** valor mínimo, saldo e prorrogação são validados no servidor, em uma
+  transação que trava o lote e depois a carteira.
+- **Tempo real:** o evento só sai depois do `COMMIT`, via Socket.IO. Se a conexão cair por pouco
+  tempo, os eventos perdidos são reenviados.
+- **Liquidação:** ao encerrar, o vencedor é debitado, o valor reservado dos demais é liberado e
+  um comprovante é gerado.
+- **Auditoria:** cada lance é um elo encadeado por hash e assinado com Ed25519. A verificação roda
+  no navegador.
+
+### Estado da demo e evidências
+
+- **Smoke em produção, 28/10/2026:** duas sessões isoladas, um lance recusado abaixo do mínimo,
+  a superação recebida sem recarregar, as carteiras e o logout foram conferidos. O encerramento e
+  o comprovante não foram testados em produção. Detalhes e limites:
+  [`docs/portfolio/lc025-smoke-producao.md`](docs/portfolio/lc025-smoke-producao.md).
+- **Testes automatizados:** E2E com Playwright, 27/27 em execução local com `FakeCatalog`
+  ([`docs/portfolio/lc026-diagnostico.md`](docs/portfolio/lc026-diagnostico.md)). O CI nunca
+  chama a API externa real.
+- **Lotes ao vivo:** a API repõe dois lotes de demonstração a cada hora quando nenhum lote ativo
+  estiver em andamento ([Banco de dados](#banco-de-dados)).
+- **Smoke anterior do deploy:** [`docs/smoke-producao.md`](docs/smoke-producao.md).
+- **Limites:** a busca no catálogo depende da API do Art Institute of Chicago. Vitrine, sala,
+  auditoria e comprovante não dependem dela. Veja
+  [Limitações](#comportamentos-inesperados-e-limitações-conhecidas) e [Uso de IA](#uso-de-ia).
 
 ## Sumário
 
