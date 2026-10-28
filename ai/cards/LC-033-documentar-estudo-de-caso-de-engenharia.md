@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Status | TODO |
+| Status | DONE |
 | Prioridade | P1 |
 | Épico / janela | Portfólio · Posterior (2–3 semanas) |
 | Esforço estimado | 3–5 h |
@@ -51,7 +51,7 @@ Documentar concorrência, locks, eventos após commit e criptografia com referê
 - Documentação: rtk git diff --check; verificar referências cruzadas a código/testes, medições e condições do experimento. Se código mudar, aplicar gates de AGENTS.md.
 - Para mudanças de produto: usar FakeCatalog e banco descartável; smoke manual com catálogo real é separado e nunca reseta banco de produção.
 - Executar testes focados do módulo alterado e os gates exigidos pelo projeto; registrar comando literal e saída real. Docs-only não requer testes artificiais.
-- Evidência inicial: **Não executado; card criado para execução futura.**
+- Evidência: [docs/estudo-de-caso.md](../../docs/estudo-de-caso.md). Em 28/10/2026, sobre `15b2a10`, os testes de integração de lances, auditoria, tempo real e liquidação passaram (46 de 46) e o `auditVerify.test.ts` também (22 de 22).
 
 ## Definição de pronto
 

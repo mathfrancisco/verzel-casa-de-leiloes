@@ -14,3 +14,4 @@
 - 28/10/2026, LC-028 e LC-029: PR #36 mergeada (`d9cc1d5`). Em produção, `/favicon.svg` responde 200 e as tags OG estão no HTML.
 - 28/10/2026, LC-034: capturas e vídeo gravados localmente com FakeCatalog. Registro: [lc034-midia.md](lc034-midia.md).
 - 28/10/2026, LC-036: pacote de publicação em [pacote-publicacao.md](pacote-publicacao.md). Nada foi enviado.
+- 28/10/2026, LC-033: estudo de caso em [../estudo-de-caso.md](../estudo-de-caso.md). Os testes citados passaram: integração 46/46 e auditVerify 22/22.
