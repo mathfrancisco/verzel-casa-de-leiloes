@@ -229,21 +229,25 @@ export function LotRoomPage() {
           fetchPriority="high"
           decoding="async"
         />
-        <div>
-          <p className="lot-category">{LOT_CATEGORIES[detail.category]}</p>
-          <h1>{detail.title}</h1>
-          <p>{detail.description}</p>
-          <dl className="lot-attributes">
-            {attributes(detail).map(([label, value]) => (
-              <Fragment key={label}>
-                <dt>{label}</dt>
-                <dd>{value}</dd>
-              </Fragment>
-            ))}
-          </dl>
-          <a href={detail.item.sourceUrl} rel="noreferrer" target="_blank">
-            Ver obra no catálogo
-          </a>
+        <div className="lot-room-text">
+          <div className="lot-room-head">
+            <p className="lot-category">{LOT_CATEGORIES[detail.category]}</p>
+            <h1>{detail.title}</h1>
+          </div>
+          <div className="lot-room-details">
+            <p>{detail.description}</p>
+            <dl className="lot-attributes">
+              {attributes(detail).map(([label, value]) => (
+                <Fragment key={label}>
+                  <dt>{label}</dt>
+                  <dd>{value}</dd>
+                </Fragment>
+              ))}
+            </dl>
+            <a href={detail.item.sourceUrl} rel="noreferrer" target="_blank">
+              Ver obra no catálogo
+            </a>
+          </div>
         </div>
       </div>
 

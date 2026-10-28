@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Status | TODO |
+| Status | DONE |
 | Prioridade | P1 |
 | Épico / janela | Portfólio · Posterior (2–3 semanas) |
 | Esforço estimado | 6–10 h |
@@ -51,7 +51,7 @@ Avaliar e melhorar a hierarquia visual da vitrine e da sala preservando comporta
 - Node 22; comandos futuros: teste focado do pacote alterado (`rtk pnpm --filter @leilao/web test` ou `rtk pnpm --filter @leilao/api test`), depois `rtk pnpm test`, `rtk pnpm lint` e `rtk pnpm typecheck` conforme AGENTS.md; E2E aplicável: `rtk pnpm test:e2e`.
 - Para mudanças de produto: usar FakeCatalog e banco descartável; smoke manual com catálogo real é separado e nunca reseta banco de produção.
 - Executar testes focados do módulo alterado e os gates exigidos pelo projeto; registrar comando literal e saída real. Docs-only não requer testes artificiais.
-- Evidência inicial: **Não executado; card criado para execução futura.**
+- Evidência: inspeção em `docs/portfolio/lc030-inspecao.md`; `pnpm --filter @leilao/web test` 32 arquivos / 156 testes passando, `pnpm typecheck` ok; `pnpm lint` só falha em Prettier de `features/auth/DemoAccounts.tsx` e `LoginPage.test.tsx` (herdado do LC-027, fora do escopo). E2E e checagem visual em 390 px não executados.
 
 ## Definição de pronto
 

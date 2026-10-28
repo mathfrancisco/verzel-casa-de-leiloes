@@ -2320,3 +2320,67 @@ main:focus {
   background: transparent;
   border-color: var(--control-border);
 }
+
+/* LC-030: hierarquia — preço, status e ação principal primeiro. */
+.lot-card .lot-price {
+  padding: 4px 12px;
+  font-size: var(--fs-lg);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.lot-card .lot-min {
+  font-weight: 500;
+  color: var(--muted);
+}
+.lot-card .lot-meta {
+  font-size: 0.75rem;
+}
+.lot-room-summary .lot-status {
+  font-size: var(--fs-lg);
+}
+.lot-room-summary .lot-status-winning {
+  color: var(--ok);
+  background: var(--ok-bg);
+  border-left-color: var(--ok);
+}
+.lot-room-summary .lot-status-outbid {
+  color: var(--warn-text);
+  background: var(--warn-bg);
+  border-left-color: var(--warn-border);
+}
+@media (max-width: 40rem) {
+  .lot-room-main,
+  .lot-room-text {
+    display: contents;
+  }
+  .lot-room-image {
+    order: 1;
+    aspect-ratio: 16 / 9;
+  }
+  .lot-room-head {
+    order: 2;
+  }
+  .lot-room-head h1 {
+    font-size: var(--fs-xl);
+    margin: 0;
+  }
+  .lot-room-summary {
+    order: 3;
+  }
+  .bid-form {
+    order: 4;
+  }
+  .lot-room-details {
+    order: 5;
+  }
+  .lot-history {
+    order: 6;
+  }
+  .lot-room > a {
+    order: 7;
+  }
+  .lot-room > [role='alert'],
+  .lot-room > .cancelled-notice {
+    order: 0;
+  }
+}
