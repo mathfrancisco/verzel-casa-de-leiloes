@@ -28,6 +28,11 @@ export default tseslint.config(
     languageOptions: { globals: globals.node },
   },
   {
+    // Scripts de mídia do portfólio rodam no Node e passam callbacks ao navegador.
+    files: ['scripts/**/*.mjs'],
+    languageOptions: { globals: { ...globals.node, ...globals.browser } },
+  },
+  {
     files: ['apps/web/**/*.{ts,tsx,js}'],
     languageOptions: { globals: globals.browser },
     plugins: { 'react-hooks': reactHooks },

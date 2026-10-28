@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Status | TODO |
+| Status | DONE |
 | Prioridade | P0 |
 | Épico / janela | Portfólio · Antes de 29/10/2026 |
 | Esforço estimado | 3–5 h |
@@ -51,7 +51,7 @@ Preparar evidências visuais iniciais e vídeo curto da demo sem confundir ambie
 - Para documentação e assets: rtk git diff --check e revisão manual de links, arquivos, direitos e rótulos de ambiente; não inventar testes para produção de mídia.
 - Para mudanças de produto: usar FakeCatalog e banco descartável; smoke manual com catálogo real é separado e nunca reseta banco de produção.
 - Executar testes focados do módulo alterado e os gates exigidos pelo projeto; registrar comando literal e saída real. Docs-only não requer testes artificiais.
-- Evidência inicial: **Não executado; card criado para execução futura.**
+- Evidência: [docs/portfolio/lc034-midia.md](../../docs/portfolio/lc034-midia.md), com gravação local de 28/10/2026, 8 capturas e vídeo de 85 s com legendas.
 
 ## Definição de pronto
 

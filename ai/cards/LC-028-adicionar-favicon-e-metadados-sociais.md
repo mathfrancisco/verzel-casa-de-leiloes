@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Status | REVIEW |
+| Status | DONE |
 | Prioridade | P0 |
 | Épico / janela | Portfólio · Antes de 29/10/2026 |
 | Esforço estimado | 1–2 h |
@@ -51,7 +51,7 @@ Aprimorar identidade da aba e prévias sociais com metadados estáticos e assets
 - Node 22; comandos futuros: teste focado do pacote alterado (`rtk pnpm --filter @leilao/web test` ou `rtk pnpm --filter @leilao/api test`), depois `rtk pnpm test`, `rtk pnpm lint` e `rtk pnpm typecheck` conforme AGENTS.md; E2E aplicável: `rtk pnpm test:e2e`.
 - Para mudanças de produto: usar FakeCatalog e banco descartável; smoke manual com catálogo real é separado e nunca reseta banco de produção.
 - Executar testes focados do módulo alterado e os gates exigidos pelo projeto; registrar comando literal e saída real. Docs-only não requer testes artificiais.
-- Evidência inicial: **Não executado; card criado para execução futura.**
+- Evidência: produção em 28/10/2026, depois do merge da PR #36 (`d9cc1d5`): `/favicon.svg` responde 200 e o HTML traz `og:title`, `og:description`, `og:url`, `og:type`, `og:locale` e `og:site_name`. Ainda falta `og:image`.
 
 ## Execução 27/10/2026
 

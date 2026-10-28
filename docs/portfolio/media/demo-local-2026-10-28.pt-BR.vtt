@@ -1,0 +1,41 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:05.000
+Casa de Leilões: leilões de arte com lances ao vivo e histórico auditável. Nenhum dinheiro real é movimentado.
+
+2
+00:00:05.000 --> 00:00:13.000
+Vitrine com obras do Art Institute of Chicago. O aviso de saldo simulado fica sempre visível.
+
+3
+00:00:13.000 --> 00:00:22.000
+Sessão A (Ana) abre o lote: preço atual, próximo lance mínimo e cronômetro.
+
+4
+00:00:22.000 --> 00:00:30.000
+Sessão B (Bruno), outro navegador: lance abaixo do mínimo é recusado pelo servidor.
+
+5
+00:00:30.000 --> 00:00:41.000
+Bruno cobre com o valor mínimo. Na sessão A, sem recarregar, chegam o novo preço e o aviso "Você foi superado".
+
+6
+00:00:41.000 --> 00:00:48.000
+Carteira da Ana: saldo simulado; a reserva do lance foi liberada quando ela foi superada.
+
+7
+00:00:48.000 --> 00:00:56.000
+Comprovante público de um lote encerrado. Dado de demonstração criado pelo seed.
+
+8
+00:00:56.000 --> 00:01:07.000
+Auditoria pública: o navegador verifica hashes encadeados e assinaturas Ed25519. Resultado: cadeia íntegra.
+
+9
+00:01:07.000 --> 00:01:13.000
+A mesma sala no celular.
+
+10
+00:01:13.000 --> 00:01:19.000
+TypeScript · React + Vite · Fastify + Socket.IO · PostgreSQL + Drizzle. github.com/mathfrancisco/verzel-casa-de-leiloes
