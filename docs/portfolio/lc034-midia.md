@@ -3,7 +3,7 @@
 Toda a mídia desta pasta foi gravada em **ambiente local**, não em produção.
 
 - **Data:** 28/10/2026.
-- **Revisão:** `main` em `d9cc1d5`.
+- **Revisão:** `0d09124` (branch `feat/interface-portfolio`), com a interface dos cards LC-027, LC-030, LC-031, LC-032 e LC-035. A primeira gravação, sobre `d9cc1d5`, foi substituída.
 - **Catálogo:** `CATALOG_PROVIDER=fake`. O seed usa as obras CC0 versionadas em
   `apps/api/seed/fixtures`.
 - **Banco:** Postgres descartável `verzel_video`, criado só para esta gravação, com `pnpm db:migrate` e

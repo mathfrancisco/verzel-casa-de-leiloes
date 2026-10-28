@@ -13,7 +13,7 @@ vi.mock('../../lib/api', async (importOriginal) => ({
   ...(await importOriginal<object>()),
   apiFetch: vi.fn(),
 }));
-vi.mock('../showcase/useLotChannel', () => ({ useLotChannel: () => undefined }));
+vi.mock('../showcase/useLotChannel', () => ({ useLotChannel: () => 'synced' }));
 vi.mock('../../lib/realtime', () => ({ refreshRealtimeSession: () => undefined }));
 
 const now = Date.now();
@@ -132,5 +132,26 @@ describe('LotRoomPage re-renders', () => {
     await advance(50);
     expect(container.querySelector('.lot-extended')).not.toBeNull();
     expect(formatter.mock.calls.length).toBe(afterMount);
+  });
+
+  it('separa título e metadados longos para o CSS priorizar preço e ação no mobile', async () => {
+    await act(async () => {
+      root.render(
+        <QueryClientProvider client={queryClient}>
+          <MemoryRouter initialEntries={['/lotes/l1']}>
+            <Routes>
+              <Route path="lotes/:id" element={<LotRoomPage />} />
+            </Routes>
+          </MemoryRouter>
+        </QueryClientProvider>,
+      );
+    });
+    await vi.waitFor(() => expect(container.querySelector('.lot-room-head h1')).not.toBeNull());
+    expect(container.querySelector('.lot-room-head h1')?.textContent).toBe('Obra');
+    expect(container.querySelector('.lot-room-details a')?.textContent).toBe(
+      'Ver obra no catálogo',
+    );
+    expect(container.querySelector('.lot-room > .lot-room-summary')).not.toBeNull();
+    expect(container.querySelector('.lot-room > .bid-form')).not.toBeNull();
   });
 });

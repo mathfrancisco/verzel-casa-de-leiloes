@@ -3,6 +3,7 @@ import { useState, type FormEvent } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { FormField } from '../../components/FormField';
 import { fieldErrors, messageFor } from '../../lib/errorMessages';
+import { DemoAccounts } from './DemoAccounts';
 import { useLogin } from './session';
 
 export function LoginPage() {
@@ -54,6 +55,12 @@ export function LoginPage() {
       <p>
         Ainda não tem conta? <Link to="/cadastro">Cadastre-se</Link>
       </p>
+      <DemoAccounts
+        onFill={(credentials) => {
+          setValues(credentials);
+          setErrors({});
+        }}
+      />
     </section>
   );
 }

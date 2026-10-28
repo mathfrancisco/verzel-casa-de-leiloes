@@ -62,9 +62,11 @@ function TestChannel({
   displayedSeq?: number;
   onBid: (seq: number) => void;
 }) {
-  useLotChannel({ lotId, displayedSeq, onBidAccepted: ({ seq }) => onBid(seq) });
-  return null;
+  const state = useLotChannel({ lotId, displayedSeq, onBidAccepted: ({ seq }) => onBid(seq) });
+  return <output data-sync>{state}</output>;
 }
+
+const syncText = () => container.querySelector('[data-sync]')?.textContent;
 
 let root: Root;
 let container: HTMLDivElement;
@@ -238,6 +240,84 @@ describe('realtime web client', () => {
     const visibilityCalls = invalidate.mock.calls.length;
     act(() => latestJoinAck('lot-1')?.({ ok: true }));
     expect(invalidate.mock.calls.length).toBeGreaterThan(visibilityCalls);
+  });
+
+  it('moves connected -> syncing -> synced -> reconnecting and ignores acks from an older connection', async () => {
+    renderWithHook();
+    // connect() do harness dispara 'connect': socket no ar, mas snapshot ainda não confirmado.
+    expect(syncText()).toBe('syncing');
+
+    const firstAck = latestJoinAck('lot-1');
+    await act(async () => firstAck?.({ ok: true }));
+    expect(syncText()).toBe('synced');
+
+    act(() => {
+      socketHarness.connected = false;
+      fire('disconnect', 'transport close');
+    });
+    expect(syncText()).toBe('reconnecting');
+
+    act(() => {
+      socketHarness.connected = true;
+      fire('connect');
+    });
+    expect(syncText()).toBe('syncing');
+    const reconnectAck = latestJoinAck('lot-1');
+
+    // Queda e nova conexão antes do ACK: o ACK da conexão anterior não confirma nada.
+    act(() => {
+      socketHarness.connected = false;
+      fire('disconnect', 'transport close');
+      socketHarness.connected = true;
+      fire('connect');
+    });
+    await act(async () => reconnectAck?.({ ok: true }));
+    expect(syncText()).toBe('syncing');
+    await act(async () => latestJoinAck('lot-1')?.({ ok: true }));
+    expect(syncText()).toBe('synced');
+  });
+
+  it('stays syncing when the refreshed lot snapshot failed', async () => {
+    queryClient.setQueryDefaults(['lot', 'lot-1'], { retry: false });
+    await queryClient
+      .fetchQuery({
+        queryKey: ['lot', 'lot-1', 'visitor'],
+        queryFn: () => Promise.reject(new Error('offline')),
+      })
+      .catch(() => undefined);
+    renderWithHook();
+    await act(async () => latestJoinAck('lot-1')?.({ ok: true }));
+    expect(syncText()).toBe('syncing');
+  });
+
+  it('ignores a delayed bid event older than the snapshot already displayed', () => {
+    const onBid = vi.fn();
+    const bid = (seq: number) => ({
+      lotId: 'lot-1',
+      seq,
+      serverTime: '2026-10-23T12:00:00.000Z',
+      amountCents: 100 * seq,
+      bidderPseudonym: 'Licitante A',
+      createdAt: '2026-10-23T12:00:00.000Z',
+      hash: 'abc',
+      currentPriceCents: 100 * seq,
+      minimumNextBidCents: 100 * seq + 100,
+      bidCount: seq,
+      endsAt: '2026-10-23T13:00:00.000Z',
+    });
+    // O snapshot REST pós-reconexão já traz seq 7; o evento atrasado (6) e o repetido (7) caem fora.
+    renderWithLot('lot-1', onBid, 7);
+    const invalidate = vi.spyOn(queryClient, 'invalidateQueries');
+    act(() => fire('bid.accepted', bid(6)));
+    act(() => fire('bid.accepted', bid(7)));
+    expect(onBid).not.toHaveBeenCalled();
+    expect(invalidate).not.toHaveBeenCalled();
+    act(() => fire('bid.accepted', bid(8)));
+    expect(onBid).toHaveBeenCalledTimes(1);
+    expect(onBid).toHaveBeenCalledWith(8);
+    // Depois do seq 8, o 7 atrasado continua ignorado.
+    act(() => fire('bid.accepted', bid(7)));
+    expect(onBid).toHaveBeenCalledTimes(1);
   });
 
   it('keeps account-wide event listeners mounted and invalidates wallet and participations snapshots', () => {

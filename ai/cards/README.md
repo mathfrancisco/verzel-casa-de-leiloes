@@ -84,15 +84,15 @@ LC-024 audita e registra; não autoriza promover status herdado sem prova.
 | [LC-024](LC-024-reconciliar-evidencias-e-quadro-legado.md) | Reconciliar evidências e quadro legado | P0 | — | 2–3 h | DONE |
 | [LC-025](LC-025-validar-demo-publicada-e-smoke-autenticado.md) | Validar demo publicada e smoke autenticado | P0 | LC-024 | 3–5 h | DONE |
 | [LC-026](LC-026-diagnosticar-instabilidade-de-realtime-e-e2e.md) | Diagnosticar instabilidade de realtime e E2E | P0 | LC-024 | 3–6 h | DONE |
-| [LC-027](LC-027-oferecer-acesso-contextual-a-demo-e-onboarding.md) | Oferecer acesso contextual à demo e onboarding | P1 | LC-024 | 4–6 h | TODO |
+| [LC-027](LC-027-oferecer-acesso-contextual-a-demo-e-onboarding.md) | Oferecer acesso contextual à demo e onboarding | P1 | LC-024 | 4–6 h | DONE |
 | [LC-028](LC-028-adicionar-favicon-e-metadados-sociais.md) | Adicionar favicon e metadados sociais | P0 | LC-024 | 1–2 h | DONE |
 | [LC-029](LC-029-escrever-readme-de-portfolio.md) | Escrever README de portfólio | P0 | LC-025, LC-026, LC-028 | 3–5 h | DONE |
-| [LC-030](LC-030-refinar-hierarquia-da-vitrine-e-sala.md) | Refinar hierarquia da vitrine e sala | P1 | LC-027 | 6–10 h | TODO |
-| [LC-031](LC-031-distinguir-conexao-de-sincronizacao.md) | Distinguir conexão de sincronização | P1 | LC-026, LC-030 | 4–8 h | TODO |
-| [LC-032](LC-032-explicar-auditoria-em-camadas.md) | Explicar auditoria em camadas | P1 | LC-024 | 4–7 h | TODO |
+| [LC-030](LC-030-refinar-hierarquia-da-vitrine-e-sala.md) | Refinar hierarquia da vitrine e sala | P1 | LC-027 | 6–10 h | DONE |
+| [LC-031](LC-031-distinguir-conexao-de-sincronizacao.md) | Distinguir conexão de sincronização | P1 | LC-026, LC-030 | 4–8 h | DONE |
+| [LC-032](LC-032-explicar-auditoria-em-camadas.md) | Explicar auditoria em camadas | P1 | LC-024 | 4–7 h | DONE |
 | [LC-033](LC-033-documentar-estudo-de-caso-de-engenharia.md) | Documentar estudo de caso de engenharia | P1 | LC-024, LC-026 | 3–5 h | DONE |
 | [LC-034](LC-034-preparar-capturas-e-video-da-demonstracao.md) | Preparar capturas e vídeo da demonstração | P0 | LC-025, LC-028 | 3–5 h | DONE |
-| [LC-035](LC-035-verificar-acessibilidade-manual-e-regressoes.md) | Verificar acessibilidade manual e regressões | P1 | LC-030, LC-031, LC-032 | 4–7 h | TODO |
+| [LC-035](LC-035-verificar-acessibilidade-manual-e-regressoes.md) | Verificar acessibilidade manual e regressões | P1 | LC-030, LC-031, LC-032 | 4–7 h | REVIEW |
 | [LC-036](LC-036-montar-pacote-de-publicacao.md) | Montar pacote de publicação | P0 | LC-029, LC-034 | 2–3 h | DONE |
 | [LC-037](LC-037-criar-laboratorio-local-com-fixture-de-auditoria.md) | Criar laboratório local com fixture de auditoria (opcional) | P2 | LC-032 | 4–8 h | TODO |
 | [LC-038](LC-038-adicionar-favoritos-locais.md) | Adicionar favoritos locais (opcional) | P2 | LC-030 | 3–6 h | TODO |

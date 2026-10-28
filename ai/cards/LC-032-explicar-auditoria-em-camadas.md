@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Status | TODO |
+| Status | DONE |
 | Prioridade | P1 |
 | Épico / janela | Portfólio · Posterior (2–3 semanas) |
 | Esforço estimado | 4–7 h |
@@ -51,7 +51,7 @@ Tornar resultado e limites da auditoria compreensíveis mantendo verificador, ha
 - Produto: rtk pnpm --filter @leilao/web test; rtk pnpm test; rtk pnpm lint; rtk pnpm typecheck. Primeiro executar testes focados da auditoria, depois gates completos exigidos por AGENTS.md antes de DONE.
 - Para mudanças de produto: usar FakeCatalog e banco descartável; smoke manual com catálogo real é separado e nunca reseta banco de produção.
 - Executar testes focados do módulo alterado e os gates exigidos pelo projeto; registrar comando literal e saída real. Docs-only não requer testes artificiais.
-- Evidência inicial: **Não executado; card criado para execução futura.**
+- Evidência (2026-10-28, Node v24.12.0 local; engines pede 22): `pnpm --filter @leilao/web test` → 31 arquivos, 154 testes passando (AuditPage.test.tsx: 8); `pnpm lint` → "ESLint: No issues found"; `pnpm typecheck` → sem erros. E2E não executado; `pnpm test` completo (API/Postgres) não executado.
 
 ## Definição de pronto
 
