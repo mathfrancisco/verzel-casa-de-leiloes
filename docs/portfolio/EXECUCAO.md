@@ -10,3 +10,7 @@
 - Ambiente reportado: Node 22.16 em `../work/node.exe` e pnpm 10.28 em `../work/pnpm.cmd`. Typecheck terminou com exit code 0. Lint reportou 24 erros `no-undef`, todos em cópias preexistentes sob `.claude/worktrees/**`; diagnóstico e resolução ficam no LC-026.
 - CI de baseline: run [40565064515](https://github.com/mathfrancisco/verzel-casa-de-leiloes/actions/runs/40565064515) `success` para SHA `a5b3afafcdae8010f837fe406eb170107211dd12`.
 - Limites operacionais: sem reset de produção ou envio de formulário/post. Smoke autenticado pós-reset em produção permanece pendente; CI baseline não comprova revisão publicada atual.
+- 28/10/2026, LC-025: smoke autenticado em produção com duas sessões isoladas. Encerramento e comprovante ficaram pendentes por causa da janela do lote. Registro: [lc025-smoke-producao.md](lc025-smoke-producao.md).
+- 28/10/2026, LC-028 e LC-029: PR #36 mergeada (`d9cc1d5`). Em produção, `/favicon.svg` responde 200 e as tags OG estão no HTML.
+- 28/10/2026, LC-034: capturas e vídeo gravados localmente com FakeCatalog. Registro: [lc034-midia.md](lc034-midia.md).
+- 28/10/2026, LC-036: pacote de publicação em [pacote-publicacao.md](pacote-publicacao.md). Nada foi enviado.

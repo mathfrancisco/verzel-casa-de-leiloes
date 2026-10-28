@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Status | TODO |
+| Status | DONE |
 | Prioridade | P0 |
 | Épico / janela | Portfólio · Antes de 29/10/2026 |
 | Esforço estimado | 2–3 h |
@@ -52,7 +52,7 @@ Reunir README, links e assets existentes em pacote revisável; preparar checklis
 - Documentação: rtk git diff --check e revisão manual de links, CTA, direitos e evidências; documentação não dispensa gates do projeto se código for alterado.
 - Para mudanças de produto: usar FakeCatalog e banco descartável; smoke manual com catálogo real é separado e nunca reseta banco de produção.
 - Executar testes focados do módulo alterado e os gates exigidos pelo projeto; registrar comando literal e saída real. Docs-only não requer testes artificiais.
-- Evidência inicial: **Não executado; card criado para execução futura.**
+- Evidência: [docs/portfolio/pacote-publicacao.md](../../docs/portfolio/pacote-publicacao.md). Nada foi publicado nem enviado.
 
 ## Definição de pronto
 

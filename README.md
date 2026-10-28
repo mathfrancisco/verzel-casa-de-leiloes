@@ -36,6 +36,20 @@ O leiloeiro (`leiloeiro@demo.com`) busca obras no catálogo e cria lotes. Ele n�
 - **Auditoria:** cada lance é um elo encadeado por hash e assinado com Ed25519. A verificação roda
   no navegador.
 
+### Capturas e vídeo
+
+Gravação **local** (FakeCatalog) feita em 28/10/2026 sobre `main` `d9cc1d5`, com duas sessões isoladas.
+Origem, direitos e limites estão em [`docs/portfolio/lc034-midia.md`](docs/portfolio/lc034-midia.md).
+
+![Sessão da Ana mostra o novo preço e o aviso "Você foi superado" após o lance do Bruno, sem recarregar a página](docs/portfolio/media/04-ana-superada.png)
+
+![Auditoria pública mostra "Cadeia íntegra" e todas as verificações aprovadas](docs/portfolio/media/07-auditoria.png)
+
+- Vídeo de 85 s com legendas: [`demo-local-2026-10-28.webm`](docs/portfolio/media/demo-local-2026-10-28.webm)
+  ([legendas `.vtt`](docs/portfolio/media/demo-local-2026-10-28.pt-BR.vtt)). As cenas são capturas reais,
+  e cada corte é indicado no vídeo.
+- Obras: Art Institute of Chicago, domínio público (CC0).
+
 ### Estado da demo e evidências
 
 - **Smoke em produção, 28/10/2026:** duas sessões isoladas, um lance recusado abaixo do mínimo,
