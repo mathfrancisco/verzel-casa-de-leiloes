@@ -38,7 +38,7 @@ O leiloeiro (`leiloeiro@demo.com`) busca obras no catálogo e cria lotes. Ele n�
 
 ### Capturas e vídeo
 
-Gravação **local** (FakeCatalog) feita em 28/10/2026 sobre `main` `d9cc1d5`, com duas sessões
+Gravação **local** (FakeCatalog) feita em 28/10/2026 sobre a revisão `0d09124` (interface dos cards LC-027 a LC-035), com duas sessões
 isoladas. Origem, direitos e limites estão em
 [`docs/portfolio/lc034-midia.md`](docs/portfolio/lc034-midia.md).
 
